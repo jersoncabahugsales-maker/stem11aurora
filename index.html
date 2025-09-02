@@ -1,179 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Grade-11 Aurora (STEM) Class</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grade 11 Aurora STEM Portal</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-    .container{background:#fff;border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,0.1);padding:40px;width:100%;max-width:1200px;animation:fadeIn .5s ease-in}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    .header{text-align:center;margin-bottom:30px}
-    .header h1{font-size:2.5rem;font-weight:700;margin-bottom:10px;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    .header p{color:#718096;font-size:1.1rem}
-    .form-group{margin-bottom:20px}
-    label{display:block;margin-bottom:8px;font-weight:500;color:#4a5568}
-    input,select{width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:16px;font-family:'Poppins',sans-serif}
-    input:focus,select:focus{outline:none;border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,.1)}
-    .btn{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;padding:12px 30px;border-radius:10px;font-size:16px;font-weight:500;cursor:pointer;transition:.3s;font-family:'Poppins',sans-serif}
-    .btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(102,126,234,.3)}
-    .btn-admin{background:linear-gradient(135deg,#f093fb,#f5576c);margin-left:10px}
-    .hidden{display:none}
-    .error{color:#e53e3e;font-size:14px;margin-top:5px}
-    .success{color:#38a169;font-size:14px;margin-top:5px}
-    .student-info{background:linear-gradient(135deg,#a8edea,#fed6e3);padding:20px;border-radius:15px;margin-bottom:30px}
-    .student-info h2{color:#2d3748;margin-bottom:5px}
-    .motto{font-style:italic;color:#667eea;font-weight:500}
-    .grades-table{width:100%;border-collapse:collapse;margin-bottom:30px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,.1)}
-    .grades-table th{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:15px;text-align:left}
-    .grades-table td{padding:12px 15px;border-bottom:1px solid #e2e8f0}
-    .final-average{background:linear-gradient(135deg,#ffecd2,#fcb69f);padding:20px;border-radius:15px;text-align:center;margin-bottom:20px}
-    .average-score{font-size:2rem;font-weight:700;color:#667eea;margin-bottom:10px}
-    .honor-status{font-size:1.2rem;font-weight:600;padding:10px 20px;border-radius:25px;display:inline-block}
-    .with-honors{background:#bee3f8;color:#2b6cb0}
-    .with-high-honors{background:#c6f6d5;color:#276749}
-    .with-highest-honors{background:#fed7d7;color:#c53030}
-    .congratulations{text-align:center;padding:30px;background:linear-gradient(135deg,#ffecd2,#fcb69f);border-radius:15px;margin-top:30px}
-    .congratulations h2{font-size:2rem;color:#2d3748;margin-bottom:10px}
-    .signature{font-style:italic;color:#667eea;font-weight:500}
-    @media(max-width:768px){.container{padding:20px}.header h1{font-size:2rem}.grades-table{font-size:14px}}
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #7c3aed;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 12px;
+      width: 400px;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 6px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      background-color: #4ade80;
+      border: none;
+      border-radius: 6px;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #22c55e;
+    }
+    .footer {
+      margin-top: 15px;
+      font-size: 12px;
+      color: #ddd;
+    }
+    .hidden {
+      display: none;
+    }
+    table {
+      width: 100%;
+      margin-top: 15px;
+      border-collapse: collapse;
+      background: white;
+      color: black;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f3f4f6;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Login -->
-    <div id="login-section">
-      <div class="header">
-        <h1>Grade-11 Aurora (STEM)</h1>
-        <p>Student Portal</p>
-      </div>
-      <div class="form-group">
-        <label for="studentId">Student ID</label>
-        <input type="text" id="studentId" placeholder="Enter ID">
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" placeholder="Enter Password">
-      </div>
-      <button class="btn" onclick="login()">Login</button>
-      <div id="login-message"></div>
-    </div>
+  <div class="container" id="loginPage">
+    <h1>Grade-11 Aurora (STEM) Class</h1>
+    <input type="text" id="accessCode" placeholder="Enter Access Code">
+    <input type="text" id="lrn" placeholder="Enter LRN">
+    <button onclick="login()">Login</button>
+    <div id="message" class="footer"></div>
+  </div>
 
-    <!-- Dashboard -->
-    <div id="dashboard" class="hidden">
-      <div class="student-info">
-        <h2 id="student-name"></h2>
-        <p id="student-section"></p>
-        <p class="motto" id="student-motto"></p>
-      </div>
-      <table class="grades-table">
-        <thead><tr><th>Subject</th><th>Grade</th></tr></thead>
-        <tbody id="grades-body"></tbody>
-      </table>
-      <div class="final-average">
-        <h3>Final Average</h3>
-        <div class="average-score" id="final-average"></div>
-        <div id="honor-status" class="honor-status"></div>
-      </div>
-      <div class="congratulations hidden" id="congratulations">
-        <h2>Congratulations!</h2>
-        <p id="congrats-message"></p>
-        <p class="signature">– Your Aurora STEM Teachers</p>
-      </div>
-    </div>
+  <div class="container hidden" id="studentDashboard">
+    <h1>Welcome, Student</h1>
+    <p id="studentInfo"></p>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <div class="container hidden" id="adminDashboard">
+    <h1>Admin Panel</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>LRN</th>
+          <th>Name</th>
+          <th>Grade</th>
+        </tr>
+      </thead>
+      <tbody id="studentTable"></tbody>
+    </table>
+    <h3>Add Student</h3>
+    <input type="text" id="newLRN" placeholder="LRN">
+    <input type="text" id="newName" placeholder="Name">
+    <input type="text" id="newGrade" placeholder="Grade">
+    <button onclick="addStudent()">Add</button>
+    <button onclick="logout()">Logout</button>
   </div>
 
   <script>
-    // === Database of students ===
-    const students = {
-      "2025001": {
-        password: "pass123",
-        name: "Juan Dela Cruz",
-        section: "Aurora STEM 11",
-        motto: "Strive for greatness!",
-        grades: {
-          Math: 90, Science: 92, English: 88,
-          Filipino: 85, "Social Studies": 91
-        }
-      },
-      "2025002": {
-        password: "hello456",
-        name: "Maria Clara",
-        section: "Aurora STEM 11",
-        motto: "Knowledge is power.",
-        grades: {
-          Math: 95, Science: 97, English: 93,
-          Filipino: 90, "Social Studies": 94
-        }
-      },
-      "2025003": {
-        password: "stem789",
-        name: "Andres Bonifacio",
-        section: "Aurora STEM 11",
-        motto: "Serve the people.",
-        grades: {
-          Math: 85, Science: 88, English: 80,
-          Filipino: 82, "Social Studies": 84
-        }
-      }
-      // 👉 You can add more students here
-    };
+    // Simulated "database"
+    const students = [
+      { lrn: "113797140007", name: "Juan Dela Cruz", grade: "STEM 11 Aurora" },
+      { lrn: "113797140008", name: "Maria Clara", grade: "STEM 11 Aurora" }
+    ];
 
-    // === Login function ===
+    const ACCESS_CODE = "TatakSTEM";
+    const ADMIN_CODE = "AdminSTEM"; // admin access code
+
     function login() {
-      const id = document.getElementById("studentId").value.trim();
-      const pw = document.getElementById("password").value.trim();
-      const msg = document.getElementById("login-message");
+      const accessCode = document.getElementById("accessCode").value.trim();
+      const lrn = document.getElementById("lrn").value.trim();
+      const message = document.getElementById("message");
 
-      if (!students[id]) {
-        msg.innerHTML = "<p class='error'>Student ID not found.</p>";
+      // Admin login
+      if (accessCode === ADMIN_CODE) {
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("adminDashboard").classList.remove("hidden");
+        renderTable();
         return;
       }
-      if (students[id].password !== pw) {
-        msg.innerHTML = "<p class='error'>Incorrect password.</p>";
-        return;
-      }
 
-      // Success
-      msg.innerHTML = "<p class='success'>Login successful!</p>";
-      showDashboard(students[id]);
+      // Student login
+      if (accessCode === ACCESS_CODE) {
+        const student = students.find(s => s.lrn === lrn);
+        if (student) {
+          document.getElementById("loginPage").classList.add("hidden");
+          document.getElementById("studentDashboard").classList.remove("hidden");
+          document.getElementById("studentInfo").innerText =
+            `LRN: ${student.lrn}\nName: ${student.name}\nSection: ${student.grade}`;
+        } else {
+          message.innerHTML = "❌ LRN not found.";
+          message.style.color = "red";
+        }
+      } else {
+        message.innerHTML = "❌ Invalid Access Code.";
+        message.style.color = "red";
+      }
     }
 
-    // === Show Dashboard ===
-    function showDashboard(student) {
-      document.getElementById("login-section").classList.add("hidden");
-      document.getElementById("dashboard").classList.remove("hidden");
+    function logout() {
+      document.getElementById("loginPage").classList.remove("hidden");
+      document.getElementById("studentDashboard").classList.add("hidden");
+      document.getElementById("adminDashboard").classList.add("hidden");
+      document.getElementById("accessCode").value = "";
+      document.getElementById("lrn").value = "";
+      document.getElementById("message").innerHTML = "";
+    }
 
-      document.getElementById("student-name").textContent = student.name;
-      document.getElementById("student-section").textContent = student.section;
-      document.getElementById("student-motto").textContent = `"${student.motto}"`;
+    function renderTable() {
+      const table = document.getElementById("studentTable");
+      table.innerHTML = "";
+      students.forEach(s => {
+        table.innerHTML += `
+          <tr>
+            <td>${s.lrn}</td>
+            <td>${s.name}</td>
+            <td>${s.grade}</td>
+          </tr>`;
+      });
+    }
 
-      const tbody = document.getElementById("grades-body");
-      tbody.innerHTML = "";
-      let sum = 0, count = 0;
-      for (let subj in student.grades) {
-        const g = student.grades[subj];
-        sum += g; count++;
-        tbody.innerHTML += `<tr><td>${subj}</td><td>${g}</td></tr>`;
-      }
-      const avg = (sum / count).toFixed(2);
-      document.getElementById("final-average").textContent = avg;
+    function addStudent() {
+      const lrn = document.getElementById("newLRN").value.trim();
+      const name = document.getElementById("newName").value.trim();
+      const grade = document.getElementById("newGrade").value.trim();
 
-      let honorText="", honorClass="";
-      if (avg>=98) { honorText="With Highest Honors"; honorClass="with-highest-honors"; }
-      else if (avg>=95) { honorText="With High Honors"; honorClass="with-high-honors"; }
-      else if (avg>=90) { honorText="With Honors"; honorClass="with-honors"; }
-      else { honorText="No Honors"; honorClass=""; }
+      if (lrn && name && grade) {
+        students.push({ lrn, name, grade });
+        renderTable();
 
-      const honorEl=document.getElementById("honor-status");
-      honorEl.textContent=honorText;
-      honorEl.className="honor-status "+honorClass;
-
-      if (avg>=90) {
-        document.getElementById("congrats-message").textContent = `${student.name}, ${honorText}!`;
-        document.getElementById("congratulations").classList.remove("hidden");
+        // clear inputs
+        document.getElementById("newLRN").value = "";
+        document.getElementById("newName").value = "";
+        document.getElementById("newGrade").value = "";
+      } else {
+        alert("Please fill all fields!");
       }
     }
   </script>
