@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grade-11 Aurora (STEM) Class</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Poppins',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .container{background:#fff;border-radius:20px;box-shadow:0 20px 40px rgba(0,0,0,0.1);padding:40px;width:100%;max-width:1200px;animation:fadeIn .5s ease-in}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .header{text-align:center;margin-bottom:30px}
+    .header h1{font-size:2.5rem;font-weight:700;margin-bottom:10px;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .header p{color:#718096;font-size:1.1rem}
+    .form-group{margin-bottom:20px}
+    label{display:block;margin-bottom:8px;font-weight:500;color:#4a5568}
+    input,select{width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:16px;font-family:'Poppins',sans-serif}
+    input:focus,select:focus{outline:none;border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,.1)}
+    .btn{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;padding:12px 30px;border-radius:10px;font-size:16px;font-weight:500;cursor:pointer;transition:.3s;font-family:'Poppins',sans-serif}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 10px 20px rgba(102,126,234,.3)}
+    .btn-admin{background:linear-gradient(135deg,#f093fb,#f5576c);margin-left:10px}
+    .hidden{display:none}
+    .error{color:#e53e3e;font-size:14px;margin-top:5px}
+    .success{color:#38a169;font-size:14px;margin-top:5px}
+    .student-info{background:linear-gradient(135deg,#a8edea,#fed6e3);padding:20px;border-radius:15px;margin-bottom:30px}
+    .student-info h2{color:#2d3748;margin-bottom:5px}
+    .motto{font-style:italic;color:#667eea;font-weight:500}
+    .grades-table{width:100%;border-collapse:collapse;margin-bottom:30px;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,.1)}
+    .grades-table th{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:15px;text-align:left}
+    .grades-table td{padding:12px 15px;border-bottom:1px solid #e2e8f0}
+    .final-average{background:linear-gradient(135deg,#ffecd2,#fcb69f);padding:20px;border-radius:15px;text-align:center;margin-bottom:20px}
+    .average-score{font-size:2rem;font-weight:700;color:#667eea;margin-bottom:10px}
+    .honor-status{font-size:1.2rem;font-weight:600;padding:10px 20px;border-radius:25px;display:inline-block}
+    .with-honors{background:#bee3f8;color:#2b6cb0}
+    .with-high-honors{background:#c6f6d5;color:#276749}
+    .with-highest-honors{background:#fed7d7;color:#c53030}
+    .congratulations{text-align:center;padding:30px;background:linear-gradient(135deg,#ffecd2,#fcb69f);border-radius:15px;margin-top:30px}
+    .congratulations h2{font-size:2rem;color:#2d3748;margin-bottom:10px}
+    .signature{font-style:italic;color:#667eea;font-weight:500}
+    @media(max-width:768px){.container{padding:20px}.header h1{font-size:2rem}.grades-table{font-size:14px}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Login -->
+    <div id="login-section">
+      <div class="header">
+        <h1>Grade-11 Aurora (STEM)</h1>
+        <p>Student Portal</p>
+      </div>
+      <div class="form-group">
+        <label for="studentId">Student ID</label>
+        <input type="text" id="studentId" placeholder="Enter ID">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter Password">
+      </div>
+      <button class="btn" onclick="login()">Login</button>
+      <div id="login-message"></div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="hidden">
+      <div class="student-info">
+        <h2 id="student-name"></h2>
+        <p id="student-section"></p>
+        <p class="motto" id="student-motto"></p>
+      </div>
+      <table class="grades-table">
+        <thead><tr><th>Subject</th><th>Grade</th></tr></thead>
+        <tbody id="grades-body"></tbody>
+      </table>
+      <div class="final-average">
+        <h3>Final Average</h3>
+        <div class="average-score" id="final-average"></div>
+        <div id="honor-status" class="honor-status"></div>
+      </div>
+      <div class="congratulations hidden" id="congratulations">
+        <h2>Congratulations!</h2>
+        <p id="congrats-message"></p>
+        <p class="signature">– Your Aurora STEM Teachers</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // === Database of students ===
+    const students = {
+      "2025001": {
+        password: "pass123",
+        name: "Juan Dela Cruz",
+        section: "Aurora STEM 11",
+        motto: "Strive for greatness!",
+        grades: {
+          Math: 90, Science: 92, English: 88,
+          Filipino: 85, "Social Studies": 91
+        }
+      },
+      "2025002": {
+        password: "hello456",
+        name: "Maria Clara",
+        section: "Aurora STEM 11",
+        motto: "Knowledge is power.",
+        grades: {
+          Math: 95, Science: 97, English: 93,
+          Filipino: 90, "Social Studies": 94
+        }
+      },
+      "2025003": {
+        password: "stem789",
+        name: "Andres Bonifacio",
+        section: "Aurora STEM 11",
+        motto: "Serve the people.",
+        grades: {
+          Math: 85, Science: 88, English: 80,
+          Filipino: 82, "Social Studies": 84
+        }
+      }
+      // 👉 You can add more students here
+    };
+
+    // === Login function ===
+    function login() {
+      const id = document.getElementById("studentId").value.trim();
+      const pw = document.getElementById("password").value.trim();
+      const msg = document.getElementById("login-message");
+
+      if (!students[id]) {
+        msg.innerHTML = "<p class='error'>Student ID not found.</p>";
+        return;
+      }
+      if (students[id].password !== pw) {
+        msg.innerHTML = "<p class='error'>Incorrect password.</p>";
+        return;
+      }
+
+      // Success
+      msg.innerHTML = "<p class='success'>Login successful!</p>";
+      showDashboard(students[id]);
+    }
+
+    // === Show Dashboard ===
+    function showDashboard(student) {
+      document.getElementById("login-section").classList.add("hidden");
+      document.getElementById("dashboard").classList.remove("hidden");
+
+      document.getElementById("student-name").textContent = student.name;
+      document.getElementById("student-section").textContent = student.section;
+      document.getElementById("student-motto").textContent = `"${student.motto}"`;
+
+      const tbody = document.getElementById("grades-body");
+      tbody.innerHTML = "";
+      let sum = 0, count = 0;
+      for (let subj in student.grades) {
+        const g = student.grades[subj];
+        sum += g; count++;
+        tbody.innerHTML += `<tr><td>${subj}</td><td>${g}</td></tr>`;
+      }
+      const avg = (sum / count).toFixed(2);
+      document.getElementById("final-average").textContent = avg;
+
+      let honorText="", honorClass="";
+      if (avg>=98) { honorText="With Highest Honors"; honorClass="with-highest-honors"; }
+      else if (avg>=95) { honorText="With High Honors"; honorClass="with-high-honors"; }
+      else if (avg>=90) { honorText="With Honors"; honorClass="with-honors"; }
+      else { honorText="No Honors"; honorClass=""; }
+
+      const honorEl=document.getElementById("honor-status");
+      honorEl.textContent=honorText;
+      honorEl.className="honor-status "+honorClass;
+
+      if (avg>=90) {
+        document.getElementById("congrats-message").textContent = `${student.name}, ${honorText}!`;
+        document.getElementById("congratulations").classList.remove("hidden");
+      }
+    }
+  </script>
+</body>
+</html>
