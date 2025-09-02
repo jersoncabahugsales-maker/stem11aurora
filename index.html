@@ -1,35 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Grade-11 Aurora (STEM) Class</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grade 11 Aurora STEM Portal</title>
   <style>
-    /* === Styles here (kept same as yours) === */
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #7c3aed; /* Purple background */
+      color: white;
       display: flex;
-      align-items: center;
       justify-content: center;
-      padding: 20px;
+      align-items: center;
+      height: 100vh;
     }
-    /* ... (all your CSS code unchanged) ... */
+    .container {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 12px;
+      width: 350px;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 6px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      background-color: #4ade80; /* Green */
+      border: none;
+      border-radius: 6px;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #22c55e;
+    }
+    .footer {
+      margin-top: 15px;
+      font-size: 12px;
+      color: #ddd;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- All your HTML content (login, admin, student dashboards) -->
-    <!-- I kept everything the same -->
+    <h1>Grade-11 Aurora (STEM) Class</h1>
+    <input type="text" id="accessCode" placeholder="Enter Access Code">
+    <input type="text" id="lrn" placeholder="Enter LRN">
+    <button onclick="login()">Login</button>
+    <div id="message" class="footer"></div>
   </div>
 
   <script>
-    // === Your JavaScript ===
-    // (student database, functions, admin, LRN checking, grade system)
-    // I kept everything except the Cloudflare part
+    function login() {
+      const accessCode = document.getElementById("accessCode").value;
+      const lrn = document.getElementById("lrn").value;
+      const message = document.getElementById("message");
+
+      if (accessCode === "TatakSTEM" && lrn === "113797140007") {
+        message.innerHTML = "✅ Login successful! Welcome STEM Aurora!";
+        message.style.color = "lightgreen";
+      } else {
+        message.innerHTML = "❌ Invalid Access Code or LRN.";
+        message.style.color = "red";
+      }
+    }
   </script>
 </body>
 </html>
