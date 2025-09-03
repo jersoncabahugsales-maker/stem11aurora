@@ -1,193 +1,478 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Grade 11 Aurora STEM Portal</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>General Mathematics - Grade Viewer</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #7c3aed;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+    :root{
+      --bg:#0f172a; --card:#0b1220; --accent:#7dd3fc; --muted:#94a3b8; --glass: rgba(255,255,255,0.04);
+      --success:#10b981; --danger:#ef4444; --soft:#111827;
     }
-    .container {
-      background-color: rgba(0, 0, 0, 0.6);
-      padding: 30px;
-      border-radius: 12px;
-      width: 400px;
-      text-align: center;
-    }
-    h1 {
-      margin-bottom: 20px;
-      font-size: 20px;
-    }
-    input {
-      width: 90%;
-      padding: 10px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 6px;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 15px;
-      background-color: #4ade80;
-      border: none;
-      border-radius: 6px;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #22c55e;
-    }
-    .footer {
-      margin-top: 15px;
-      font-size: 12px;
-      color: #ddd;
-    }
-    .hidden {
-      display: none;
-    }
-    table {
-      width: 100%;
-      margin-top: 15px;
-      border-collapse: collapse;
-      background: white;
-      color: black;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: center;
-    }
-    th {
-      background-color: #f3f4f6;
-    }
+    *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{margin:0;background:linear-gradient(180deg,#071129 0%, #071a2a 100%);color:#e6eef6;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .container{width:100%;max-width:1100px}
+    header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+    .logo{width:68px;height:68px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#60a5fa);display:flex;align-items:center;justify-content:center;color:#012; font-weight:700}
+    h1{margin:0;font-size:20px}
+    h2{margin:0;color:var(--muted);font-weight:400}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:18px;border-radius:14px;box-shadow:0 6px 20px rgba(2,6,23,0.6)}
+    .grid{display:grid;grid-template-columns:1fr 380px;gap:18px}
+    .sections{display:flex;flex-wrap:wrap;gap:10px}
+    .section-btn{background:var(--glass);border:1px solid rgba(255,255,255,0.03);padding:12px 14px;border-radius:10px;cursor:pointer;min-width:120px;text-align:center}
+    .section-btn:hover{transform:translateY(-4px);transition:all .14s}
+    .search{display:flex;gap:8px;margin-top:12px}
+    input,select,textarea{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px;border-radius:8px;color:inherit;width:100%}
+    button{background:var(--accent);border:none;color:#012;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:600}
+    .small{font-size:13px;color:var(--muted)}
+    .student-card{padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);}
+    .grade{font-weight:700;font-size:18px}
+    .muted{color:var(--muted);font-size:13px}
+    .admin-actions{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+    .table{overflow:auto;max-height:420px}
+    table{width:100%;border-collapse:collapse}
+    th,td{text-align:left;padding:8px;border-bottom:1px dashed rgba(255,255,255,0.03)}
+    th{font-size:13px;color:var(--muted)}
+    td input{width:100%;background:transparent;border:none;color:inherit}
+    .controls{display:flex;gap:8px;align-items:center}
+    .hint{font-size:12px;color:var(--muted)}
+    .danger{background:var(--danger);color:white}
+    .success{background:var(--success);color:#012}
+    .footer-note{margin-top:10px;color:var(--muted);font-size:13px}
+    /* modal */
+    .modal-backdrop{position:fixed;inset:0;background:linear-gradient(0deg,rgba(0,0,0,0.55),rgba(0,0,0,0.65));display:flex;align-items:center;justify-content:center}
+    .modal{width:100%;max-width:540px;background:linear-gradient(180deg,#02243a,#041426);padding:20px;border-radius:12px;box-shadow:0 20px 40px rgba(2,6,23,0.7)}
+    .row{display:flex;gap:8px}
+    .topline{display:flex;align-items:center;justify-content:space-between}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}.logo{width:56px;height:56px}}
   </style>
 </head>
 <body>
-  <div class="container" id="loginPage">
-    <h1>Grade-11 Aurora (STEM) Class</h1>
-    <input type="text" id="accessCode" placeholder="Enter Access Code">
-    <input type="text" id="lrn" placeholder="Enter LRN">
-    <button onclick="login()">Login</button>
-    <div id="message" class="footer"></div>
+  <div class="container">
+    <header>
+      <div class="logo">G</div>
+      <div>
+        <h1>Welcome to General Mathematics Class</h1>
+        <h2>Subject Teacher: Jerson C. Sales</h2>
+      </div>
+    </header>
+
+    <div id="main" class="card">
+      <!-- content injected by JS -->
+      <div id="app-root"></div>
+    </div>
+
+    <p class="footer-note">This is a local single-file grade viewer. Data is stored in your browser. Teachers can import/export CSV to act as the grade "database" (Excel-friendly).</p>
   </div>
 
-  <div class="container hidden" id="studentDashboard">
-    <h1>Welcome, Student</h1>
-    <p id="studentInfo"></p>
-    <button onclick="logout()">Logout</button>
-  </div>
+  <!-- welcome/login modal -->
+  <div id="welcomeModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="topline">
+        <div>
+          <h2 style="margin:0">Welcome</h2>
+          <p class="small" style="margin:6px 0 0">Please sign in to continue to the General Mathematics Grade Viewing Database.</p>
+        </div>
+        <div class="muted">Version 1.0</div>
+      </div>
 
-  <div class="container hidden" id="adminDashboard">
-    <h1>Admin Panel</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>LRN</th>
-          <th>Name</th>
-          <th>Grade</th>
-        </tr>
-      </thead>
-      <tbody id="studentTable"></tbody>
-    </table>
-    <h3>Add Student</h3>
-    <input type="text" id="newLRN" placeholder="LRN">
-    <input type="text" id="newName" placeholder="Name">
-    <input type="text" id="newGrade" placeholder="Grade">
-    <button onclick="addStudent()">Add</button>
-    <button onclick="logout()">Logout</button>
+      <div style="margin-top:14px">
+        <label class="small">Access code</label>
+        <input id="accessCode" placeholder="Enter class code" />
+        <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+          <button id="accessBtn">Log in</button>
+          <div class="hint">Use code <strong>GenMath2025</strong></div>
+        </div>
+        <div id="accessMsg" class="small muted" style="margin-top:8px"></div>
+
+        <hr style="margin:12px 0;border:none;border-top:1px dashed rgba(255,255,255,0.03)" />
+        <div class="small muted">First-time setup (optional)</div>
+        <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+          <input id="firstLoginCheckbox" type="checkbox" /> <label class="small">Show admin setup after login</label>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script>
-    // Simulated "database"
-    const students = [
-      { lrn: "113797140007", name: "Juan Dela Cruz", grade: "STEM 11 Aurora" },
-      { lrn: "113797140008", name: "Maria Clara", grade: "STEM 11 Aurora" }
+    // ----- sample dataset (acts as 'database') -----
+    const SAMPLE_DATA = [
+      {LRN: '2025000001', name: 'Maria Santos', section: 'Aurora', q1:88, q2:90, q3:85, q4:92},
+      {LRN: '2025000002', name: 'Juan Dela Cruz', section: 'Aurora', q1:78, q2:80, q3:82, q4:81},
+      {LRN: '2025000101', name: 'Alana Rivera', section: 'Ember', q1:92, q2:95, q3:94, q4:96},
+      {LRN: '2025000201', name: 'Edwin Cruz', section: 'Oasis', q1:74, q2:70, q3:72, q4:75},
+      {LRN: '2025000301', name: 'Bianca Reyes', section: 'Solstice', q1:89, q2:90, q3:87, q4:88},
+      {LRN: '2025000401', name: 'Kyle Martinez', section: 'Meadow', q1:66, q2:70, q3:68, q4:69}
     ];
 
-    const ACCESS_CODE = "TatakSTEM";
-    const ADMIN_CODE = "AdminSTEM"; // admin access code
+    const CLASS_CODE = 'GenMath2025';
+    const ADMIN_PASS = '675915';
+    const SECTIONS = ['Aurora','Ember','Oasis','Solstice','Meadow'];
 
-    function login() {
-      const accessCode = document.getElementById("accessCode").value.trim();
-      const lrn = document.getElementById("lrn").value.trim();
-      const message = document.getElementById("message");
+    // ----- storage helpers -----
+    function loadData(){
+      const raw = localStorage.getItem('genmath_students');
+      if(!raw){
+        localStorage.setItem('genmath_students', JSON.stringify(SAMPLE_DATA));
+        return JSON.parse(JSON.stringify(SAMPLE_DATA));
+      }
+      try{ return JSON.parse(raw);}catch(e){localStorage.setItem('genmath_students', JSON.stringify(SAMPLE_DATA)); return JSON.parse(JSON.stringify(SAMPLE_DATA));}
+    }
+    function saveData(arr){ localStorage.setItem('genmath_students', JSON.stringify(arr)); }
 
-      // Admin login
-      if (accessCode === ADMIN_CODE) {
-        document.getElementById("loginPage").classList.add("hidden");
-        document.getElementById("adminDashboard").classList.remove("hidden");
-        renderTable();
+    // ----- UI render -----
+    const root = document.getElementById('app-root');
+    let students = loadData();
+    let currentSection = null;
+    let isAdmin = false;
+
+    function avg(s){
+      const a = ['q1','q2','q3','q4'].map(k => Number(s[k]||0));
+      return Math.round((a.reduce((x,y)=>x+y,0)/a.length) * 100)/100;
+    }
+
+    function renderHome(){
+      root.innerHTML = `
+        <div class="grid">
+          <div>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+              <div><h1 style="font-size:18px;margin:0">General Mathematics Grade Viewing Database</h1><div class="small">Choose your section and enter LRN to view your personal grade.</div></div>
+              <div class="controls">
+                <button id="btnExport">Export CSV</button>
+                <button id="btnImport">Import CSV</button>
+              </div>
+            </div>
+
+            <div class="card" style="margin-bottom:12px">
+              <div class="small muted">Select section</div>
+              <div class="sections" id="sections"></div>
+            </div>
+
+            <div class="card">
+              <div class="small muted">Enter your LRN to view your grade</div>
+              <div class="search" style="margin-top:8px">
+                <input id="lrnInput" placeholder="e.g. 2025000001" />
+                <button id="viewBtn">View</button>
+              </div>
+              <div id="viewMsg" class="muted" style="margin-top:8px"></div>
+              <div id="studentView" style="margin-top:12px"></div>
+            </div>
+
+          </div>
+
+          <div>
+            <div class="card">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div>
+                  <div class="small muted">Class</div>
+                  <h2 style="margin:4px 0 0">General Mathematics — Teacher: Jerson C. Sales</h2>
+                </div>
+                <div style="text-align:right">
+                  <div class="small">Role</div>
+                  <div id="roleBadge" class="muted">Learner</div>
+                </div>
+              </div>
+
+              <div style="margin-top:12px">
+                <div class="small muted">Quick stats</div>
+                <div style="display:flex;gap:10px;margin-top:8px">
+                  <div class="student-card" style="flex:1"><div class="muted">Sections</div><div class="grade">${SECTIONS.length}</div></div>
+                  <div class="student-card" style="flex:1"><div class="muted">Total students</div><div class="grade">${students.length}</div></div>
+                </div>
+              </div>
+
+              <div class="admin-actions" id="adminActionsBlock">
+                <!-- admin-only controls -->
+              </div>
+
+            </div>
+
+            <div style="margin-top:12px" class="card">
+              <div class="small muted">Teacher tools</div>
+              <div style="margin-top:8px;display:flex;gap:6px;flex-direction:column">
+                <button id="btnAdminSetup">Admin login / setup</button>
+                <label class="small muted">Import CSV format: LRN,name,section,q1,q2,q3,q4</label>
+                <input id="csvFile" type="file" style="display:none" accept=".csv,text/csv" />
+              </div>
+            </div>
+
+          </div>
+        </div>
+      `;
+
+      // populate sections
+      const sectionsDiv = document.getElementById('sections');
+      SECTIONS.forEach(s => {
+        const btn = document.createElement('div'); btn.className='section-btn'; btn.textContent = s; btn.onclick = ()=>{ currentSection = s; document.getElementById('lrnInput').value=''; showSection(s); }
+        sectionsDiv.appendChild(btn);
+      });
+
+      document.getElementById('viewBtn').onclick = handleView;
+      document.getElementById('btnAdminSetup').onclick = promptAdminLogin;
+      document.getElementById('btnExport').onclick = exportCSV;
+      document.getElementById('btnImport').onclick = ()=> document.getElementById('csvFile').click();
+      document.getElementById('csvFile').onchange = handleCSVImport;
+
+      renderAdminBlock();
+    }
+
+    function showSection(s){
+      const viewMsg = document.getElementById('viewMsg'); viewMsg.textContent = `Section: ${s} — Enter your LRN to view personal grade.`;
+      // optionally show list with LRNs? We'll show a small table of students in that section but hide LRNs to preserve privacy (unless admin)
+      const studentView = document.getElementById('studentView');
+      const arr = students.filter(x=>x.section===s);
+      if(arr.length===0){ studentView.innerHTML = '<div class="muted">No students registered in this section yet.</div>'; return; }
+      let html = '<div class="muted" style="margin-bottom:8px">Students in this section</div><div class="table"><table><thead><tr><th>Name</th><th>Average</th></tr></thead><tbody>';
+      arr.forEach(st=>{ html += `<tr><td>${st.name}</td><td>${avg(st)}</td></tr>` });
+      html += '</tbody></table></div>';
+      studentView.innerHTML = html;
+    }
+
+    function handleView(){
+      const lrn = document.getElementById('lrnInput').value.trim();
+      const vm = document.getElementById('viewMsg');
+      if(!currentSection){ vm.textContent = 'Please select a section first.'; return; }
+      if(!lrn){ vm.textContent = 'Please enter your LRN.'; return; }
+      const s = students.find(x=>x.LRN===lrn && x.section===currentSection);
+      if(!s){ vm.textContent = 'LRN not found in this section. Check LRN and section.'; document.getElementById('studentView').innerHTML = ''; return; }
+      vm.textContent = '';
+      document.getElementById('studentView').innerHTML = renderStudentCard(s);
+
+      if(isAdmin) setupInlineEditButtons();
+    }
+
+    function renderStudentCard(s){
+      return `
+        <div class="student-card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="muted">Name</div>
+              <div style="font-weight:700">${s.name}</div>
+              <div class="muted" style="margin-top:6px">LRN: ${s.LRN} — Section: ${s.section}</div>
+            </div>
+            <div style="text-align:right">
+              <div class="muted">Final Average</div>
+              <div class="grade">${avg(s)}</div>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+            <div><div class="muted">Quarter 1</div><div class="grade">${s.q1}</div></div>
+            <div><div class="muted">Quarter 2</div><div class="grade">${s.q2}</div></div>
+            <div><div class="muted">Quarter 3</div><div class="grade">${s.q3}</div></div>
+            <div><div class="muted">Quarter 4</div><div class="grade">${s.q4}</div></div>
+          </div>
+
+          <div style="margin-top:12px;display:flex;gap:8px">
+            ${isAdmin ? `<button id="editThis">Edit</button>` : ''}
+            <button id="printBtn">Print</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function setupInlineEditButtons(){
+      const editBtn = document.getElementById('editThis');
+      if(editBtn) editBtn.onclick = ()=>{
+        const lrn = document.getElementById('lrnInput').value.trim();
+        const sIdx = students.findIndex(x=>x.LRN===lrn && x.section===currentSection);
+        if(sIdx===-1) return alert('Student not found');
+        openAdminEditor(students[sIdx]);
+      };
+
+      document.getElementById('printBtn').onclick = ()=> window.print();
+    }
+
+    // ----- admin -----
+    function renderAdminBlock(){
+      const block = document.getElementById('adminActionsBlock');
+      if(!block) return;
+      block.innerHTML = '';
+      if(isAdmin){
+        document.getElementById('roleBadge').textContent = 'Teacher (Admin)';
+        block.innerHTML = `
+          <div style="display:flex;gap:8px">
+            <button id="openEditor">Open Grade Editor</button>
+            <button id="addStudent">Add Student</button>
+            <button id="logoutAdmin" class="danger">Exit Admin</button>
+          </div>
+        `;
+        document.getElementById('openEditor').onclick = ()=> openAdminEditor();
+        document.getElementById('addStudent').onclick = ()=> openAddStudent();
+        document.getElementById('logoutAdmin').onclick = ()=>{ isAdmin=false; renderHome(); }
+      } else {
+        document.getElementById('roleBadge').textContent = 'Learner';
+        block.innerHTML = `<div class="small muted">Not in admin mode. Use Admin login to edit grades.</div>`;
+      }
+    }
+
+    function promptAdminLogin(){
+      const pass = prompt('Enter admin passcode to enable admin mode:');
+      if(pass===null) return;
+      if(pass===ADMIN_PASS){ isAdmin=true; localStorage.setItem('genmath_admin', 'true'); alert('Admin mode enabled'); renderHome(); }
+      else alert('Incorrect passcode');
+    }
+
+    function openAddStudent(){
+      const html = `
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <input id="newLRN" placeholder="LRN" />
+          <input id="newName" placeholder="Full name" />
+          <select id="newSection">${SECTIONS.map(s=>`<option>${s}</option>`).join('')}</select>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+            <input id="nq1" placeholder="Q1" />
+            <input id="nq2" placeholder="Q2" />
+            <input id="nq3" placeholder="Q3" />
+            <input id="nq4" placeholder="Q4" />
+          </div>
+          <div style="display:flex;gap:8px"><button id="createBtn">Create</button><button id="cancelCreate" class="danger">Cancel</button></div>
+        </div>
+      `;
+      openModalContent('Add new student', html);
+      document.getElementById('createBtn').onclick = ()=>{
+        const newS = {LRN:document.getElementById('newLRN').value.trim(), name:document.getElementById('newName').value.trim(), section:document.getElementById('newSection').value, q1:Number(document.getElementById('nq1').value)||0,q2:Number(document.getElementById('nq2').value)||0,q3:Number(document.getElementById('nq3').value)||0,q4:Number(document.getElementById('nq4').value)||0};
+        if(!newS.LRN||!newS.name){ alert('Please provide LRN and name'); return; }
+        students.push(newS); saveData(students); closeModal(); renderHome(); alert('Student added');
+      };
+      document.getElementById('cancelCreate').onclick = closeModal;
+    }
+
+    function openAdminEditor(student){
+      // if student provided, edit single; else full table
+      if(student){
+        const html = `
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="muted">Editing student (${student.LRN})</div>
+            <input id="eName" value="${escapeHtml(student.name)}" />
+            <select id="eSection">${SECTIONS.map(s=>`<option ${s===student.section? 'selected':''}>${s}</option>`).join('')}</select>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+              <input id="eq1" value="${student.q1}" />
+              <input id="eq2" value="${student.q2}" />
+              <input id="eq3" value="${student.q3}" />
+              <input id="eq4" value="${student.q4}" />
+            </div>
+            <div style="display:flex;gap:8px"><button id="saveEdit">Save</button><button id="cancelEdit" class="danger">Cancel</button></div>
+          </div>
+        `;
+        openModalContent('Edit student', html);
+        document.getElementById('saveEdit').onclick = ()=>{
+          const idx = students.findIndex(x=>x.LRN===student.LRN);
+          if(idx===-1) return alert('Student not found');
+          students[idx].name = document.getElementById('eName').value.trim();
+          students[idx].section = document.getElementById('eSection').value;
+          students[idx].q1 = Number(document.getElementById('eq1').value)||0;
+          students[idx].q2 = Number(document.getElementById('eq2').value)||0;
+          students[idx].q3 = Number(document.getElementById('eq3').value)||0;
+          students[idx].q4 = Number(document.getElementById('eq4').value)||0;
+          saveData(students); closeModal(); renderHome(); alert('Saved');
+        };
+        document.getElementById('cancelEdit').onclick = closeModal;
         return;
       }
 
-      // Student login
-      if (accessCode === ACCESS_CODE) {
-        const student = students.find(s => s.lrn === lrn);
-        if (student) {
-          document.getElementById("loginPage").classList.add("hidden");
-          document.getElementById("studentDashboard").classList.remove("hidden");
-          document.getElementById("studentInfo").innerText =
-            `LRN: ${student.lrn}\nName: ${student.name}\nSection: ${student.grade}`;
-        } else {
-          message.innerHTML = "❌ LRN not found.";
-          message.style.color = "red";
-        }
-      } else {
-        message.innerHTML = "❌ Invalid Access Code.";
-        message.style.color = "red";
-      }
-    }
+      // full table editor
+      let html = '<div style="display:flex;flex-direction:column;gap:8px"><div class="muted">Edit grades directly; changes are saved to browser storage.</div><div class="table"><table><thead><tr><th>LRN</th><th>Name</th><th>Section</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th></th></tr></thead><tbody>';
+      students.forEach((st,i)=>{
+        html += `<tr data-idx="${i}"><td>${st.LRN}</td><td><input value="${escapeHtml(st.name)}" data-field="name" /></td><td><select data-field="section">${SECTIONS.map(s=>`<option ${s===st.section? 'selected':''}>${s}</option>`).join('')}</select></td><td><input value="${st.q1}" data-field="q1" /></td><td><input value="${st.q2}" data-field="q2" /></td><td><input value="${st.q3}" data-field="q3" /></td><td><input value="${st.q4}" data-field="q4" /></td><td><button class="saveRow">Save</button> <button class="delRow danger">Delete</button></td></tr>`;
+      });
+      html += '</tbody></table></div><div style="display:flex;gap:8px"><button id="closeEditor">Close</button><button id="downloadCSV">Download CSV</button></div></div>';
+      openModalContent('Grade editor', html);
+      document.getElementById('closeEditor').onclick = ()=>{ closeModal(); renderHome(); };
+      document.getElementById('downloadCSV').onclick = exportCSV;
 
-    function logout() {
-      document.getElementById("loginPage").classList.remove("hidden");
-      document.getElementById("studentDashboard").classList.add("hidden");
-      document.getElementById("adminDashboard").classList.add("hidden");
-      document.getElementById("accessCode").value = "";
-      document.getElementById("lrn").value = "";
-      document.getElementById("message").innerHTML = "";
-    }
-
-    function renderTable() {
-      const table = document.getElementById("studentTable");
-      table.innerHTML = "";
-      students.forEach(s => {
-        table.innerHTML += `
-          <tr>
-            <td>${s.lrn}</td>
-            <td>${s.name}</td>
-            <td>${s.grade}</td>
-          </tr>`;
+      // attach row buttons
+      document.querySelectorAll('.saveRow').forEach(btn=> btn.onclick = (e)=>{
+        const tr = e.target.closest('tr'); const idx = Number(tr.getAttribute('data-idx'));
+        const inputs = tr.querySelectorAll('[data-field]');
+        inputs.forEach(inp=>{ const f = inp.getAttribute('data-field'); let val = inp.value; if(['q1','q2','q3','q4'].includes(f)) val = Number(val)||0; students[idx][f]=val; });
+        saveData(students); alert('Row saved');
+      });
+      document.querySelectorAll('.delRow').forEach(btn=> btn.onclick = (e)=>{
+        if(!confirm('Delete this student?')) return; const tr = e.target.closest('tr'); const idx = Number(tr.getAttribute('data-idx'));
+        students.splice(idx,1); saveData(students); alert('Deleted'); openAdminEditor(); // reopen to reflect
       });
     }
 
-    function addStudent() {
-      const lrn = document.getElementById("newLRN").value.trim();
-      const name = document.getElementById("newName").value.trim();
-      const grade = document.getElementById("newGrade").value.trim();
-
-      if (lrn && name && grade) {
-        students.push({ lrn, name, grade });
-        renderTable();
-
-        // clear inputs
-        document.getElementById("newLRN").value = "";
-        document.getElementById("newName").value = "";
-        document.getElementById("newGrade").value = "";
-      } else {
-        alert("Please fill all fields!");
-      }
+    // ----- CSV import/export -----
+    function exportCSV(){
+      const header = 'LRN,name,section,q1,q2,q3,q4\n';
+      const csv = header + students.map(s=>`${s.LRN},"${s.name.replace(/"/g,'""')}",${s.section},${s.q1},${s.q2},${s.q3},${s.q4}`).join('\n');
+      const blob = new Blob([csv], {type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='genmath_grades.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     }
+
+    function handleCSVImport(e){
+      const f = e.target.files[0]; if(!f) return; const reader = new FileReader();
+      reader.onload = (ev)=>{
+        const text = ev.target.result; parseCSVText(text);
+      };
+      reader.readAsText(f);
+      e.target.value='';
+    }
+    function parseCSVText(text){
+      const lines = text.split(/\r?\n/).filter(Boolean);
+      if(lines.length<2) return alert('CSV appears empty');
+      const data = [];
+      for(let i=1;i<lines.length;i++){
+        const row = parseCSVLine(lines[i]);
+        if(!row || row.length<7) continue;
+        data.push({LRN:row[0], name:row[1], section:row[2], q1:Number(row[3])||0, q2:Number(row[4])||0, q3:Number(row[5])||0, q4:Number(row[6])||0});
+      }
+      if(!confirm(`Import ${data.length} rows and replace existing students? Press Cancel to append instead.`)){
+        // append
+        students = students.concat(data);
+      } else {
+        students = data;
+      }
+      saveData(students); alert('Import complete'); renderHome();
+    }
+    function parseCSVLine(line){
+      // simple CSV parser that handles quoted fields
+      const out=[]; let cur=''; let inQuotes=false; for(let i=0;i<line.length;i++){ const ch=line[i]; if(ch==='"'){ if(inQuotes && line[i+1]==='"'){ cur+='"'; i++; } else inQuotes=!inQuotes; } else if(ch===',' && !inQuotes){ out.push(cur); cur=''; } else cur+=ch; } out.push(cur); return out;
+    }
+
+    // ----- modal helpers -----
+    function openModalContent(title, innerHTML){
+      // reuse existing welcomeModal as container by replacing its content temporarily
+      const modal = document.createElement('div'); modal.className='modal-backdrop';
+      modal.innerHTML = `<div class="modal"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">${title}</h3><button id="closeModalSmall">X</button></div><div style="margin-top:12px">${innerHTML}</div></div>`;
+      document.body.appendChild(modal);
+      document.getElementById('closeModalSmall').onclick = ()=>{ modal.remove(); };
+      modal.onclick = (ev)=>{ if(ev.target===modal) modal.remove(); };
+    }
+    function closeModal(){ document.querySelectorAll('.modal-backdrop').forEach((m,i)=>{ if(i>0) m.remove(); }); }
+
+    // small helper
+    function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+    // ----- initial login handling -----
+    (function init(){
+      const modal = document.getElementById('welcomeModal');
+      document.getElementById('accessBtn').onclick = ()=>{
+        const val = document.getElementById('accessCode').value.trim();
+        const msg = document.getElementById('accessMsg');
+        const showAdminOpt = document.getElementById('firstLoginCheckbox').checked;
+        if(val===CLASS_CODE){
+          modal.style.display='none'; modal.remove(); renderHome();
+          // if first time and user asked for admin setup, show admin prompt
+          if(showAdminOpt && !localStorage.getItem('genmath_admin_initialized')){
+            const p = prompt('Set admin mode now? Enter admin passcode to enable now (will be stored locally):');
+            if(p===ADMIN_PASS){ isAdmin=true; localStorage.setItem('genmath_admin','true'); localStorage.setItem('genmath_admin_initialized','1'); alert('Admin enabled and initialized.'); }
+            else if(p!==null) alert('Incorrect passcode. You can enable admin later.');
+          }
+          // if admin flag set earlier
+          if(localStorage.getItem('genmath_admin')==='true') { isAdmin=true; }
+        } else { msg.textContent = 'Incorrect access code.'; }
+      };
+      // allow Enter key for convenience
+      document.getElementById('accessCode').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('accessBtn').click(); });
+
+      // if admin flag stored, set isAdmin
+      if(localStorage.getItem('genmath_admin')==='true') isAdmin=true;
+
+    })();
+
   </script>
 </body>
 </html>
