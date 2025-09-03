@@ -1,379 +1,574 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>General Mathematics Grade Viewer</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>General Mathematics - Grade Viewer</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: url('https://img.freepik.com/free-vector/mathematics-background-doodle-style_23-2148592519.jpg') no-repeat center center fixed;
-      background-size: cover;
-    }
-    .overlay {
-      background-color: rgba(255,255,255,0.9);
-      min-height: 100vh;
-      padding: 30px;
-      text-align: center;
-    }
-    h1, h2, h3 {
-      color: #004080;
-    }
-    .hidden {
-      display: none;
-    }
-    select, input, button {
-      margin: 10px;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
-    button {
-      background: #4da6ff;
-      color: white;
-      cursor: pointer;
-      border: none;
-    }
-    button:hover {
-      background: #1a8cff;
-    }
-    table {
-      margin: 20px auto;
-      border-collapse: collapse;
-      width: 90%;
-    }
-    table, th, td {
-      border: 1px solid #888;
-      padding: 8px;
-    }
-    th {
-      background: #cce6ff;
-    }
-    .logout {
-      margin-top: 20px;
-      background: #e60000;
-    }
+    :root{--bg:#eaf6ff;--card:#ffffff;--accent:#cfeeff;--text:#04304a}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{background:linear-gradient(180deg,var(--bg),#ffffff);color:var(--text);display:flex;align-items:center;justify-content:center;padding:24px}
+    .app{width:100%;max-width:980px;border-radius:14px;background:var(--card);box-shadow:0 10px 30px rgba(3,48,74,0.08);overflow:hidden}
+    header{display:flex;align-items:center;gap:16px;padding:22px 28px;border-bottom:1px solid rgba(4,48,74,0.06)}
+    .logo{width:58px;height:58px;border-radius:10px;background:linear-gradient(135deg,#ffffff88,#cfeeff88);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--text)}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:0;color:rgba(4,48,74,0.7)}
+
+    main{display:flex;gap:28px;padding:28px}
+    /* left panel */
+    .panel{flex:1;min-width:300px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));padding:18px;border-radius:12px;border:1px solid rgba(4,48,74,0.04)}
+    .center{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+
+    /* login */
+    .login-box{display:flex;flex-direction:column;gap:12px}
+    input[type="password"], input[type="text"], select{padding:10px 12px;border-radius:8px;border:1px solid rgba(4,48,74,0.08);outline:none;font-size:14px}
+    button{background:linear-gradient(180deg,#59afff,#3f91e6);color:white;padding:10px 14px;border-radius:8px;border:0;cursor:pointer;font-weight:600}
+    button.ghost{background:transparent;color:var(--text);border:1px solid rgba(4,48,74,0.06)}
+
+    /* sections */
+    .sections{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+    .section-btn{padding:10px 12px;border-radius:8px;background:var(--accent);cursor:pointer;border:1px solid rgba(4,48,74,0.04);min-width:120px;text-align:center;font-weight:700}
+
+    /* student card */
+    .student-info{margin-top:12px}
+    .info-row{display:flex;justify-content:space-between;padding:8px 12px;border-radius:8px;background:rgba(3,48,74,0.03);margin-bottom:8px}
+    .message{margin-top:10px;padding:12px;border-radius:8px;background:linear-gradient(180deg,#f8fdff,#eef9ff);border:1px solid rgba(4,48,74,0.03)}
+
+    /* admin */
+    .admin-panel{margin-top:12px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{padding:8px;border-bottom:1px solid rgba(3,48,74,0.05);text-align:left}
+    tr:hover{background:rgba(3,48,74,0.02)}
+    .small{font-size:12px;color:rgba(4,48,74,0.6)}
+
+    /* footer */
+    footer{padding:12px 28px;border-top:1px solid rgba(4,48,74,0.04);text-align:right;font-size:13px;color:rgba(4,48,74,0.55)}
+
+    /* math background text */
+    .bg-math{position:absolute;left:0;right:0;top:0;bottom:0;pointer-events:none;opacity:0.06;z-index:0;background-image:radial-gradient(circle at 10% 10%, rgba(3,48,74,0.03) 0, transparent 20%), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><text x="10" y="40" font-size="36" fill="%2304304a">Mathematics</text><text x="10" y="90" font-size="18" fill="%2304304a">The language of patterns and problem solving</text></svg>');background-repeat:no-repeat;background-position:20px 10px}
+
+    /* responsive */
+    @media (max-width:900px){main{flex-direction:column}footer{text-align:center}}
+
   </style>
 </head>
 <body>
-<div class="overlay">
-  <div id="welcome">
-    <h1>Welcome to General Mathematics Class</h1>
-    <h2>Subject Teacher: Jerson C. Sales</h2>
-    <input type="password" id="passcode" placeholder="Enter Passcode">
-    <button onclick="checkPasscode()">Login</button>
-    <p id="error" style="color:red;"></p>
+  <div class="bg-math" aria-hidden></div>
+  <div class="app" role="application">
+    <header>
+      <div class="logo">GM</div>
+      <div>
+        <h1>Welcome to General Mathematics Class</h1>
+        <p class="lead">Subject Teacher: Jerson C. Sales</p>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
+        <button id="logoutBtn" class="ghost" style="display:none">Log out</button>
+        <button id="adminToggle" class="ghost" style="display:none">Admin Mode</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="panel">
+        <div class="card">
+          <div class="center">
+            <h2>General Mathematics Grade Viewing Database</h2>
+            <p class="small">Please log in using your class login code to continue.</p>
+          </div>
+
+          <div id="loginArea" class="login-box" style="margin-top:14px">
+            <input id="loginCode" type="password" placeholder="Enter class login code" aria-label="class login code">
+            <div style="display:flex;gap:8px">
+              <button id="loginBtn">Log in</button>
+              <button id="guestBtn" class="ghost">View Sections</button>
+            </div>
+            <p id="loginMsg" class="small" style="color:crimson;display:none;margin-top:8px"></p>
+          </div>
+
+          <div id="sectionsArea" style="display:none;margin-top:14px">
+            <p class="small">Select your section:</p>
+            <div class="sections" id="sectionsList">
+              <!-- Section buttons inserted here -->
+            </div>
+          </div>
+
+          <div id="lrnArea" style="display:none;margin-top:14px">
+            <p class="small">Enter your LRN to view your grade for the selected section.</p>
+            <input id="lrnInput" type="text" placeholder="Enter your LRN" aria-label="LRN">
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <button id="viewBtn">View Grade</button>
+              <button id="backSections" class="ghost">Change Section</button>
+            </div>
+            <p id="lrnMsg" class="small" style="color:crimson;display:none;margin-top:8px"></p>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="card" style="min-height:260px">
+          <div id="studentCardPlaceholder" class="center">
+            <p>Select a section and enter your LRN to view your personal grade. Students only see their own information here.</p>
+          </div>
+
+          <div id="studentCard" style="display:none">
+            <h3 id="subjTitle">Subject: General Mathematics</h3>
+            <div class="student-info">
+              <div class="info-row"><div><strong id="studentName">Full name</strong></div><div class="small" id="studentLRN">LRN</div></div>
+              <div class="info-row"><div>Grade</div><div id="studentGrade">-</div></div>
+              <div id="resultMessage" class="message" style="display:none"></div>
+              <div style="margin-top:10px"><strong>Message from teacher</strong>
+                <div class="message" id="teacherMsg">Keep working hard and ask for help when needed. — Mr. J. Sales</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="adminPanel" class="admin-panel" style="display:none">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <strong>Admin - Edit database</strong>
+              <div style="display:flex;gap:8px">
+                <button id="addRowBtn" class="ghost">Add row</button>
+                <button id="saveDbBtn">Save database</button>
+                <button id="exportBtn" class="ghost">Export CSV</button>
+              </div>
+            </div>
+            <div style="overflow:auto;margin-top:10px;height:340px">
+              <table id="adminTable">
+                <thead>
+                  <tr><th>LRN</th><th>Full name</th><th>Section</th><th>Grade</th><th>Actions</th></tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <small>Light blue & white theme — Student portal. Designed for General Mathematics.</small>
+    </footer>
   </div>
 
-  <div id="main" class="hidden">
-    <h1>General Mathematics Grade Viewing Database</h1>
-    <h3>Select Your Section</h3>
-    <select id="sectionSelect">
-      <option value="">--Choose Section--</option>
-      <option value="Aurora">Aurora</option>
-      <option value="Ember">Ember</option>
-      <option value="Oasis">Oasis</option>
-      <option value="Solstice">Solstice</option>
-      <option value="Meadow">Meadow</option>
-    </select>
-    <div id="lrnInput" class="hidden">
-      <input type="text" id="lrn" placeholder="Enter your LRN">
-      <button onclick="viewGrade()">View Grade</button>
-    </div>
-    <div id="studentInfo" class="hidden"></div>
-    <button class="logout hidden" id="logoutBtn" onclick="logout()">Logout</button>
-  </div>
+  <script>
+    // Class login code (not shown in UI). Do NOT display hints in the interface.
+    const CLASS_CODE = 'GenMath2025';
+    const ADMIN_CODE = '675915';
 
-  <div id="admin" class="hidden">
-    <h1>Admin Mode</h1>
-    <table id="adminTable"></table>
-    <button class="logout" onclick="logout()">Logout</button>
-  </div>
-</div>
+    // Initial database (source of truth). Will be persisted to localStorage when saved by admin.
+    const initialDb = [
+      // Aurora
+      {lrn:'113797140007',name:'Alutaya, MJ O.',section:'Aurora',grade:88},
+      {lrn:'113604140025',name:'Aparente, Austin Jolf S.',section:'Aurora',grade:85},
+      {lrn:'113604140026',name:'Arizobal, Robert Jules O.',section:'Aurora',grade:91},
+      {lrn:'113606150076',name:'Atacador, Rey Kenneth C.',section:'Aurora',grade:91},
+      {lrn:'113606130113',name:'Capellan, Kian Carl N.',section:'Aurora',grade:83},
+      {lrn:'113602140018',name:'Delara, Jhonpyu A.',section:'Aurora',grade:92},
+      {lrn:'113602140008',name:'Delara, Joeren Joules O.',section:'Aurora',grade:92},
+      {lrn:'113606150001',name:'Dilao, Mark Lawrence P.',section:'Aurora',grade:94},
+      {lrn:'113606140061',name:'Gabelo, Yeshuah Ashliegh B.',section:'Aurora',grade:87},
+      {lrn:'113606150116',name:'Gamba, Renzell Wen G.',section:'Aurora',grade:86},
+      {lrn:'113951140031',name:'Manlapaz, Mark Laurence B.',section:'Aurora',grade:88},
+      {lrn:'113606140170',name:'Paraguya, Josua E.',section:'Aurora',grade:85},
+      {lrn:'113605140018',name:'Piodos, John Errol M.',section:'Aurora',grade:91},
+      {lrn:'113612140017',name:'Raymundo, Kyle Nathan M.',section:'Aurora',grade:86},
+      {lrn:'113597140007',name:'Resma, Lenard B.',section:'Aurora',grade:94},
+      {lrn:'113599140008',name:'Retuerto, Remark Fel R.',section:'Aurora',grade:95},
+      {lrn:'113606140109',name:'Valle, Jahn Aj Vhin T.',section:'Aurora',grade:95},
+      {lrn:'113606140130',name:'Almero, Mikaela Mildred D.',section:'Aurora',grade:92},
+      {lrn:'113606140132',name:'Arizala, Rain A.',section:'Aurora',grade:89},
+      {lrn:'113786140015',name:'Atega, Dianne Ashly M.',section:'Aurora',grade:83},
+      {lrn:'113608140025',name:'Cabrera, Wenchie P.',section:'Aurora',grade:94},
+      {lrn:'113606140142',name:'Cervantes, Nica A.',section:'Aurora',grade:90},
+      {lrn:'113589140014',name:'Edem, Jeramie M.',section:'Aurora',grade:83},
+      {lrn:'113606140173',name:'Huelva, Jelianne S.',section:'Aurora',grade:92},
+      {lrn:'113597140060',name:'Ibañez, Carmela O.',section:'Aurora',grade:89},
+      {lrn:'113597140060',name:'Jores, Cristel B.',section:'Aurora',grade:90},
+      {lrn:'113597140026',name:'Malunes, Fricel Blaze A.',section:'Aurora',grade:94},
+      {lrn:'113599140030',name:'Pelayo, Trecia Faith C.',section:'Aurora',grade:84},
+      {lrn:'402104150245',name:'Peteros, Lhola Belle E.',section:'Aurora',grade:92},
+      {lrn:'113677130163',name:'Salazar, Shane A.',section:'Aurora',grade:91},
+      {lrn:'113609140024',name:'Tagbacaola, Irene A.',section:'Aurora',grade:96},
+      {lrn:'113782140023',name:'Tamayo, Mary Antoniette A.',section:'Aurora',grade:97},
+      // Ember
+      {lrn:'113597140014',name:'AFABLE,CLARENS ANTIPOLO',section:'Ember',grade:74},
+      {lrn:'113610140002',name:'ALFORTE,RANNEL JOHN BALDEO',section:'Ember',grade:78},
+      {lrn:'113606140068',name:'ATABAY,JURODS BASAS',section:'Ember',grade:75},
+      {lrn:'113606140041',name:'CAGATIN,MARC JAY MARFIL',section:'Ember',grade:74},
+      {lrn:'113606140051',name:'CAPELLAN,JAMES ROLLY TOLENTINO',section:'Ember',grade:77},
+      {lrn:'113606140046',name:'CASTOR,KENNY RICH SALONDAGA',section:'Ember',grade:82},
+      {lrn:'120868140083',name:'GERVACIO,CZECH NAZARINE DINGAL',section:'Ember',grade:80},
+      {lrn:'113951140024',name:'GIMANG,BABY NIÑO VAFLOR',section:'Ember',grade:94},
+      {lrn:'113943140021',name:'GUIOGUIO,WINNARD KENT DALANON',section:'Ember',grade:88},
+      {lrn:'113604140035',name:'LETADA,R-JAY VILLAMOR',section:'Ember',grade:75},
+      {lrn:'113712140015',name:'TAMAYO,RENZ IVAN FUENTES',section:'Ember',grade:75},
+      {lrn:'113606140183',name:'VILLAMIN,JAMES JAHRED GUIRIBA',section:'Ember',grade:84},
+      {lrn:'113606140185',name:'VISDA,MATTHEW JOSH BISNAR',section:'Ember',grade:78},
+      {lrn:'113606140113',name:'ABAÑO,JESSA MAE ALICANTE',section:'Ember',grade:75},
+      {lrn:'113612120033',name:'AFABLE,NOVIE EMPAS',section:'Ember',grade:78},
+      {lrn:'113951140037',name:'ALORAN,MARIA PRINCESS AMARO',section:'Ember',grade:79},
+      {lrn:'113606140124',name:'ARROYO,KIMBERLY MOTITA',section:'Ember',grade:79},
+      {lrn:'113606140126',name:'ATABAY,JEAN ESCARO',section:'Ember',grade:86},
+      {lrn:'113606140128',name:'ATABAY,MARY CLAIRE GADIANA',section:'Ember',grade:84},
+      {lrn:'113606150115',name:'CAJEGAS,BENNIE MARIE CAPELLAN',section:'Ember',grade:81},
+      {lrn:'136836140494',name:'CAPELLAN,PRESCILLA ENATE',section:'Ember',grade:80},
+      {lrn:'113606150071',name:'CARILLO,IRISH MITRA',section:'Ember',grade:81},
+      {lrn:'113610140012',name:'CLORES,JOJIELYN ARAGON',section:'Ember',grade:82},
+      {lrn:'113786140045',name:'DELAVIN,CHENKIE CASIO',section:'Ember',grade:83},
+      {lrn:'113606140144',name:'DERLA,PRINCESS MAE SORIANO',section:'Ember',grade:85},
+      {lrn:'103871140036',name:'ESCALA,SCARLETTE SORIANO',section:'Ember',grade:88},
+      {lrn:'113605140032',name:'GARCIA,ANALYN TAMAYO',section:'Ember',grade:90},
+      {lrn:'113610140016',name:'LOZADA,NECEL JOY BULALAQUE',section:'Ember',grade:91},
+      {lrn:'113604140052',name:'NAGA,JAMIE LOREN TINAY',section:'Ember',grade:85},
+      {lrn:'113606140164',name:'ORIAS,TRISHA JANE NUÑEZ',section:'Ember',grade:81},
+      {lrn:'113603140010',name:'PABILANDO,JHOANNA VILLANTES',section:'Ember',grade:89},
+      {lrn:'113606140160',name:'PEÑARANDA,JAN MONICQUE ESPARRAGO',section:'Ember',grade:88},
+      {lrn:'113606140178',name:'ROBISO,ANDREA ATENDIDO',section:'Ember',grade:75},
+      {lrn:'113605140039',name:'SANCHEZ,DIANNE PATRICIA BERGADO',section:'Ember',grade:93},
+      {lrn:'113504140033',name:'TORRENUEVA,PRINCESS GEMINO',section:'Ember',grade:85},
+      {lrn:'113606140161',name:'VALLERAS,ROSELYN JERUSALEM',section:'Ember',grade:79},
+      // Oasis
+      {lrn:'113606140050',name:'Arimbuyutan, Nhel John Elyson A.',section:'Oasis',grade:76},
+      {lrn:'113602140005',name:'Belarmino, Mark Dm H.',section:'Oasis',grade:83},
+      {lrn:'113606140060',name:'Canete, Jolit Z.',section:'Oasis',grade:78},
+      {lrn:'113597140071',name:'Diaz, Jethro L.',section:'Oasis',grade:90},
+      {lrn:'113613140004',name:'Ecita, Lorince D.',section:'Oasis',grade:76},
+      {lrn:'113613140005',name:'Igloso, Jerry Jr. C.',section:'Oasis',grade:80},
+      {lrn:'113617140031',name:'Mahayag, Kyle',section:'Oasis',grade:85},
+      {lrn:'113604140036',name:'Mahinay, Romel C.',section:'Oasis',grade:81},
+      {lrn:'113606140074',name:'Manlangit, Lester C.',section:'Oasis',grade:88},
+      {lrn:'113615140011',name:'Minggoy, John Mark V.',section:'Oasis',grade:75},
+      {lrn:'113605130037',name:'Ramirez, Jielo A.',section:'Oasis',grade:77},
+      {lrn:'113604140042',name:'Serafin, Reynald P.',section:'Oasis',grade:70},
+      {lrn:'136838140101',name:'Ubac, Michael John M.',section:'Oasis',grade:79},
+      {lrn:'113606150124',name:'Alforque, Anniver C.',section:'Oasis',grade:75},
+      {lrn:'113615140014',name:'Aplacador, Arnie',section:'Oasis',grade:77},
+      {lrn:'113614140016',name:'Apues, Marjorie A.',section:'Oasis',grade:75},
+      {lrn:'113606140129',name:'Arizobal, Jenny P.',section:'Oasis',grade:75},
+      {lrn:'113606140088',name:'Atizado, Princess Odesa P.',section:'Oasis',grade:81},
+      {lrn:'113951140053',name:'Bandol, Loida A.',section:'Oasis',grade:77},
+      {lrn:'110282140176',name:'Baring, Kristine M.',section:'Oasis',grade:81},
+      {lrn:'113599140015',name:'Baring, Lanilyn A.',section:'Oasis',grade:90},
+      {lrn:'113606140143',name:'Bayagosa, Esiel V.',section:'Oasis',grade:76},
+      {lrn:'113606140139',name:'Caones, Cynde M.',section:'Oasis',grade:82},
+      {lrn:'113597140019',name:'Catarinin, Victoria M.',section:'Oasis',grade:81},
+      {lrn:'113612140024',name:'Etang, Kristine Rein Lara',section:'Oasis',grade:80},
+      {lrn:'113617140002',name:'Francisco, Emmalyn E.',section:'Oasis',grade:81},
+      {lrn:'113613140019',name:'Jubay, Jeann M.',section:'Oasis',grade:74},
+      {lrn:'123456789012',name:'Lerit, Sassy Liane A.',section:'Oasis',grade:70},
+      {lrn:'113597140053',name:'Luzong C. Nancy',section:'Oasis',grade:86},
+      {lrn:'113786140055',name:'Mahinay, Gella',section:'Oasis',grade:77},
+      {lrn:'113597120160',name:'Moreno, Jenny A.',section:'Oasis',grade:75},
+      {lrn:'113606140177',name:'Natural, Erika Joy P.',section:'Oasis',grade:79},
+      {lrn:'113606140114',name:'Noda, Glyza B.',section:'Oasis',grade:75},
+      {lrn:'113604140050',name:'Orbes, Annjean B.',section:'Oasis',grade:78},
+      {lrn:'113613140016',name:'Paghunasan, Shery-Ann T.',section:'Oasis',grade:83},
+      {lrn:'113606140115',name:'Paran, Ronalyn D.',section:'Oasis',grade:81},
+      {lrn:'113951140046',name:'Pascua, Danica A.',section:'Oasis',grade:78},
+      {lrn:'113951140086',name:'Presilda, Janna Shane R.',section:'Oasis',grade:78},
+      {lrn:'113606140116',name:'Ramirez, Jendy V.',section:'Oasis',grade:80},
+      {lrn:'113597140027',name:'Rupa, Clavel O.',section:'Oasis',grade:78},
+      // Solstice
+      {lrn:'113612140003',name:'AVILA,GIAN JOSH RAYMUNDO',section:'Solstice',grade:76},
+      {lrn:'113605130028',name:'BELEN,JACKPHILLIP MENDERO',section:'Solstice',grade:73},
+      {lrn:'110108140048',name:'BERRES,GEIAN CARLO RONDA',section:'Solstice',grade:75},
+      {lrn:'136524150592',name:'CABRALES,AL FRANCIS AFABLE',section:'Solstice',grade:78},
+      {lrn:'113606140044',name:'CARMEN,ERNESTO JR BERDIN',section:'Solstice',grade:73},
+      {lrn:'113606130133',name:'COSTE,IGNACIO III ABAYON',section:'Solstice',grade:73},
+      {lrn:'113606110055',name:'DEL MUNDO,JUSTINE PABATANG',section:'Solstice',grade:74},
+      {lrn:'109156150106',name:'DELA CRUZ,JOHN KYLE -',section:'Solstice',grade:76},
+      {lrn:'113602130016',name:'DOCUSIN,GIAN SOCITO',section:'Solstice',grade:78},
+      {lrn:'113954130030',name:'ERENIA,KIM OCHEA',section:'Solstice',grade:73},
+      {lrn:'113597140011',name:'FLORES,DAVE RABUYA',section:'Solstice',grade:75},
+      {lrn:'113604120065',name:'LIBAY,JOSHUA VILLAMAR',section:'Solstice',grade:77},
+      {lrn:'113602140012',name:'LUCENESIO,MARK JUSTIN ETAOC',section:'Solstice',grade:73},
+      {lrn:'113613130008',name:'LUGANA,JADE IGLOSO',section:'Solstice',grade:70},
+      {lrn:'113606140099',name:'LUZONG,BRENT KEVIN ARIZOBAL',section:'Solstice',grade:80},
+      {lrn:'113608110042',name:'MALANA,GEHARD ADIGUE',section:'Solstice',grade:81},
+      {lrn:'113614140009',name:'MONTECALVO,JOJIE AREGLADO',section:'Solstice',grade:75},
+      {lrn:'113612140020',name:'TAMAYO,JOHN LESTER BELARMINO',section:'Solstice',grade:75},
+      {lrn:'104753140051',name:'TOROY,DAVE ESPEJON',section:'Solstice',grade:76},
+      {lrn:'136477140516',name:'TRINIDAD,JOHN WAYNE LUTCHE',section:'Solstice',grade:73},
+      {lrn:'113603140006',name:'TUMANGAN,NHOAH BUJAWE',section:'Solstice',grade:75},
+      {lrn:'113606140119',name:'ALIÑO,JEAN BENARO',section:'Solstice',grade:73},
+      {lrn:'113597140076',name:'ARCUENO,AMANDA ANDRINO',section:'Solstice',grade:84},
+      {lrn:'113606140123',name:'ARMA,ROCHELLE COSTE',section:'Solstice',grade:74},
+      {lrn:'113612140023',name:'BARRUGA,RICHEL SOQUESO',section:'Solstice',grade:73},
+      {lrn:'113613140012',name:'BRUSAS,JESSEL CAPALAR',section:'Solstice',grade:81},
+      {lrn:'113608120068',name:'CANTORIA,JIZEL AMARO',section:'Solstice',grade:73},
+      {lrn:'113613140013',name:'CAPALAR,RICHELYN CABAIS',section:'Solstice',grade:80},
+      {lrn:'113602140021',name:'CARASICAS,SUSAN ANABE',section:'Solstice',grade:74},
+      {lrn:'113606140093',name:'COLIBAO,ALEYAH ARCUENO',section:'Solstice',grade:76},
+      {lrn:'113610140013',name:'ESCOTE,ROMA MAE MONCADA',section:'Solstice',grade:73},
+      {lrn:'113604140046',name:'FRANCISCO,ANIELYN PALANAS',section:'Solstice',grade:76},
+      {lrn:'113605140033',name:'GARCIA,SHIELA MAE BARILE',section:'Solstice',grade:74},
+      {lrn:'113606140150',name:'GESTIADA,JULIA JANE IGNACIO',section:'Solstice',grade:75},
+      {lrn:'113606130227',name:'MADERA,JERECA VERDIDA',section:'Solstice',grade:73},
+      {lrn:'113951130094',name:'RICARTE,SHEILA MAE ESQUILONA',section:'Solstice',grade:75},
+      {lrn:'113612140027',name:'ROMBAIZ,ROSALYN ADIGUE',section:'Solstice',grade:73},
+      {lrn:'113617140028',name:'SALUNDAGA,JOSEL ALMOGUERA',section:'Solstice',grade:75},
+      {lrn:'113597140065',name:'SANCHEZ,JESEL ARCUENO',section:'Solstice',grade:73},
+      {lrn:'113612140028',name:'TAMAYO,PRINCESS HANNAH YLARAN',section:'Solstice',grade:75},
+      // Meadow
+      {lrn:'113610130009',name:'ARRANGUEZ,MARK LEO ALFORTE',section:'Meadow',grade:73},
+      {lrn:'113956130022',name:'BOGABIL,ALDIN LUMALANG',section:'Meadow',grade:76},
+      {lrn:'113602140017',name:'CABAGUE,MIGUEL VIDA',section:'Meadow',grade:75},
+      {lrn:'113604140006',name:'CABINTOY,JEROME CASIDSID',section:'Meadow',grade:73},
+      {lrn:'113602120010',name:'CARASICAS,JEVAN ANABE',section:'Meadow',grade:76},
+      {lrn:'113605140007',name:'DELA CRUZ,JHONNY FRANCISCO',section:'Meadow',grade:75},
+      {lrn:'113604140007',name:'FLORES,JEM VASQUEZ',section:'Meadow',grade:77},
+      {lrn:'113605140012',name:'MANANGAT,ERIC MENEL',section:'Meadow',grade:76},
+      {lrn:'113604140038',name:'MITRA,CYRIL JOHN ESTRADA',section:'Meadow',grade:73},
+      {lrn:'113610140006',name:'MONCADA,RON MART ESCOTE',section:'Meadow',grade:76},
+      {lrn:'113606140169',name:'PARAGUYA,GERALD ESCARAN',section:'Meadow',grade:74},
+      {lrn:'113605140017',name:'PINOTE,JAMES ABLAS',section:'Meadow',grade:76},
+      {lrn:'113606140181',name:'RAMIREZ,RONIE MARK MENDOZA',section:'Meadow',grade:75},
+      {lrn:'113606140182',name:'TANA,FRANCE HERMOSA',section:'Meadow',grade:73},
+      {lrn:'113613130013',name:'URBANO,JOHN CARLO CAPELLAN',section:'Meadow',grade:90},
+      {lrn:'113612110001',name:'ABAD,JUVYMAE BARRUGA',section:'Meadow',grade:''},
+      {lrn:'113610140008',name:'ADORNA,CHARISA REBUJAS',section:'Meadow',grade:75},
+      {lrn:'113610140009',name:'ALFORTE,MERYL JOY CAÑELAS',section:'Meadow',grade:75},
+      {lrn:'113597130044',name:'ARCUENO,JENELYN PRESILDA',section:'Meadow',grade:73},
+      {lrn:'113605140023',name:'ATIBAGOS,CRISHELLE FLORES',section:'Meadow',grade:74},
+      {lrn:'113610140010',name:'BADIANA,MARIAN ARCON',section:'Meadow',grade:73},
+      {lrn:'113613130017',name:'BILARMINO,RAYCEL LATAGAN',section:'Meadow',grade:74},
+      {lrn:'113610140011',name:'BOGNOT,KIMBERLY ARAGON',section:'Meadow',grade:73},
+      {lrn:'113596120049',name:'CAADLAWON,BELIZA BOHOL',section:'Meadow',grade:75},
+      {lrn:'113604140012',name:'CARIÑO,DANICE ARQUIO',section:'Meadow',grade:75},
+      {lrn:'113606140147',name:'CLEMENTE,MAURENE NICDAO',section:'Meadow',grade:77},
+      {lrn:'165510141544',name:'COLLADO,HANNAH OSABEL',section:'Meadow',grade:72},
+      {lrn:'120741140026',name:'CONTREDAS,CRISTINE LABATETE',section:'Meadow',grade:74},
+      {lrn:'113606140094',name:'COSTE,GECEL TABOR',section:'Meadow',grade:74},
+      {lrn:'113608140014',name:'CUIZON,JUNALYN ABELINDE',section:'Meadow',grade:75},
+      {lrn:'113942140018',name:'DAO,LEIAN CARILLO',section:'Meadow',grade:75},
+      {lrn:'113612130037',name:'DELA PEÑA,CHARLENE GAVIOLA',section:'Meadow',grade:77},
+      {lrn:'113606140096',name:'DELOS SANTOS,LUJIL BELO',section:'Meadow',grade:75},
+      {lrn:'113597140021',name:'ECITA,CHARMAE CAÑELAS',section:'Meadow',grade:77},
+      {lrn:'113597140077',name:'LUCENESIO,ANGELICA VEPINOSA',section:'Meadow',grade:76},
+      {lrn:'113606140175',name:'MAGLASANG,DANIELA COLUMNA',section:'Meadow',grade:81},
+      {lrn:'113617130046',name:'MATERDAN,JESALYN TAMBOBOY',section:'Meadow',grade:72},
+      {lrn:'113606140118',name:'RAYMUNDO,RHEA BANDOL',section:'Meadow',grade:76},
+      {lrn:'113605140038',name:'SAMPAGA,JESSICA VILLAR',section:'Meadow',grade:74}
+    ];
 
-<script>
-const studentData = {
-  "Aurora": [
-    ["113797140007","Alutaya, MJ O.",88],
-    ["113604140025","Aparente, Austin Jolf S.",85],
-    ["113604140026","Arizobal, Robert Jules O.",91],
-    ["113606150076","Atacador, Rey Kenneth C.",91],
-    ["113606130113","Capellan, Kian Carl N.",83],
-    ["113602140018","Delara, Jhonpyu A.",92],
-    ["113602140008","Delara, Joeren Joules O.",92],
-    ["113606150001","Dilao, Mark Lawrence P.",94],
-    ["113606140061","Gabelo, Yeshuah Ashliegh B.",87],
-    ["113606150116","Gamba, Renzell Wen G.",86],
-    ["113951140031","Manlapaz, Mark Laurence B.",88],
-    ["113606140170","Paraguya, Josua E.",85],
-    ["113605140018","Piodos, John Errol M.",91],
-    ["113612140017","Raymundo, Kyle Nathan M.",86],
-    ["113597140007","Resma, Lenard B.",94],
-    ["113599140008","Retuerto, Remark Fel R.",95],
-    ["113606140109","Valle, Jahn Aj Vhin T.",95],
-    ["113606140130","Almero, Mikaela Mildred D.",92],
-    ["113606140132","Arizala, Rain A.",89],
-    ["113786140015","Atega, Dianne Ashly M.",83],
-    ["113608140025","Cabrera, Wenchie P.",94],
-    ["113606140142","Cervantes, Nica A.",90],
-    ["113589140014","Edem, Jeramie M.",83],
-    ["113606140173","Huelva, Jelianne S.",92],
-    ["113597140060","Ibañez, Carmela O.",89],
-    ["113597140060","Jores, Cristel B.",90],
-    ["113597140026","Malunes, Fricel Blaze A.",94],
-    ["113599140030","Pelayo, Trecia Faith C.",84],
-    ["402104150245","Peteros, Lhola Belle E.",92],
-    ["113677130163","Salazar, Shane A.",91],
-    ["113609140024","Tagbacaola, Irene A.",96],
-    ["113782140023","Tamayo, Mary Antoniette A.",97]
-  ],
-  "Ember": [
-    ["113597140014","AFABLE, CLARENS ANTIPOLO",74],
-    ["113610140002","ALFORTE, RANNEL JOHN BALDEO",78],
-    ["113606140068","ATABAY, JURODS BASAS",75],
-    ["113606140041","CAGATIN, MARC JAY MARFIL",74],
-    ["113606140051","CAPELLAN, JAMES ROLLY TOLENTINO",77],
-    ["113606140046","CASTOR, KENNY RICH SALONDAGA",82],
-    ["120868140083","GERVACIO, CZECH NAZARINE DINGAL",80],
-    ["113951140024","GIMANG, BABY NIÑO VAFLOR",94],
-    ["113943140021","GUIOGUIO, WINNARD KENT DALANON",88],
-    ["113604140035","LETADA, R-JAY VILLAMOR",75],
-    ["113712140015","TAMAYO, RENZ IVAN FUENTES",75],
-    ["113606140183","VILLAMIN, JAMES JAHRED GUIRIBA",84],
-    ["113606140185","VISDA, MATTHEW JOSH BISNAR",78],
-    ["113606140113","ABAÑO, JESSA MAE ALICANTE",75],
-    ["113612120033","AFABLE, NOVIE EMPAS",78],
-    ["113951140037","ALORAN, MARIA PRINCESS AMARO",79],
-    ["113606140124","ARROYO, KIMBERLY MOTITA",79],
-    ["113606140126","ATABAY, JEAN ESCARO",86],
-    ["113606140128","ATABAY, MARY CLAIRE GADIANA",84],
-    ["113606150115","CAJEGAS, BENNIE MARIE CAPELLAN",81],
-    ["136836140494","CAPELLAN, PRESCILLA ENATE",80],
-    ["113606150071","CARILLO, IRISH MITRA",81],
-    ["113610140012","CLORES, JOJIELYN ARAGON",82],
-    ["113786140045","DELAVIN, CHENKIE CASIO",83],
-    ["113606140144","DERLA, PRINCESS MAE SORIANO",85],
-    ["103871140036","ESCALA, SCARLETTE SORIANO",88],
-    ["113605140032","GARCIA, ANALYN TAMAYO",90],
-    ["113610140016","LOZADA, NECEL JOY BULALAQUE",91],
-    ["113604140052","NAGA, JAMIE LOREN TINAY",85],
-    ["113606140164","ORIAS, TRISHA JANE NUÑEZ",81],
-    ["113603140010","PABILANDO, JHOANNA VILLANTES",89],
-    ["113606140160","PEÑARANDA, JAN MONICQUE ESPARRAGO",88],
-    ["113606140178","ROBISO, ANDREA ATENDIDO",75],
-    ["113605140039","SANCHEZ, DIANNE PATRICIA BERGADO",93],
-    ["113504140033","TORRENUEVA, PRINCESS GEMINO",85],
-    ["113606140161","VALLERAS, ROSELYN JERUSALEM",79]
-  ],
-  "Oasis": [
-    ["113606140050","Arimbuyutan, Nhel John Elyson A.",76],
-    ["113602140005","Belarmino, Mark Dm H.",83],
-    ["113606140060","Canete, Jolit Z.",78],
-    ["113597140071","Diaz, Jethro L.",90],
-    ["113613140004","Ecita, Lorince D.",76],
-    ["113613140005","Igloso, Jerry Jr. C.",80],
-    ["113617140031","Mahayag, Kyle",85],
-    ["113604140036","Mahinay, Romel C.",81],
-    ["113606140074","Manlangit, Lester C.",88],
-    ["113615140011","Minggoy, John Mark V.",75],
-    ["113605130037","Ramirez, Jielo A.",77],
-    ["113604140042","Serafin, Reynald P.",70],
-    ["136838140101","Ubac, Michael John M.",79],
-    ["113606150124","Alforque, Anniver C.",75],
-    ["113615140014","Aplacador, Arnie",77],
-    ["113614140016","Apues, Marjorie A.",75],
-    ["113606140129","Arizobal, Jenny P.",75],
-    ["113606140088","Atizado, Princess Odesa P.",81],
-    ["113951140053","Bandol, Loida A.",77],
-    ["110282140176","Baring, Kristine M.",81],
-    ["113599140015","Baring, Lanilyn A.",90],
-    ["113606140143","Bayagosa, Esiel V.",76],
-    ["113606140139","Caones, Cynde M.",82],
-    ["113597140019","Catarinin, Victoria M.",81],
-    ["113612140024","Etang, Kristine Rein Lara",80],
-    ["113617140002","Francisco, Emmalyn E.",81],
-    ["113613140019","Jubay, Jeann M.",74],
-    ["123456789012","Lerit, Sassy Liane A.",70],
-    ["113597140053","Luzong C. Nancy",86],
-    ["113786140055","Mahinay, Gella",77],
-    ["113597120160","Moreno, Jenny A.",75],
-    ["113606140177","Natural, Erika Joy P.",79],
-    ["113606140114","Noda, Glyza B.",75],
-    ["113604140050","Orbes, Annjean B.",78],
-    ["113613140016","Paghunasan, Shery-Ann T.",83],
-    ["113606140115","Paran, Ronalyn D.",81],
-    ["113951140046","Pascua, Danica A.",78],
-    ["113951140086","Presilda, Janna Shane R.",78],
-    ["113606140116","Ramirez, Jendy V.",80],
-    ["113597140027","Rupa, Clavel O.",78]
-  ],
-  "Solstice": [
-    ["113612140003","AVILA, GIAN JOSH RAYMUNDO",76],
-    ["113605130028","BELEN, JACKPHILLIP MENDERO",73],
-    ["110108140048","BERRES, GEIAN CARLO RONDA",75],
-    ["136524150592","CABRALES, AL FRANCIS AFABLE",78],
-    ["113606140044","CARMEN, ERNESTO JR BERDIN",73],
-    ["113606130133","COSTE, IGNACIO III ABAYON",73],
-    ["113606110055","DEL MUNDO, JUSTINE PABATANG",74],
-    ["109156150106","DELA CRUZ, JOHN KYLE",76],
-    ["113602130016","DOCUSIN, GIAN SOCITO",78],
-    ["113954130030","ERENIA, KIM OCHEA",73],
-    ["113597140011","FLORES, DAVE RABUYA",75],
-    ["113604120065","LIBAY, JOSHUA VILLAMAR",77],
-    ["113602140012","LUCENESIO, MARK JUSTIN ETAOC",73],
-    ["113613130008","LUGANA, JADE IGLOSO",70],
-    ["113606140099","LUZONG, BRENT KEVIN ARIZOBAL",80],
-    ["113608110042","MALANA, GEHARD ADIGUE",81],
-    ["113614140009","MONTECALVO, JOJIE AREGLADO",75],
-    ["113612140020","TAMAYO, JOHN LESTER BELARMINO",75],
-    ["104753140051","TOROY, DAVE ESPEJON",76],
-    ["136477140516","TRINIDAD, JOHN WAYNE LUTCHE",73],
-    ["113603140006","TUMANGAN, NHOAH BUJAWE",75],
-    ["113606140119","ALIÑO, JEAN BENARO",73],
-    ["113597140076","ARCUENO, AMANDA ANDRINO",84],
-    ["113606140123","ARMA, ROCHELLE COSTE",74],
-    ["113612140023","BARRUGA, RICHEL SOQUESO",73],
-    ["113613140012","BRUSAS, JESSEL CAPALAR",81],
-    ["113608120068","CANTORIA, JIZEL AMARO",73],
-    ["113613140013","CAPALAR, RICHELYN CABAIS",80],
-    ["113602140021","CARASICAS, SUSAN ANABE",74],
-    ["113606140093","COLIBAO, ALEYAH ARCUENO",76],
-    ["113610140013","ESCOTE, ROMA MAE MONCADA",73],
-    ["113604140046","FRANCISCO, ANIELYN PALANAS",76],
-    ["113605140033","GARCIA, SHIELA MAE BARILE",74],
-    ["113606140150","GESTIADA, JULIA JANE IGNACIO",75],
-    ["113606130227","MADERA, JERECA VERDIDA",73],
-    ["113951130094","RICARTE, SHEILA MAE ESQUILONA",75],
-    ["113612140027","ROMBAIZ, ROSALYN ADIGUE",73],
-    ["113617140028","SALUNDAGA, JOSEL ALMOGUERA",75],
-    ["113597140065","SANCHEZ, JESEL ARCUENO",73],
-    ["113612140028","TAMAYO, PRINCESS HANNAH YLARAN",75]
-  ],
-  "Meadow": [
-    ["113610130009","ARRANGUEZ, MARK LEO ALFORTE",73],
-    ["113956130022","BOGABIL, ALDIN LUMALANG",76],
-    ["113602140017","CABAGUE, MIGUEL VIDA",75],
-    ["113604140006","CABINTOY, JEROME CASIDSID",73],
-    ["113602120010","CARASICAS, JEVAN ANABE",76],
-    ["113605140007","DELA CRUZ, JHONNY FRANCISCO",75],
-    ["113604140007","FLORES, JEM VASQUEZ",77],
-    ["113605140012","MANANGAT, ERIC MENEL",76],
-    ["113604140038","MITRA, CYRIL JOHN ESTRADA",73],
-    ["113610140006","MONCADA, RON MART ESCOTE",76],
-    ["113606140169","PARAGUYA, GERALD ESCARAN",74],
-    ["113605140017","PINOTE, JAMES ABLAS",76],
-    ["113606140181","RAMIREZ, RONIE MARK MENDOZA",75],
-    ["113606140182","TANA, FRANCE HERMOSA",73],
-    ["113613130013","URBANO, JOHN CARLO CAPELLAN",90],
-    ["113612110001","ABAD, JUVYMAE BARRUGA",0],
-    ["113610140008","ADORNA, CHARISA REBUJAS",75],
-    ["113610140009","ALFORTE, MERYL JOY CAÑELAS",75],
-    ["113597130044","ARCUENO, JENELYN PRESILDA",73],
-    ["113605140023","ATIBAGOS, CRISHELLE FLORES",74],
-    ["113610140010","BADIANA, MARIAN ARCON",73],
-    ["113613130017","BILARMINO, RAYCEL LATAGAN",74],
-    ["113610140011","BOGNOT, KIMBERLY ARAGON",73],
-    ["113596120049","CAADLAWON, BELIZA BOHOL",75],
-    ["113613120018","CAGUE, ROSE ANN ARAGON",76],
-    ["113610140012","CONGE, KARELLY PARIN",75],
-    ["113597140016","DELA CRUZ, AILYN ALIÑO",73],
-    ["113605140027","DERAMO, KHIM TAN",73],
-    ["113597140018","DIMABUYU, ANALYN DELOS REYES",73],
-    ["113597140020","DINGAL, JESSIE NARRIDO",75],
-    ["113613130020","DUMLAO, MAICAH NIMOY",75],
-    ["113613130021","ENATE, BHEA JOY COSTE",73],
-    ["113606140145","ESQUILONA, PATRICIA JANE VILLALUZ",73],
-    ["113605140030","FLORES, KEN SALAMAT",74],
-    ["113597140023","FLORES, LEONA MAE ANGELES",75],
-    ["113612140010","FLORES, MAE ANN GUTIERREZ",76],
-    ["113610140015","FRANCISCO, MARY ROSE CASTRO",74],
-    ["113605140031","GEMINO, CAMILLE GEMINO",76],
-    ["113613140008","GERIOLAGA, RIZELYN ROSALES",75],
-    ["113608140033","GIDOC, LYN VELASCO",75],
-    ["113604140014","LUMALANG, JELYN DE LEON",73],
-    ["113604140020","NARRIDO, CINDY SANTOS",73],
-    ["113604140021","NOGARA, JOVELYN ASAY",74],
-    ["113606140152","ORENSE, ANA LIZA COSTE",73],
-    ["113604140022","ORTEGA, JESSA MAE COSTE",75],
-    ["113606140157","PAGULAYAN, CIELO MAE VILLALUZ",74],
-    ["113613140010","PALES, AIRA ESQUEJO",73],
-    ["113604140026","PARIN, JERAMY TOLENTINO",73],
-    ["113613140011","PRESILLAS, KIMBERLY TRINIDAD",75],
-    ["113604140028","QUEZON, RUTH REGIDOR",74],
-    ["113606140165","QUILLAO, ROSE JANE MEDIDA",73],
-    ["113610140022","RESMA, REYNALYN AFABLE",73],
-    ["113610140024","SANCHEZ, JONALYN PELARES",73],
-    ["113610140025","SEVILLA, ANGELIKA PUNZAL",75],
-    ["113610140026","TAMAYO, ROGELYN BERMUDO",74],
-    ["113604140031","TAMAYO, ZYRA JANE ESPIRITU",73],
-    ["113610140027","TINGZON, JESUSA JANE GUTIERREZ",75],
-    ["113604140032","VALENCIA, PATRICIA MAE MARTIZANO",74],
-    ["113604140033","VALERA, CECILIA COSTE",73],
-    ["113610140028","VICENTE, QUEEN ANGEL BARRUGA",73],
-    ["113605140042","VILLACRUCIS, NEIL BERMUDO",74]
-  ]
-};
+    // state
+    let db = [];
+    let currentSection = null;
+    let loggedIn = false;
+    let adminActive = false;
 
-function checkPasscode() {
-  const pass = document.getElementById("passcode").value;
-  if (pass === "GenMath2025") {
-    document.getElementById("welcome").classList.add("hidden");
-    document.getElementById("main").classList.remove("hidden");
-  } else if (pass === "Admin2025") {
-    document.getElementById("welcome").classList.add("hidden");
-    document.getElementById("admin").classList.remove("hidden");
-    loadAdminTable();
-  } else {
-    document.getElementById("error").textContent = "Invalid passcode.";
-  }
-}
+    // DOM
+    const loginArea = document.getElementById('loginArea');
+    const loginBtn = document.getElementById('loginBtn');
+    const loginCode = document.getElementById('loginCode');
+    const loginMsg = document.getElementById('loginMsg');
+    const guestBtn = document.getElementById('guestBtn');
+    const sectionsArea = document.getElementById('sectionsArea');
+    const sectionsList = document.getElementById('sectionsList');
+    const lrnArea = document.getElementById('lrnArea');
+    const lrnInput = document.getElementById('lrnInput');
+    const viewBtn = document.getElementById('viewBtn');
+    const backSections = document.getElementById('backSections');
+    const studentCard = document.getElementById('studentCard');
+    const studentCardPlaceholder = document.getElementById('studentCardPlaceholder');
+    const studentNameEl = document.getElementById('studentName');
+    const studentLRNEl = document.getElementById('studentLRN');
+    const studentGradeEl = document.getElementById('studentGrade');
+    const resultMessage = document.getElementById('resultMessage');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const adminToggle = document.getElementById('adminToggle');
+    const adminPanel = document.getElementById('adminPanel');
+    const adminTableBody = document.querySelector('#adminTable tbody');
+    const addRowBtn = document.getElementById('addRowBtn');
+    const saveDbBtn = document.getElementById('saveDbBtn');
+    const exportBtn = document.getElementById('exportBtn');
 
-document.getElementById("sectionSelect").addEventListener("change", function(){
-  if(this.value){
-    document.getElementById("lrnInput").classList.remove("hidden");
-  } else {
-    document.getElementById("lrnInput").classList.add("hidden");
-  }
-});
-
-function viewGrade() {
-  const section = document.getElementById("sectionSelect").value;
-  const lrn = document.getElementById("lrn").value.trim();
-  const students = studentData[section];
-  let found = false;
-  for(let s of students){
-    if(s[0] === lrn){
-      document.getElementById("studentInfo").classList.remove("hidden");
-      document.getElementById("studentInfo").innerHTML =
-        "<h2>General Mathematics</h2>" +
-        "<p><strong>Full Name:</strong> " + s[1] + "</p>" +
-        "<p><strong>LRN:</strong> " + s[0] + "</p>" +
-        "<p><strong>Grade:</strong> " + s[2] + "</p>" +
-        "<p><em>Message from Teacher: Keep striving for excellence in your studies!</em></p>";
-      document.getElementById("logoutBtn").classList.remove("hidden");
-      found = true;
-      break;
+    // init
+    function loadDb(){
+      const saved = localStorage.getItem('gm_db_v1');
+      if(saved){
+        try{ db = JSON.parse(saved); return; }catch(e){ db = initialDb.slice(); }
+      }else{ db = initialDb.slice(); }
     }
-  }
-  if(!found){
-    alert("LRN not found in this section.");
-  }
-}
+    loadDb();
 
-function loadAdminTable(){
-  const table = document.getElementById("adminTable");
-  table.innerHTML = "<tr><th>Section</th><th>LRN</th><th>Name</th><th>Grade</th></tr>";
-  for(const sec in studentData){
-    for(const s of studentData[sec]){
-      table.innerHTML += "<tr><td>"+sec+"</td><td>"+s[0]+"</td><td>"+s[1]+"</td><td>"+s[2]+"</td></tr>";
+    function persistDb(){ localStorage.setItem('gm_db_v1', JSON.stringify(db)); }
+
+    // build sections list from db
+    function buildSections(){
+      const sections = ['Aurora','Ember','Oasis','Solstice','Meadow'];
+      sectionsList.innerHTML = '';
+      sections.forEach(s=>{
+        const btn = document.createElement('button'); btn.className='section-btn'; btn.textContent=s;
+        btn.addEventListener('click', ()=>{ selectSection(s); });
+        sectionsList.appendChild(btn);
+      });
     }
-  }
-}
+    buildSections();
 
-function logout(){
-  location.reload();
-}
-</script>
+    // login
+    loginBtn.addEventListener('click', ()=>{
+      loginMsg.style.display='none';
+      const code = loginCode.value.trim();
+      if(code === CLASS_CODE){
+        onLogin();
+      } else {
+        loginMsg.textContent='Invalid code. Please try again.'; loginMsg.style.display='block';
+      }
+    });
+
+    guestBtn.addEventListener('click', ()=>{
+      // allow viewing sections without logging in (but cannot view specific student info)
+      sectionsArea.style.display='block';
+      lrnArea.style.display='none';
+      loginArea.style.display='none';
+      studentCardPlaceholder.querySelector('p').textContent = 'Choose a section and then enter your LRN to view your grade.';
+    });
+
+    function onLogin(){
+      loggedIn = true;
+      loginArea.style.display='none';
+      sectionsArea.style.display='block';
+      logoutBtn.style.display='inline-block';
+      adminToggle.style.display='inline-block';
+      loginCode.value='';
+    }
+
+    logoutBtn.addEventListener('click', ()=>{
+      loggedIn = false; adminActive=false; currentSection=null;
+      sectionsArea.style.display='none'; lrnArea.style.display='none'; adminPanel.style.display='none'; studentCard.style.display='none'; studentCardPlaceholder.style.display='block';
+      logoutBtn.style.display='none'; adminToggle.style.display='none';
+      loginArea.style.display='block';
+    });
+
+    function selectSection(s){
+      currentSection = s;
+      sectionsArea.style.display='none';
+      lrnArea.style.display='block';
+      lrnMsg.style.display='none';
+      studentCard.style.display='none';
+      studentCardPlaceholder.style.display='block';
+      lrnInput.value='';
+    }
+
+    backSections.addEventListener('click', ()=>{
+      currentSection = null; sectionsArea.style.display='block'; lrnArea.style.display='none';
+    });
+
+    viewBtn.addEventListener('click', ()=>{ handleView(); });
+    lrnInput.addEventListener('keypress', (e)=>{ if(e.key==='Enter') handleView(); });
+
+    function handleView(){
+      lrnMsg.style.display='none';
+      const lrn = lrnInput.value.trim();
+      if(!lrn){ lrnMsg.textContent='Please enter your LRN.'; lrnMsg.style.display='block'; return; }
+      if(!currentSection){ lrnMsg.textContent='Please select a section first.'; lrnMsg.style.display='block'; return; }
+      const found = db.find(r=>r.lrn === lrn && r.section === currentSection);
+      if(!found){ lrnMsg.textContent='LRN not found for this section.'; lrnMsg.style.display='block'; return; }
+
+      // show student info
+      studentCardPlaceholder.style.display='none';
+      studentCard.style.display='block';
+      studentNameEl.textContent = found.name;
+      studentLRNEl.textContent = found.lrn;
+      studentGradeEl.textContent = (found.grade === '' || found.grade === null) ? 'N/A' : found.grade;
+
+      // result message
+      resultMessage.style.display='none';
+      const gradeNum = Number(found.grade);
+      if(!isNaN(gradeNum) && gradeNum >= 75){ resultMessage.style.display='block'; resultMessage.textContent = 'Congratulations! You passed the subject. Continue improving!'; }
+      else if(!isNaN(gradeNum) && gradeNum !== 0){ resultMessage.style.display='block'; resultMessage.textContent = 'You did not reach the passing grade yet. Keep working and ask for help.'; }
+
+      // show admin panel toggle only if logged in
+      adminToggle.style.display = loggedIn ? 'inline-block' : 'none';
+    }
+
+    // admin mode prompt
+    adminToggle.addEventListener('click', ()=>{
+      if(!adminActive){
+        const attempt = prompt('Enter admin passcode');
+        if(attempt === null) return; // cancelled
+        if(attempt === ADMIN_CODE){
+          adminActive = true; adminPanel.style.display='block'; buildAdminTable(); adminToggle.textContent='Exit Admin';
+        } else { alert('Invalid admin passcode'); }
+      } else {
+        adminActive = false; adminPanel.style.display='none'; adminToggle.textContent='Admin Mode';
+      }
+    });
+
+    function buildAdminTable(){
+      adminTableBody.innerHTML='';
+      db.forEach((r,idx)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><input data-idx="${idx}" data-field="lrn" style="width:180px" value="${r.lrn || ''}"></td>
+          <td><input data-idx="${idx}" data-field="name" style="width:260px" value="${r.name || ''}"></td>
+          <td>
+            <select data-idx="${idx}" data-field="section">
+              <option ${r.section==='Aurora'?'selected':''}>Aurora</option>
+              <option ${r.section==='Ember'?'selected':''}>Ember</option>
+              <option ${r.section==='Oasis'?'selected':''}>Oasis</option>
+              <option ${r.section==='Solstice'?'selected':''}>Solstice</option>
+              <option ${r.section==='Meadow'?'selected':''}>Meadow</option>
+            </select>
+          </td>
+          <td><input data-idx="${idx}" data-field="grade" style="width:80px" value="${r.grade !== undefined ? r.grade : ''}"></td>
+          <td><button class="delBtn" data-idx="${idx}">Delete</button></td>
+        `;
+        adminTableBody.appendChild(tr);
+      });
+
+      // attach listeners
+      adminTableBody.querySelectorAll('input,select').forEach(el=>{
+        el.addEventListener('change', (e)=>{
+          const idx = Number(e.target.dataset.idx); const field = e.target.dataset.field;
+          db[idx][field] = e.target.value;
+        });
+      });
+      adminTableBody.querySelectorAll('.delBtn').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const idx = Number(btn.dataset.idx);
+          if(confirm('Delete this row?')){ db.splice(idx,1); buildAdminTable(); }
+        });
+      });
+    }
+
+    addRowBtn.addEventListener('click', ()=>{
+      db.push({lrn:'',name:'',section:'Aurora',grade:''}); buildAdminTable();
+    });
+
+    saveDbBtn.addEventListener('click', ()=>{
+      if(!confirm('Save changes to the database?')) return;
+      // normalize grade values to either number or empty
+      db = db.map(r=>({lrn:(r.lrn||'').toString().trim(), name:(r.name||'').toString().trim(), section:r.section, grade: (r.grade === '' ? '' : (isNaN(Number(r.grade)) ? r.grade : Number(r.grade)))}));
+      persistDb(); alert('Database saved locally.');
+      // refresh admin table to reflect any normalization
+      buildAdminTable();
+    });
+
+    exportBtn.addEventListener('click', ()=>{
+      const csv = toCSV(db);
+      const blob = new Blob([csv],{type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href=url; a.download='gm_database.csv'; a.click(); URL.revokeObjectURL(url);
+    });
+
+    function toCSV(arr){
+      const rows = [['LRN','Full name','Section','Grade']];
+      arr.forEach(r=>{ rows.push([r.lrn || '', r.name || '', r.section || '', r.grade || '']); });
+      return rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+    }
+
+    // initial UI state
+    (function(){
+      sectionsArea.style.display='none'; lrnArea.style.display='none'; adminPanel.style.display='none';
+      logoutBtn.style.display='none'; adminToggle.style.display='none';
+    })();
+
+    // Accessibility: allow pressing Escape to log out from admin prompt
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && adminActive){ adminActive=false; adminPanel.style.display='none'; adminToggle.textContent='Admin Mode'; } });
+
+  </script>
 </body>
 </html>
