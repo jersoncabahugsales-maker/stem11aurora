@@ -2,256 +2,554 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dimasalang National High School Portal</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #eaf6ff;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background: #1a73e8;
-      color: white;
-      padding: 10px 20px;
-      display: flex;
-      align-items: center;
-    }
-    header img {
-      margin-right: 15px;
-      border-radius: 8px;
-    }
-    header h1 {
-      font-size: 22px;
-      margin: 0;
-    }
-    header p {
-      font-size: 14px;
-      margin: 0;
-    }
-    .container {
-      text-align: center;
-      padding: 30px;
-    }
-    input, select, button {
-      padding: 8px;
-      margin: 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      background: #1a73e8;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0c47a1;
-    }
-    .hidden {
-      display: none;
-    }
-    table {
-      border-collapse: collapse;
-      margin: 20px auto;
-      background: white;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 6px 10px;
-    }
-    th {
-      background: #1a73e8;
-      color: white;
-    }
-    #congrats-message {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-      color: #1a4b7a;
-      text-align: center;
-    }
+    :root{--blue:#e6f7ff;--accent:#007acc;--dark:#00304d}
+    body {font-family: Inter, Arial, sans-serif; background: linear-gradient(180deg,#f7fbff 0%, #ffffff 100%); margin:0; color:#072b3a}
+    header{display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--blue);box-shadow:0 2px 6px rgba(3,27,45,0.06)}
+    header img{height:64px;width:64px;object-fit:contain;border-radius:8px}
+    .school-title{line-height:1}
+    .school-title h1{margin:0;font-size:20px;color:var(--dark);font-weight:700}
+    .school-title p{margin:0;font-size:13px;color:#2b4b5a}
+    main{max-width:980px;margin:28px auto;padding:18px}
+    .card{background:white;border-radius:12px;padding:18px;box-shadow:0 6px 18px rgba(10,30,60,0.06);}
+    .center{display:flex;flex-direction:column;align-items:center;gap:8px}
+    input[type=text], input[type=password], select{width:280px;padding:10px;border-radius:8px;border:1px solid #d1e9fb}
+    button{padding:10px 14px;border-radius:8px;border:none;background:var(--accent);color:white;cursor:pointer}
+    button.secondary{background:#4da3d8}
+    .logout{background:#c33}
+    .sections{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+    .sections button{min-width:140px}
+    .hidden{display:none}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{border:1px solid #e6f3fb;padding:8px;text-align:center}
+    th{background:var(--blue)}
+    .msg-pass{color:#006400;font-weight:700}
+    .msg-fail{color:#b30000;font-weight:700}
+    .small{font-size:13px;color:#375a6a}
+    .notice{font-style:italic;color:#254250;margin-top:6px}
+    .admin-actions{display:flex;gap:8px;flex-wrap:wrap}
+    input.grade-input{width:70px}
+    .center-row{display:flex;align-items:center;gap:8px;justify-content:center}
+    .caption{font-size:14px;color:#345}
   </style>
 </head>
 <body>
-
 <header>
-  <a href="index.html">
-    <img src="https://drive.google.com/uc?id=1_T4_-2ufDacbCf7u2vKP8mkMGG9-Tmjm" 
-         alt="Dimasalang National High School Logo" width="60">
-  </a>
-  <div>
+  <img src="https://drive.google.com/uc?id=1_T4_-2ufDacbCf7u2vKP8mkMGG9-Tmjm" alt="School Logo">
+  <div class="school-title">
     <h1>Dimasalang National High School</h1>
     <p>Dimasalang, Masbate</p>
   </div>
 </header>
 
-<div class="container" id="login-screen">
-  <h2>Welcome! Please enter the code</h2>
-  <input type="password" id="access-code" placeholder="Enter code">
-  <button onclick="checkCode()">Submit</button>
-</div>
+<main>
+  <div id="loginCard" class="card center">
+    <h2>Welcome! Please enter the code.</h2>
+    <input type="password" id="mainCode" placeholder="Enter access code">
+    <div class="center-row">
+      <button onclick="enterPortal()">Submit</button>
+      <button class="secondary" onclick="openAdminPrompt()">Admin Mode</button>
+    </div>
+    <p class="notice">Enter <strong>GenMath2025</strong> for General Mathematics, or <strong>TatakSTEM</strong> for Grade-11 Aurora (STEM).</p>
+  </div>
 
-<!-- General Math Interface -->
-<div class="container hidden" id="genmath-screen">
-  <h2>Welcome to General Mathematics Grade Viewing Database</h2>
-  <p>Select your section:</p>
-  <button onclick="selectSection('Ember')">11 – Ember (HUMSS)</button>
-  <button onclick="selectSection('Oasis')">11 – Oasis (GAS)</button>
-  <button onclick="selectSection('Solstice')">11 – Solstice (GAS)</button>
-  <button onclick="selectSection('Meadow')">11 – Meadow (GAS)</button>
-  <br><br>
-  <button onclick="logout()">Log out</button>
-</div>
+  <!-- GENERAL MATH -->
+  <div id="genMathCard" class="card hidden">
+    <h2>Welcome to General Mathematics Grade Viewing Database</h2>
+    <p class="caption">Select your section then enter your LRN to view your individual grade.</p>
+    <div class="sections">
+      <button onclick="chooseSection('Ember')">11 - Ember</button>
+      <button onclick="chooseSection('Oasis')">11 - Oasis</button>
+      <button onclick="chooseSection('Solstice')">11 - Solstice</button>
+      <button onclick="chooseSection('Meadow')">11 - Meadow</button>
+    </div>
+    <div style="margin-top:12px" class="center-row">
+      <button class="logout" onclick="logout()">Log Out</button>
+    </div>
+  </div>
 
-<div class="container hidden" id="genmath-lrn-screen">
-  <h2>Enter your LRN</h2>
-  <input type="text" id="genmath-lrn" placeholder="Enter LRN">
-  <button onclick="checkGenMathLRN()">Submit</button>
-  <br><br>
-  <button onclick="backToGenMath()">Back</button>
-</div>
+  <div id="lrnCard" class="card hidden center">
+    <h3 id="selectedSection">Section</h3>
+    <input type="text" id="lrnInput" placeholder="Enter LRN">
+    <div class="center-row">
+      <button onclick="checkGrade()">View Grade</button>
+      <button class="secondary" onclick="backToSections()">Back</button>
+    </div>
+  </div>
 
-<div class="container hidden" id="genmath-result"></div>
+  <div id="studentCard" class="card hidden">
+    <h3 id="stuName">Student Name</h3>
+    <p class="small">LRN: <span id="stuLRN"></span></p>
+    <p class="small">Subject: <strong>General Mathematics</strong></p>
+    <h2 id="stuGradeDisplay"></h2>
+    <p id="stuMessage" class="caption"></p>
+    <div style="margin-top:12px" class="center-row">
+      <button onclick="backToSections()">Back</button>
+      <button class="logout" onclick="logout()">Log Out</button>
+    </div>
+  </div>
 
-<!-- TatakSTEM Interface -->
-<div class="container hidden" id="stem-screen">
-  <h2>Welcome to Grade-11 Aurora (STEM) Database</h2>
-  <p>Please enter your LRN:</p>
-  <input type="text" id="stem-lrn" placeholder="Enter LRN">
-  <button onclick="checkStemLRN()">Submit</button>
-  <br><br>
-  <button onclick="logout()">Log out</button>
-</div>
+  <!-- STEM -->
+  <div id="stemCard" class="card hidden center">
+    <h2>Welcome to Grade-11 Aurora (STEM) Database</h2>
+    <p class="caption">Enter your LRN to view your subjects and grades.</p>
+    <input type="text" id="stemLRN" placeholder="Enter LRN">
+    <div class="center-row">
+      <button onclick="checkSTEM()">View</button>
+      <button class="secondary" onclick="logout()">Log Out</button>
+    </div>
+  </div>
 
-<div class="container hidden" id="stem-result"></div>
+  <div id="stemStudentCard" class="card hidden">
+    <h3 id="stemName">Student Name</h3>
+    <p class="small">LRN: <span id="stemLRNDisplay"></span></p>
+    <p class="small">Science, Technology, Engineering, and Mathematics Class Batch 2025 - 2026</p>
+    <table id="stemTable"><thead><tr><th>Subject</th><th>Grade</th></tr></thead><tbody></tbody></table>
+    <h3 id="stemFinalAvg"></h3>
+    <p class="caption">Final average is automatically calculated from entered subjects (ignores empty subjects).</p>
+    <div style="margin-top:12px" class="center-row">
+      <button onclick="logout()" class="logout">Log Out</button>
+    </div>
+  </div>
 
-<!-- Admin Mode -->
-<div class="container hidden" id="admin-screen">
-  <h2>Admin Mode – Masterlist</h2>
-  <p>Edit the grades and info directly in this table.</p>
-  <div id="admin-table"></div>
-  <br>
-  <button onclick="logout()">Log out</button>
-</div>
+  <!-- ADMIN -->
+  <div id="adminPrompt" class="card hidden center">
+    <h3>Enter Admin PIN</h3>
+    <input type="password" id="adminPin" placeholder="Admin PIN">
+    <div class="center-row">
+      <button onclick="enterAdmin()">Enter Admin Mode</button>
+      <button class="secondary" onclick="closeAdminPrompt()">Cancel</button>
+    </div>
+  </div>
+
+  <div id="adminPanel" class="card hidden">
+    <h2>Admin: Master Spreadsheet</h2>
+    <p class="caption">Edit LRNs, names, and grades here. Click <strong>Save Changes</strong> to persist data in this browser (localStorage).</p>
+    <div style="overflow:auto;max-height:520px">
+      <table id="adminTable"><thead></thead><tbody></tbody></table>
+    </div>
+    <div class="admin-actions" style="margin-top:12px">
+      <button onclick="saveData()">Save Changes</button>
+      <button class="secondary" onclick="exportCSV()">Export CSV</button>
+      <button class="logout" onclick="exitAdmin()">Exit Admin</button>
+    </div>
+  </div>
+
+</main>
 
 <script>
-  // Databases
-  const genMathData = {
-    "Ember": {
-      "113597140014": {name:"AFABLE, CLARENS ANTIPOLO", grade:74},
-      "113610140002": {name:"ALFORTE, RANNEL JOHN BALDEO", grade:78},
-      // ... (shortened for demo, add all your Ember students here)
-    },
-    "Oasis": {
-      "113606140050": {name:"Arimbuyutan, Nhel John Elyson A.", grade:76},
-      "113602140005": {name:"Belarmino, Mark Dm H.", grade:83},
-      // ... (add all Oasis students here)
+// ---------------------------
+// Data: full masterlists
+// ---------------------------
+let genMathDB = {
+  "Ember":[
+    {lrn:"113597140014", name:"AFABLE,CLARENS ANTIPOLO", grade:74},
+    {lrn:"113610140002", name:"ALFORTE,RANNEL JOHN BALDEO", grade:78},
+    {lrn:"113606140068", name:"ATABAY,JURODS BASAS", grade:75},
+    {lrn:"113606140041", name:"CAGATIN,MARC JAY MARFIL", grade:74},
+    {lrn:"113606140051", name:"CAPELLAN,JAMES ROLLY TOLENTINO", grade:77},
+    {lrn:"113606140046", name:"CASTOR,KENNY RICH SALONDAGA", grade:82},
+    {lrn:"120868140083", name:"GERVACIO,CZECH NAZARINE DINGAL", grade:80},
+    {lrn:"113951140024", name:"GIMANG,BABY NIÑO VAFLOR", grade:94},
+    {lrn:"113943140021", name:"GUIOGUIO,WINNARD KENT DALANON", grade:88},
+    {lrn:"113604140035", name:"LETADA,R-JAY VILLAMOR", grade:75},
+    {lrn:"113712140015", name:"TAMAYO,RENZ IVAN FUENTES", grade:75},
+    {lrn:"113606140183", name:"VILLAMIN,JAMES JAHRED GUIRIBA", grade:84},
+    {lrn:"113606140185", name:"VISDA,MATTHEW JOSH BISNAR", grade:78},
+    {lrn:"113606140113", name:"ABAÑO,JESSA MAE ALICANTE", grade:75},
+    {lrn:"113612120033", name:"AFABLE,NOVIE EMPAS", grade:78},
+    {lrn:"113951140037", name:"ALORAN,MARIA PRINCESS AMARO", grade:79},
+    {lrn:"113606140124", name:"ARROYO,KIMBERLY MOTITA", grade:79},
+    {lrn:"113606140126", name:"ATABAY,JEAN ESCARO", grade:86},
+    {lrn:"113606140128", name:"ATABAY,MARY CLAIRE GADIANA", grade:84},
+    {lrn:"113606150115", name:"CAJEGAS,BENNIE MARIE CAPELLAN", grade:81},
+    {lrn:"136836140494", name:"CAPELLAN,PRESCILLA ENATE", grade:80},
+    {lrn:"113606150071", name:"CARILLO,IRISH MITRA", grade:81},
+    {lrn:"113610140012", name:"CLORES,JOJIELYN ARAGON", grade:82},
+    {lrn:"113786140045", name:"DELAVIN,CHENKIE CASIO", grade:83},
+    {lrn:"113606140144", name:"DERLA,PRINCESS MAE SORIANO", grade:85},
+    {lrn:"103871140036", name:"ESCALA,SCARLETTE SORIANO", grade:88},
+    {lrn:"113605140032", name:"GARCIA,ANALYN TAMAYO", grade:90},
+    {lrn:"113610140016", name:"LOZADA,NECEL JOY BULALAQUE", grade:91},
+    {lrn:"113604140052", name:"NAGA,JAMIE LOREN TINAY", grade:85},
+    {lrn:"113606140164", name:"ORIAS,TRISHA JANE NUÑEZ", grade:81},
+    {lrn:"113603140010", name:"PABILANDO,JHOANNA VILLANTES", grade:89},
+    {lrn:"113606140160", name:"PEÑARANDA,JAN MONICQUE ESPARRAGO", grade:88},
+    {lrn:"113606140178", name:"ROBISO,ANDREA ATENDIDO", grade:75},
+    {lrn:"113605140039", name:"SANCHEZ,DIANNE PATRICIA BERGADO", grade:93},
+    {lrn:"113504140033", name:"TORRENUEVA,PRINCESS GEMINO", grade:85},
+    {lrn:"113606140161", name:"VALLERAS,ROSELYN JERUSALEM", grade:79}
+  ],
+  "Oasis":[
+    {lrn:"113606140050", name:"Arimbuyutan, Nhel John Elyson A.", grade:76},
+    {lrn:"113602140005", name:"Belarmino, Mark Dm H.", grade:83},
+    {lrn:"113606140060", name:"Canete, Jolit Z.", grade:78},
+    {lrn:"113597140071", name:"Diaz, Jethro L.", grade:90},
+    {lrn:"113613140004", name:"Ecita, Lorince D.", grade:76},
+    {lrn:"113613140005", name:"Igloso, Jerry Jr. C.", grade:80},
+    {lrn:"113617140031", name:"Mahayag, Kyle", grade:85},
+    {lrn:"113604140036", name:"Mahinay, Romel C.", grade:81},
+    {lrn:"113606140074", name:"Manlangit, Lester C.", grade:88},
+    {lrn:"113615140011", name:"Minggoy, John Mark V.", grade:75},
+    {lrn:"113605130037", name:"Ramirez, Jielo A.", grade:77},
+    {lrn:"113604140042", name:"Serafin, Reynald P.", grade:70},
+    {lrn:"136838140101", name:"Ubac, Michael John M.", grade:79},
+    {lrn:"113606150124", name:"Alforque, Anniver C.", grade:75},
+    {lrn:"113615140014", name:"Aplacador, Arnie", grade:77},
+    {lrn:"113614140016", name:"Apues, Marjorie A.", grade:75},
+    {lrn:"113606140129", name:"Arizobal, Jenny P.", grade:75},
+    {lrn:"113606140088", name:"Atizado, Princess Odesa P.", grade:81},
+    {lrn:"113951140053", name:"Bandol, Loida A.", grade:77},
+    {lrn:"110282140176", name:"Baring, Kristine M.", grade:81},
+    {lrn:"113599140015", name:"Baring, Lanilyn A.", grade:90},
+    {lrn:"113606140143", name:"Bayagosa, Esiel V.", grade:76},
+    {lrn:"113606140139", name:"Caones, Cynde M.", grade:82},
+    {lrn:"113597140019", name:"Catarinin, Victoria M.", grade:81},
+    {lrn:"113612140024", name:"Etang, Kristine Rein Lara", grade:80},
+    {lrn:"113617140002", name:"Francisco, Emmalyn E.", grade:81},
+    {lrn:"113613140019", name:"Jubay, Jeann M.", grade:74},
+    {lrn:"123456789012", name:"Lerit, Sassy Liane A.", grade:70},
+    {lrn:"113597140053", name:"Luzong C. Nancy", grade:86},
+    {lrn:"113786140055", name:"Mahinay, Gella", grade:77},
+    {lrn:"113597120160", name:"Moreno, Jenny A.", grade:75},
+    {lrn:"113606140177", name:"Natural, Erika Joy P.", grade:79},
+    {lrn:"113606140114", name:"Noda, Glyza B.", grade:75},
+    {lrn:"113604140050", name:"Orbes, Annjean B.", grade:78},
+    {lrn:"113613140016", name:"Paghunasan, Shery-Ann T.", grade:83},
+    {lrn:"113606140115", name:"Paran, Ronalyn D.", grade:81},
+    {lrn:"113951140046", name:"Pascua, Danica A.", grade:78},
+    {lrn:"113951140086", name:"Presilda, Janna Shane R.", grade:78},
+    {lrn:"113606140116", name:"Ramirez, Jendy V.", grade:80},
+    {lrn:"113597140027", name:"Rupa, Clavel O.", grade:78}
+  ],
+  "Solstice":[
+    {lrn:"113612140003", name:"AVILA,GIAN JOSH RAYMUNDO", grade:76},
+    {lrn:"113605130028", name:"BELEN,JACKPHILLIP MENDERO", grade:73},
+    {lrn:"110108140048", name:"BERRES,GEIAN CARLO RONDA", grade:75},
+    {lrn:"136524150592", name:"CABRALES,AL FRANCIS AFABLE", grade:78},
+    {lrn:"113606140044", name:"CARMEN,ERNESTO JR BERDIN", grade:73},
+    {lrn:"113606130133", name:"COSTE,IGNACIO III ABAYON", grade:73},
+    {lrn:"113606110055", name:"DEL MUNDO,JUSTINE PABATANG", grade:74},
+    {lrn:"109156150106", name:"DELA CRUZ,JOHN KYLE -", grade:76},
+    {lrn:"113602130016", name:"DOCUSIN,GIAN SOCITO", grade:78},
+    {lrn:"113954130030", name:"ERENIA,KIM OCHEA", grade:73},
+    {lrn:"113597140011", name:"FLORES,DAVE RABUYA", grade:75},
+    {lrn:"113604120065", name:"LIBAY,JOSHUA VILLAMAR", grade:77},
+    {lrn:"113602140012", name:"LUCENESIO,MARK JUSTIN ETAOC", grade:73},
+    {lrn:"113613130008", name:"LUGANA,JADE IGLOSO", grade:70},
+    {lrn:"113606140099", name:"LUZONG,BRENT KEVIN ARIZOBAL", grade:80},
+    {lrn:"113608110042", name:"MALANA,GEHARD ADIGUE", grade:81},
+    {lrn:"113614140009", name:"MONTECALVO,JOJIE AREGLADO", grade:75},
+    {lrn:"113612140020", name:"TAMAYO,JOHN LESTER BELARMINO", grade:75},
+    {lrn:"104753140051", name:"TOROY,DAVE ESPEJON", grade:76},
+    {lrn:"136477140516", name:"TRINIDAD,JOHN WAYNE LUTCHE", grade:73},
+    {lrn:"113603140006", name:"TUMANGAN,NHOAH BUJAWE", grade:75},
+    {lrn:"113606140119", name:"ALIÑO,JEAN BENARO", grade:73},
+    {lrn:"113597140076", name:"ARCUENO,AMANDA ANDRINO", grade:84},
+    {lrn:"113606140123", name:"ARMA,ROCHELLE COSTE", grade:74},
+    {lrn:"113612140023", name:"BARRUGA,RICHEL SOQUESO", grade:73},
+    {lrn:"113613140012", name:"BRUSAS,JESSEL CAPALAR", grade:81},
+    {lrn:"113608120068", name:"CANTORIA,JIZEL AMARO", grade:73},
+    {lrn:"113613140013", name:"CAPALAR,RICHELYN CABAIS", grade:80},
+    {lrn:"113602140021", name:"CARASICAS,SUSAN ANABE", grade:74},
+    {lrn:"113606140093", name:"COLIBAO,ALEYAH ARCUENO", grade:76},
+    {lrn:"113610140013", name:"ESCOTE,ROMA MAE MONCADA", grade:73},
+    {lrn:"113604140046", name:"FRANCISCO,ANIELYN PALANAS", grade:76},
+    {lrn:"113605140033", name:"GARCIA,SHIELA MAE BARILE", grade:74},
+    {lrn:"113606140150", name:"GESTIADA,JULIA JANE IGNACIO", grade:75},
+    {lrn:"113606130227", name:"MADERA,JERECA VERDIDA", grade:73},
+    {lrn:"113951130094", name:"RICARTE,SHEILA MAE ESQUILONA", grade:75},
+    {lrn:"113612140027", name:"ROMBAIZ,ROSALYN ADIGUE", grade:73},
+    {lrn:"113617140028", name:"SALUNDAGA,JOSEL ALMOGUERA", grade:75},
+    {lrn:"113597140065", name:"SANCHEZ,JESEL ARCUENO", grade:73},
+    {lrn:"113612140028", name:"TAMAYO,PRINCESS HANNAH YLARAN", grade:75}
+  ],
+  "Meadow":[
+    {lrn:"113610130009", name:"ARRANGUEZ,MARK LEO ALFORTE", grade:73},
+    {lrn:"113956130022", name:"BOGABIL,ALDIN LUMALANG", grade:76},
+    {lrn:"113602140017", name:"CABAGUE,MIGUEL VIDA", grade:75},
+    {lrn:"113604140006", name:"CABINTOY,JEROME CASIDSID", grade:73},
+    {lrn:"113602120010", name:"CARASICAS,JEVAN ANABE", grade:76},
+    {lrn:"113605140007", name:"DELA CRUZ,JHONNY FRANCISCO", grade:75},
+    {lrn:"113604140007", name:"FLORES,JEM VASQUEZ", grade:77},
+    {lrn:"113605140012", name:"MANANGAT,ERIC MENEL", grade:76},
+    {lrn:"113604140038", name:"MITRA,CYRIL JOHN ESTRADA", grade:73},
+    {lrn:"113610140006", name:"MONCADA,RON MART ESCOTE", grade:76},
+    {lrn:"113606140169", name:"PARAGUYA,GERALD ESCARAN", grade:74},
+    {lrn:"113605140017", name:"PINOTE,JAMES ABLAS", grade:76},
+    {lrn:"113606140181", name:"RAMIREZ,RONIE MARK MENDOZA", grade:75},
+    {lrn:"113606140182", name:"TANA,FRANCE HERMOSA", grade:73},
+    {lrn:"113613130013", name:"URBANO,JOHN CARLO CAPELLAN", grade:90},
+    {lrn:"113612110001", name:"ABAD,JUVYMAE BARRUGA", grade:null},
+    {lrn:"113610140008", name:"ADORNA,CHARISA REBUJAS", grade:75},
+    {lrn:"113610140009", name:"ALFORTE,MERYL JOY CAÑELAS", grade:75},
+    {lrn:"113597130044", name:"ARCUENO,JENELYN PRESILDA", grade:73},
+    {lrn:"113605140023", name:"ATIBAGOS,CRISHELLE FLORES", grade:74},
+    {lrn:"113610140010", name:"BADIANA,MARIAN ARCON", grade:73},
+    {lrn:"113613130017", name:"BILARMINO,RAYCEL LATAGAN", grade:74},
+    {lrn:"113610140011", name:"BOGNOT,KIMBERLY ARAGON", grade:73},
+    {lrn:"113596120049", name:"CAADLAWON,BELIZA BOHOL", grade:75},
+    {lrn:"113604140012", name:"CARIÑO,DANICE ARQUIO", grade:75},
+    {lrn:"113606140147", name:"CLEMENTE,MAURENE NICDAO", grade:77},
+    {lrn:"165510141544", name:"COLLADO,HANNAH OSABEL", grade:72},
+    {lrn:"120741140026", name:"CONTREDAS,CRISTINE LABATETE", grade:74},
+    {lrn:"113606140094", name:"COSTE,GECEL TABOR", grade:74},
+    {lrn:"113608140014", name:"CUIZON,JUNALYN ABELINDE", grade:75},
+    {lrn:"113942140018", name:"DAO,LEIAN CARILLO", grade:75},
+    {lrn:"113612130037", name:"DELA PEÑA,CHARLENE GAVIOLA", grade:77},
+    {lrn:"113606140096", name:"DELOS SANTOS,LUJIL BELO", grade:75},
+    {lrn:"113597140021", name:"ECITA,CHARMAE CAÑELAS", grade:77},
+    {lrn:"113597140077", name:"LUCENESIO,ANGELICA VEPINOSA", grade:76},
+    {lrn:"113606140175", name:"MAGLASANG,DANIELA COLUMNA", grade:81},
+    {lrn:"113617130046", name:"MATERDAN,JESALYN TAMBOBOY", grade:72},
+    {lrn:"113606140118", name:"RAYMUNDO,RHEA BANDOL", grade:76},
+    {lrn:"113605140038", name:"SAMPAGA,JESSICA VILLAR", grade:74}
+  ]
+};
+
+// STEM masterlist (32 students)
+let stemDB = [
+  {lrn:"113797140007", name:"Alutaya, MJ O.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":91,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":96,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113604140025", name:"Aparente, Austin Jolf S.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":84,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":91,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113604140026", name:"Arizobal, Robert Jules O.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":86,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":92,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113606150076", name:"Atacador, Rey Kenneth C.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":88,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":96,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113606130113", name:"Capellan, Kian Carl N.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":85,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":89,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113602140018", name:"Delara, Jhonpyu A.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":87,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":93,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113602140008", name:"Delara, Joeren Joules O.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":82,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":95,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113606150001", name:"Dilao, Mark Lawrence P.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":87,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":91,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113606140061", name:"Gabelo, Yeshuah Ashliegh B.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":85,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":94,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113606150116", name:"Gamba, Renzell Wen G.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":85,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":90,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113951140031", name:"Manlapaz, Mark Laurence B.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":85,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":91,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113606140170", name:"Paraguya, Josua E.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":82,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":91,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113605140018", name:"Piodos, John Errol M.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":90,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":97,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113612140017", name:"Raymundo, Kyle Nathan M.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":84,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":92,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113597140007", name:"Resma, Lenard B.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":85,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":92,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113599140008", name:"Retuerto, Remark Fel R.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":88,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":96,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113606140109", name:"Valle, Jahn Aj Vhin T.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":84,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":89,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113606140130", name:"Almero, Mikaela Mildred D.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":79,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":91,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113606140132", name:"Arizala, Rain A.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":88,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":92,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113786140015", name:"Atega, Dianne Ashly M.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":84,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":86,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113608140025", name:"Cabrera, Wenchie P.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":85,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":93,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113606140142", name:"Cervantes, Nica A.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":87,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":95,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113589140014", name:"Edem, Jeramie M.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":82,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":91,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113606140173", name:"Huelva, Jelianne S.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":90,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":97,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113597140060", name:"Ibañez, Carmela O.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":84,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":92,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113597140060", name:"Jores, Cristel B.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":85,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":92,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113597140026", name:"Malunes, Fricel Blaze A.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":88,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":96,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113599140030", name:"Pelayo, Trecia Faith C.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":91,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":93,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"402104150245", name:"Peteros, Lhola Belle E.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":85,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":94,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113677130163", name:"Salazar, Shane A.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":89,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":92,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113609140024", name:"Tagbacaola, Irene A.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":86,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":86,"Physical Education and Health":"","Pre-Calculus":""}},
+  {lrn:"113782140023", name:"Tamayo, Mary Antoniette A.", subjects:{"Earth Science":"","General Mathematics":"","Oral Communication in Context":"","21st Century Literature from the Philippines and the World":"","Introduction to Philosophy of the Human Person":89,"Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino":"","Media and Information Literacy":97,"Physical Education and Health":"","Pre-Calculus":""}}
+];
+
+// Load saved data from localStorage (if previously saved by admin)
+if(localStorage.getItem('genMathDB')){
+  try{ genMathDB = JSON.parse(localStorage.getItem('genMathDB')); }catch(e){}
+}
+if(localStorage.getItem('stemDB')){
+  try{ stemDB = JSON.parse(localStorage.getItem('stemDB')); }catch(e){}
+}
+
+// ---------------------------
+// Helpers and navigation
+// ---------------------------
+function hideAll(){
+  document.querySelectorAll('.card').forEach(c=>c.classList.add('hidden'));
+}
+
+function enterPortal(){
+  const code = document.getElementById('mainCode').value.trim();
+  if(code === 'GenMath2025'){
+    hideAll(); document.getElementById('genMathCard').classList.remove('hidden');
+  } else if(code === 'TatakSTEM'){
+    hideAll(); document.getElementById('stemCard').classList.remove('hidden');
+  } else if(code === '675915'){
+    // quick admin access through main box
+    openAdminPrompt(); document.getElementById('adminPin').value = '675915';
+  } else { alert('Invalid code.'); }
+}
+
+function chooseSection(sec){
+  window.currentSection = sec; hideAll();
+  document.getElementById('lrnCard').classList.remove('hidden');
+  document.getElementById('selectedSection').innerText = 'Section: 11 - ' + sec;
+}
+
+function backToSections(){ hideAll(); document.getElementById('genMathCard').classList.remove('hidden'); }
+
+function checkGrade(){
+  const lrn = document.getElementById('lrnInput').value.trim();
+  const sec = window.currentSection;
+  if(!lrn){ alert('Please enter your LRN.'); return; }
+  const list = genMathDB[sec] || [];
+  const student = list.find(s=>s.lrn === lrn);
+  if(!student){ alert('LRN not found in selected section.'); return; }
+  hideAll(); document.getElementById('studentCard').classList.remove('hidden');
+  document.getElementById('stuName').innerText = student.name;
+  document.getElementById('stuLRN').innerText = student.lrn;
+  const grade = (student.grade === null || student.grade === undefined || student.grade === '')? 'N/A' : student.grade;
+  document.getElementById('stuGradeDisplay').innerText = grade;
+  const msg = (student.grade>=75)? 'Congratulations! You passed the subject. Continue improving!' : 'May second quarter pa, pwedeng-pwede pang bumawi!';
+  // message must appear only in individual student interface
+  document.getElementById('stuMessage').innerText = (grade==='N/A')? 'Grade not yet available.' : msg;
+  document.getElementById('stuMessage').className = (student.grade>=75)? 'msg-pass' : 'msg-fail';
+}
+
+// ---------------------------
+// STEM view
+// ---------------------------
+const STEM_SUBJECTS = [
+  'Earth Science','General Mathematics','Oral Communication in Context','21st Century Literature from the Philippines and the World','Introduction to Philosophy of the Human Person','Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino','Media and Information Literacy','Physical Education and Health','Pre-Calculus'
+];
+
+function checkSTEM(){
+  const lrn = document.getElementById('stemLRN').value.trim();
+  if(!lrn){ alert('Please enter LRN.'); return; }
+  const student = stemDB.find(s=>s.lrn === lrn);
+  if(!student){ alert('LRN not found.'); return; }
+  hideAll(); document.getElementById('stemStudentCard').classList.remove('hidden');
+  document.getElementById('stemName').innerText = student.name;
+  document.getElementById('stemLRNDisplay').innerText = student.lrn;
+  const tbody = document.querySelector('#stemTable tbody'); tbody.innerHTML = '';
+  let total=0,count=0;
+  STEM_SUBJECTS.forEach(sub=>{
+    const val = student.subjects[sub];
+    const row = document.createElement('tr');
+    const td1 = document.createElement('td'); td1.innerText = sub;
+    const td2 = document.createElement('td'); td2.innerText = (val === undefined || val === '')? '' : val;
+    row.appendChild(td1); row.appendChild(td2); tbody.appendChild(row);
+    if(val !== undefined && val !== ''){ total += Number(val); count++; }
+  });
+  const avg = (count>0)?(total/count):'';
+  let honors = '';
+  if(avg !== ''){
+    if(avg >= 97.5555) honors = ' - WITH HIGHEST HONORS';
+    else if(avg >= 94.5555) honors = ' - WITH HIGH HONORS';
+    else if(avg >= 89.5444) honors = ' - WITH HONORS';
+    document.getElementById('stemFinalAvg').innerText = 'Final Average: ' + avg.toFixed(2) + honors;
+  } else {
+    document.getElementById('stemFinalAvg').innerText = 'Final Average: N/A';
+  }
+}
+
+// ---------------------------
+// ADMIN functions
+// ---------------------------
+function openAdminPrompt(){ hideAll(); document.getElementById('adminPrompt').classList.remove('hidden'); }
+function closeAdminPrompt(){ hideAll(); document.getElementById('loginCard').classList.remove('hidden'); }
+
+function enterAdmin(){
+  const pin = document.getElementById('adminPin').value.trim();
+  if(pin !== '675915'){ alert('Invalid admin PIN.'); return; }
+  hideAll(); document.getElementById('adminPanel').classList.remove('hidden');
+  renderAdminTable();
+}
+
+function exitAdmin(){ localStorage.setItem('genMathDB', JSON.stringify(genMathDB)); localStorage.setItem('stemDB', JSON.stringify(stemDB)); location.reload(); }
+
+function renderAdminTable(){
+  const thead = document.querySelector('#adminTable thead'); const tbody = document.querySelector('#adminTable tbody');
+  thead.innerHTML = '';
+  tbody.innerHTML = '';
+  // Columns: type, lrn, name, section/subject, grade
+  thead.innerHTML = '<tr><th>Type</th><th>LRN</th><th>Name</th><th>Section / Subject</th><th>Grade (editable)</th></tr>';
+
+  // GenMath rows
+  for(const sec of Object.keys(genMathDB)){
+    for(const s of genMathDB[sec]){
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>GenMath</td><td><input value="${s.lrn}" onchange="this.closest('tr').dataset.lrn=this.value"></td><td><input value='${s.name}' style='width:260px' onchange="this.closest('tr').dataset.name=this.value"></td><td>${sec}</td><td><input class='grade-input' value='${s.grade === null ? '' : s.grade}' onchange="this.closest('tr').dataset.grade=this.value"></td>`;
+      // store data attributes for save
+      tr.dataset.type='gen'; tr.dataset.origLrn=s.lrn; tr.dataset.lrn=s.lrn; tr.dataset.name=s.name; tr.dataset.sec=sec; tr.dataset.grade=(s.grade===null || s.grade===undefined)?'':s.grade;
+      tbody.appendChild(tr);
     }
-    // Add Solstice + Meadow as well
-  };
+  }
 
-  const stemData = {
-    "113797140007": {name:"Alutaya, MJ O.", subjects:{}, final:0},
-    "113604140025": {name:"Aparente, Austin Jolf S.", subjects:{}, final:0}
-    // ... Add all 32 STEM students here
-  };
+  // STEM rows - each student as one row with editable subject grades in a modal-like inline area
+  for(const stu of stemDB){
+    const tr = document.createElement('tr');
+    const subjectsPreview = STEM_SUBJECTS.map(sub=> (stu.subjects[sub] === undefined || stu.subjects[sub] === '')? (sub+':') : (sub+':'+stu.subjects[sub]) ).join(' | ');
+    tr.innerHTML = `<td>STEM</td><td><input value="${stu.lrn}" onchange="this.closest('tr').dataset.lrn=this.value"></td><td><input value='${stu.name}' style='width:260px' onchange="this.closest('tr').dataset.name=this.value"></td><td style='text-align:left;max-width:360px'>${subjectsPreview}</td><td><button onclick='openEditSubjects(this)'>Edit Subjects</button></td>`;
+    tr.dataset.type='stem'; tr.dataset.lrn=stu.lrn; tr.dataset.name=stu.name; tbody.appendChild(tr);
+  }
+}
 
-  let currentSection = "";
+// Open edit subjects for a stem student (inline prompt)
+function openEditSubjects(btn){
+  const tr = btn.closest('tr');
+  const lrn = tr.dataset.lrn;
+  const student = stemDB.find(s=>s.lrn === lrn);
+  if(!student){ alert('Student not found.'); return; }
+  // simple prompt series to edit each subject (keeps interface simple and portable)
+  for(const sub of STEM_SUBJECTS){
+    const current = student.subjects[sub] === undefined ? '' : student.subjects[sub];
+    const val = prompt(`Edit grade for ${student.name}
+Subject: ${sub}
+(current: ${current})`, current);
+    if(val === null) break; // cancel
+    student.subjects[sub] = (val.trim()==='')? '' : Number(val);
+  }
+  renderAdminTable();
+}
 
-  function checkCode(){
-    const code = document.getElementById("access-code").value;
-    if(code==="GenMath2025"){
-      document.getElementById("login-screen").classList.add("hidden");
-      document.getElementById("genmath-screen").classList.remove("hidden");
-    } else if(code==="TatakSTEM"){
-      document.getElementById("login-screen").classList.add("hidden");
-      document.getElementById("stem-screen").classList.remove("hidden");
-    } else if(code==="675915"){
-      document.getElementById("login-screen").classList.add("hidden");
-      document.getElementById("admin-screen").classList.remove("hidden");
-      loadAdminTable();
-    } else {
-      alert("Invalid code.");
+function saveData(){
+  // Gather edited GenMath rows from table
+  const rows = document.querySelectorAll('#adminTable tbody tr');
+  // Reconstruct genMathDB and stemDB from current UI inputs
+  const newGen = {Ember:[],Oasis:[],Solstice:[],Meadow:[]};
+  const newStem = [];
+  rows.forEach(r=>{
+    if(r.dataset.type==='gen'){
+      const lrn = r.querySelector('td input').value.trim();
+      const name = r.querySelectorAll('td input')[1].value.trim();
+      const gradeField = r.querySelectorAll('td input')[2].value.trim();
+      const grade = gradeField === ''? null : Number(gradeField);
+      const sec = r.cells[3].innerText;
+      newGen[sec].push({lrn,name,grade});
+    } else if(r.dataset.type==='stem'){
+      const lrn = r.querySelector('td input').value.trim();
+      const name = r.querySelectorAll('td input')[1].value.trim();
+      // find original student in stemDB and take subjects
+      const orig = stemDB.find(s=>s.lrn===lrn) || {subjects:{}};
+      newStem.push({lrn,name,subjects: orig.subjects});
+    }
+  });
+  genMathDB = newGen; stemDB = newStem;
+  localStorage.setItem('genMathDB', JSON.stringify(genMathDB));
+  localStorage.setItem('stemDB', JSON.stringify(stemDB));
+  alert('Saved to browser localStorage. Admin edits preserved on this device.');
+  renderAdminTable();
+}
+
+function exportCSV(){
+  // Export a CSV containing both GenMath and STEM data in a simple flattened form
+  let rows = [];
+  rows.push(['type','lrn','name','section_or_subject','grade']);
+  for(const sec of Object.keys(genMathDB)){
+    for(const s of genMathDB[sec]) rows.push(['GenMath', s.lrn, s.name, sec, s.grade===null? '': s.grade]);
+  }
+  for(const stu of stemDB){
+    for(const sub of STEM_SUBJECTS){
+      rows.push(['STEM', stu.lrn, stu.name, sub, stu.subjects[sub]===undefined? '': stu.subjects[sub]]);
     }
   }
+  const csv = rows.map(r=> r.map(c=>`"${(''+c).replace(/"/g,'""')}"`).join(',')).join('
+');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'masterlist_export.csv'; a.click(); URL.revokeObjectURL(url);
+}
 
-  function logout(){
-    document.querySelectorAll(".container").forEach(el=>el.classList.add("hidden"));
-    document.getElementById("login-screen").classList.remove("hidden");
-    document.getElementById("access-code").value="";
-  }
+// ---------------------------
+// Utilities
+// ---------------------------
+function logout(){ location.reload(); }
 
-  // GenMath
-  function selectSection(section){
-    currentSection = section;
-    document.getElementById("genmath-screen").classList.add("hidden");
-    document.getElementById("genmath-lrn-screen").classList.remove("hidden");
-  }
-  function backToGenMath(){
-    document.getElementById("genmath-lrn-screen").classList.add("hidden");
-    document.getElementById("genmath-screen").classList.remove("hidden");
-  }
-  function checkGenMathLRN(){
-    const lrn=document.getElementById("genmath-lrn").value;
-    const sectionData=genMathData[currentSection];
-    if(sectionData && sectionData[lrn]){
-      const student=sectionData[lrn];
-      let msg="";
-      if(student.grade>=75){
-        msg="Congratulations! You passed the subject. Continue improving!";
-      } else {
-        msg="May second quarter pa, pwedeng-pwede pang bumawi!";
-      }
-      document.getElementById("genmath-lrn-screen").classList.add("hidden");
-      document.getElementById("genmath-result").innerHTML=`
-        <h3>${student.name}</h3>
-        <p>LRN: ${lrn}</p>
-        <p>General Math Grade: <b>${student.grade}</b></p>
-        <p>${msg}</p>
-        <div id="congrats-message">
-          Congratulations! You survived the First Quarter of School Year 2025-2026 — Sir Jerson
-        </div>
-        <br><button onclick="logout()">Log out</button>
-      `;
-      document.getElementById("genmath-result").classList.remove("hidden");
-    } else {
-      alert("Invalid LRN for this section.");
-    }
-  }
-
-  // STEM
-  function checkStemLRN(){
-    const lrn=document.getElementById("stem-lrn").value;
-    if(stemData[lrn]){
-      const s=stemData[lrn];
-      let subjectsHTML="<table><tr><th>Subject</th><th>Grade</th></tr>";
-      for(let sub in s.subjects){
-        subjectsHTML+=`<tr><td>${sub}</td><td>${s.subjects[sub]}</td></tr>`;
-      }
-      subjectsHTML+="</table>";
-      document.getElementById("stem-screen").classList.add("hidden");
-      document.getElementById("stem-result").innerHTML=`
-        <h3>${s.name}</h3>
-        <p>LRN: ${lrn}</p>
-        ${subjectsHTML}
-        <p>Final Average: <b>${s.final}</b></p>
-        <div id="congrats-message">
-          Congratulations! You survived the First Quarter of School Year 2025-2026 — Sir Jerson
-        </div>
-        <br><button onclick="logout()">Log out</button>
-      `;
-      document.getElementById("stem-result").classList.remove("hidden");
-    } else {
-      alert("Invalid LRN.");
-    }
-  }
-
-  // Admin
-  function loadAdminTable(){
-    document.getElementById("admin-table").innerHTML="<p>(Editable table placeholder for grades database)</p>";
-  }
+// On load: show login
+hideAll(); document.getElementById('loginCard').classList.remove('hidden');
 </script>
-
 </body>
 </html>
