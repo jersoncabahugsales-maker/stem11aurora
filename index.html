@@ -1,42 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Dimasalang NHS — Student Portal</title>
-  <style>
-    :root{--bg:#f4fbff;--card:#ffffff;--accent:#1e90ff;--dark:#042638}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:var(--bg);color:var(--dark)}
-    header{display:flex;align-items:center;gap:12px;padding:14px 20px;background:linear-gradient(90deg,#e9f7ff,white);box-shadow:0 2px 6px rgba(5,40,60,0.06)}
-    header img{width:64px;height:64px;border-radius:8px;object-fit:cover}
-    header .titles{line-height:1}
-    header h1{margin:0;font-size:20px}
-    header p{margin:0;font-size:13px;color:#225c6b}
-    main{max-width:980px;margin:28px auto;padding:12px}
-    .card{background:var(--card);border-radius:12px;padding:18px;box-shadow:0 8px 18px rgba(7,28,42,0.06);}
-    .center{display:flex;flex-direction:column;align-items:center;gap:10px}
-    input[type=text], input[type=password], select{padding:10px;border-radius:8px;border:1px solid #d9eefb;width:280px}
-    button{padding:10px 14px;border-radius:8px;border:none;background:var(--accent);color:white;cursor:pointer}
-    button.ghost{background:#4aa3db}
-    button.danger{background:#c33}
-    .sections{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-    table{width:100%;border-collapse:collapse;margin-top:12px}
-    th,td{border:1px solid #e6f3fb;padding:8px;text-align:center}
-    th{background:#eaf8ff}
-    .small{font-size:13px;color:#35676f}
-    .msg-pass{color:#006400;font-weight:700}
-    .msg-fail{color:#b30000;font-weight:700}
-    .overlay{position:fixed;inset:0;background:rgba(3,20,30,0.45);display:flex;align-items:center;justify-content:center}
-    .modal{background:white;padding:16px;border-radius:10px;max-width:920px;width:96%;max-height:88vh;overflow:auto}
-    .flex-row{display:flex;gap:8px}
-    @media(max-width:640px){header h1{font-size:16px} input[type=text]{width:100%}}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dimasalang NHS — Student Portal</title>
+<style>
+  :root{
+    --bg:#f4fbff; --card:#ffffff; --ink:#083344; --muted:#35676f;
+    --accent:#1e90ff; --accent-2:#4aa3db; --danger:#c0392b;
+    --ring:rgba(30,144,255,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+  .hidden{display:none !important;} /* IMPORTANT: used to hide screens & modals */
+  header{display:flex;align-items:center;gap:12px;padding:14px 20px;background:linear-gradient(90deg,#e9f7ff,white);box-shadow:0 2px 6px rgba(5,40,60,.06)}
+  header img{width:64px;height:64px;border-radius:10px;object-fit:cover}
+  header h1{margin:0;font-size:22px}
+  header p{margin:0;font-size:13px;color:#2b5a68}
+  main{max-width:1000px;margin:28px auto;padding:12px}
+  .card{background:var(--card);border-radius:14px;padding:20px;box-shadow:0 8px 20px rgba(7,28,42,.08)}
+  .center{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px}
+  h2{margin:6px 0 12px}
+  h3{margin:6px 0 8px}
+  .small{font-size:13px;color:var(--muted)}
+  input[type=text],input[type=password],select{
+    padding:10px 12px;border-radius:10px;border:1px solid #d9eefb;min-width:280px;max-width:98%;
+    outline:0;box-shadow:0 0 0 0 var(--ring)
+  }
+  input:focus{border-color:#b7e3ff;box-shadow:0 0 0 4px var(--ring)}
+  button{
+    padding:10px 14px;border-radius:10px;border:none;background:var(--accent);color:#fff;cursor:pointer;
+    box-shadow:0 6px 14px rgba(30,144,255,.25);font-weight:600
+  }
+  button.ghost{background:var(--accent-2)}
+  button.danger{background:var(--danger)}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .sections{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+  table{width:100%;border-collapse:collapse;margin-top:12px}
+  th,td{border:1px solid #e6f3fb;padding:8px;text-align:center}
+  th{background:#eaf8ff}
+  .msg-pass{color:#0a7a3d;font-weight:700}
+  .msg-fail{color:#a41414;font-weight:700}
+  /* Overlays/Modals */
+  .overlay{position:fixed;inset:0;background:rgba(4,23,32,.50);display:flex;align-items:center;justify-content:center;z-index:50}
+  .modal{background:#fff;border-radius:14px;max-width:960px;width:96%;padding:18px;box-shadow:0 16px 40px rgba(0,0,0,.25);max-height:85vh;overflow:auto}
+  .pill{display:inline-block;padding:6px 10px;background:#eef7ff;border:1px solid #d7ecff;border-radius:999px;color:#0c4a6e;font-size:12px}
+  .footer-note{margin-top:18px;font-style:italic;color:#0c4a6e}
+  @media (max-width:640px){header h1{font-size:18px} input{min-width:100%}}
+</style>
 </head>
 <body>
 <header>
-  <img src="https://drive.google.com/uc?id=1_T4_-2ufDacbCf7u2vKP8mkMGG9-Tmjm" alt="logo">
-  <div class="titles">
+  <!-- School logo (upper-left) -->
+  <img src="https://drive.google.com/uc?id=1_T4_-2ufDacbCf7u2vKP8mkMGG9-Tmjm" alt="School Logo">
+  <div>
     <h1>Dimasalang National High School</h1>
     <p>Dimasalang, Masbate</p>
   </div>
@@ -47,44 +64,44 @@
   <section id="login" class="card center">
     <h2>Welcome! Please enter the code.</h2>
     <input id="codeInput" type="password" placeholder="Enter access code">
-    <div class="flex-row" style="margin-top:8px">
+    <div class="row">
       <button onclick="handleCode()">Submit</button>
       <button class="ghost" onclick="openAdminPin()">Admin Mode</button>
     </div>
-    <p class="small">Use <strong>GenMath2025</strong> for General Math or <strong>TatakSTEM</strong> for Grade-11 Aurora.</p>
+    <p class="small">Codes: <span class="pill">GenMath2025</span> (General Math) · <span class="pill">TatakSTEM</span> (Grade-11 Aurora)</p>
   </section>
 
-  <!-- GENERAL MATH SECTION SELECT -->
+  <!-- GENMATH HUB -->
   <section id="genmath" class="card hidden">
     <h2>General Mathematics Grade Viewing Database</h2>
-    <p class="small">Choose your section then enter LRN to view your individual grade.</p>
+    <p class="small">Choose your section then enter your LRN to view your personal grade.</p>
     <div class="sections">
-      <button onclick="openLRN('Ember')">11 - Ember</button>
-      <button onclick="openLRN('Oasis')">11 - Oasis</button>
-      <button onclick="openLRN('Solstice')">11 - Solstice</button>
-      <button onclick="openLRN('Meadow')">11 - Meadow</button>
+      <button onclick="openLRN('Ember')">11 – Ember</button>
+      <button onclick="openLRN('Oasis')">11 – Oasis</button>
+      <button onclick="openLRN('Solstice')">11 – Solstice</button>
+      <button onclick="openLRN('Meadow')">11 – Meadow</button>
     </div>
     <div style="margin-top:12px"><button class="danger" onclick="logout()">Log Out</button></div>
   </section>
 
-  <!-- LRN ENTRY -->
+  <!-- LRN ENTRY FOR GENMATH -->
   <section id="lrnSection" class="card center hidden">
     <h3 id="lrnSectionTitle">Section</h3>
     <input id="lrnField" type="text" placeholder="Enter LRN">
-    <div class="flex-row" style="margin-top:8px">
+    <div class="row">
       <button onclick="viewGenGrade()">View Grade</button>
       <button class="ghost" onclick="backToGen()">Back</button>
     </div>
   </section>
 
-  <!-- STUDENT VIEW (GEN MATH) -->
+  <!-- GENMATH STUDENT VIEW -->
   <section id="genStudent" class="card hidden">
     <h3 id="genStuName">Student Name</h3>
     <p class="small">LRN: <span id="genStuLRN"></span></p>
     <p class="small">Subject: <strong>General Mathematics</strong></p>
-    <h2 id="genStuGrade"></h2>
+    <h2 id="genStuGrade">—</h2>
     <p id="genStuMsg" class="small"></p>
-    <div style="margin-top:12px" class="flex-row">
+    <div class="row">
       <button onclick="backToGen()">Back</button>
       <button class="danger" onclick="logout()">Log Out</button>
     </div>
@@ -92,60 +109,62 @@
 
   <!-- STEM LOGIN -->
   <section id="stem" class="card center hidden">
-    <h2>Grade-11 Aurora (STEM) Database</h2>
-    <p class="small">Enter your LRN to view your subjects and grades.</p>
+    <h2>Welcome to Grade-11 Aurora (STEM) Database</h2>
+    <p class="small">Enter your LRN to proceed.</p>
     <input id="stemLRNInput" type="text" placeholder="Enter LRN">
-    <div class="flex-row" style="margin-top:8px">
+    <div class="row">
       <button onclick="viewStem()">View</button>
       <button class="danger" onclick="logout()">Log Out</button>
     </div>
+    <p class="small footer-note">Science, Technology, Engineering, and Mathematics Class Batch 2025 – 2026</p>
   </section>
 
   <!-- STEM STUDENT VIEW -->
   <section id="stemStudent" class="card hidden">
     <h3 id="stemName">Student Name</h3>
     <p class="small">LRN: <span id="stemLRNDisplay"></span></p>
-    <p class="small">Science, Technology, Engineering, and Mathematics Class Batch 2025 - 2026</p>
+    <p class="small">Science, Technology, Engineering, and Mathematics Class Batch 2025 – 2026</p>
     <table id="stemGrades"><thead><tr><th>Subject</th><th>Grade</th></tr></thead><tbody></tbody></table>
-    <h3 id="stemFinal"></h3>
-    <div style="margin-top:12px" class="flex-row">
-      <button onclick="logout()">Log Out</button>
-      <button class="ghost" onclick="backToStem()">Back</button>
+    <h3 id="stemFinal">Final Average: N/A</h3>
+    <div class="row">
+      <button onclick="backToStem()">Back</button>
+      <button class="danger" onclick="logout()">Log Out</button>
     </div>
+    <p class="footer-note">“Congratulations! You survived the First Quarter of School Year 2025-2026” — <em>Sir Jerson</em></p>
   </section>
-
-  <!-- ADMIN PIN MODAL -->
-  <div id="adminPinModal" class="overlay hidden">
-    <div class="modal">
-      <h3>Enter Admin PIN</h3>
-      <input id="adminPinField" type="password" placeholder="Admin PIN">
-      <div style="margin-top:8px" class="flex-row">
-        <button onclick="enterAdmin()">Enter</button>
-        <button class="ghost" onclick="closeAdminPin()">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ADMIN PANEL -->
-  <div id="adminPanel" class="overlay hidden">
-    <div class="modal">
-      <h2>Admin — Master Spreadsheet</h2>
-      <p class="small">Edit grades and LRNs here. Click Save to persist changes in this browser (localStorage).</p>
-      <div style="overflow:auto;max-height:60vh;margin-top:8px">
-        <table id="adminTable"><thead></thead><tbody></tbody></table>
-      </div>
-      <div style="margin-top:12px" class="flex-row">
-        <button onclick="saveAdmin()">Save Changes</button>
-        <button class="ghost" onclick="downloadCSV()">Export CSV</button>
-        <button class="danger" onclick="closeAdmin()">Close</button>
-      </div>
-    </div>
-  </div>
-
 </main>
 
+<!-- ADMIN PIN MODAL (starts hidden) -->
+<div id="adminPinModal" class="overlay hidden">
+  <div class="modal">
+    <h3>Enter Admin PIN</h3>
+    <input id="adminPinField" type="password" placeholder="Admin PIN">
+    <div class="row" style="margin-top:8px">
+      <button onclick="enterAdmin()">Enter</button>
+      <button class="ghost" onclick="closeAdminPin()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL (starts hidden) -->
+<div id="adminPanel" class="overlay hidden">
+  <div class="modal">
+    <h2>Admin — Master Spreadsheet</h2>
+    <p class="small">Edit grades and LRNs here. Click <strong>Save Changes</strong> to persist in this browser (localStorage).</p>
+    <div style="overflow:auto;max-height:60vh;margin-top:10px">
+      <table id="adminTable"><thead></thead><tbody></tbody></table>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button onclick="saveAdmin()">Save Changes</button>
+      <button class="ghost" onclick="downloadCSV()">Export CSV</button>
+      <button class="danger" onclick="closeAdmin()">Close</button>
+    </div>
+  </div>
+</div>
+
 <script>
-// ---------- Data (full masterlists) ----------
+/* ----------------------- DATA ----------------------- */
+/* General Mathematics masterlist with grades */
 const genMathDB = {
   Ember:[
     {lrn:'113597140014',name:'AFABLE,CLARENS ANTIPOLO',grade:74},
@@ -312,151 +331,289 @@ const genMathDB = {
   ]
 };
 
-const STEM_SUBJECTS = ['Earth Science','General Mathematics','Oral Communication in Context','21st Century Literature from the Philippines and the World','Introduction to Philosophy of the Human Person','Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino','Media and Information Literacy','Physical Education and Health','Pre-Calculus'];
-
-// 32 STEM students with Media & Info Lit and Intro to Philo filled, others blank
-let stemDB = [
-  {lrn:'113797140007',name:'Alutaya, MJ O.',subjects:{'Media and Information Literacy':96,'Introduction to Philosophy of the Human Person':91}},
-  {lrn:'113604140025',name:'Aparente, Austin Jolf S.',subjects:{'Media and Information Literacy':91,'Introduction to Philosophy of the Human Person':84}},
-  {lrn:'113604140026',name:'Arizobal, Robert Jules O.',subjects:{'Media and Information Literacy':92,'Introduction to Philosophy of the Human Person':86}},
-  {lrn:'113606150076',name:'Atacador, Rey Kenneth C.',subjects:{'Media and Information Literacy':96,'Introduction to Philosophy of the Human Person':88}},
-  {lrn:'113606130113',name:'Capellan, Kian Carl N.',subjects:{'Media and Information Literacy':89,'Introduction to Philosophy of the Human Person':85}},
-  {lrn:'113602140018',name:'Delara, Jhonpyu A.',subjects:{'Media and Information Literacy':93,'Introduction to Philosophy of the Human Person':87}},
-  {lrn:'113602140008',name:'Delara, Joeren Joules O.',subjects:{'Media and Information Literacy':95,'Introduction to Philosophy of the Human Person':82}},
-  {lrn:'113606150001',name:'Dilao, Mark Lawrence P.',subjects:{'Media and Information Literacy':91,'Introduction to Philosophy of the Human Person':87}},
-  {lrn:'113606140061',name:'Gabelo, Yeshuah Ashliegh B.',subjects:{'Media and Information Literacy':94,'Introduction to Philosophy of the Human Person':85}},
-  {lrn:'113606150116',name:'Gamba, Renzell Wen G.',subjects:{'Media and Information Literacy':90,'Introduction to Philosophy of the Human Person':85}},
-  {lrn:'113951140031',name:'Manlapaz, Mark Laurence B.',subjects:{'Media and Information Literacy':91,'Introduction to Philosophy of the Human Person':85}},
-  {lrn:'113606140170',name:'Paraguya, Josua E.',subjects:{'Media and Information Literacy':91,'Introduction to Philosophy of the Human Person':82}},
-  {lrn:'113605140018',name:'Piodos, John Errol M.',subjects:{'Media and Information Literacy':97,'Introduction to Philosophy of the Human Person':90}},
-  {lrn:'113612140017',name:'Raymundo, Kyle Nathan M.',subjects:{'Media and Information Literacy':92,'Introduction to Philosophy of the Human Person':84}},
-  {lrn:'113597140007',name:'Resma, Lenard B.',subjects:{'Media and Information Literacy':92,'Introduction to Philosophy of the Human Person':85}},
-  {lrn:'113599140008',name:'Retuerto, Remark Fel R.',subjects:{'Media and Information Literacy':96,'Introduction to Philosophy of the Human Person':88}},
-  {lrn:'113606140109',name:'Valle, Jahn Aj Vhin T.',subjects:{'Media and Information Literacy':89,'Introduction to Philosophy of the Human Person':84}},
-  {lrn:'113606140130',name:'Almero, Mikaela Mildred D.',subjects:{'Media and Information Literacy':91,'Introduction to Philosophy of the Human Person':79}},
-  {lrn:'113606140132',name:'Arizala, Rain A.',subjects:{'Media and Information Literacy':92,'Introduction to Philosophy of the Human Person':88}},
-  {lrn:'113786140015',name:'Atega, Dianne Ashly M.',subjects:{'Media and Information Literacy':86,'Introduction to Philosophy of the Human Person':84}},
-  {lrn:'113608140025',name:'Cabrera, Wenchie P.',subjects:{'Media and Information Literacy':93,'Introduction to Philosophy of the Human Person':85}},
-  {lrn:'113606140142',name:'Cervantes, Nica A.',subjects:{'Media and Information Literacy':95,'Introduction to Philosophy of the Human Person':87}},
-  {lrn:'113589140014',name:'Edem, Jeramie M.',subjects:{'Media and Information Literacy':91,'Introduction to Philosophy of the Human Person':82}},
-  {lrn:'113606140173',name:'Huelva, Jelianne S.',subjects:{'Media and Information Literacy':97,'Introduction to Philosophy of the Human Person':90}},
-  {lrn:'113597140060',name:'Ibañez, Carmela O.',subjects:{'Media and Information Literacy':92,'Introduction to Philosophy of the Human Person':84}},
-  {lrn:'113597140060',name:'Jores, Cristel B.',subjects:{'Media and Information Literacy':92,'Introduction to Philosophy of the Human Person':85}},
-  {lrn:'113597140026',name:'Malunes, Fricel Blaze A.',subjects:{'Media and Information Literacy':96,'Introduction to Philosophy of the Human Person':88}},
-  {lrn:'113599140030',name:'Pelayo, Trecia Faith C.',subjects:{'Media and Information Literacy':93,'Introduction to Philosophy of the Human Person':91}},
-  {lrn:'402104150245',name:'Peteros, Lhola Belle E.',subjects:{'Media and Information Literacy':94,'Introduction to Philosophy of the Human Person':85}},
-  {lrn:'113677130163',name:'Salazar, Shane A.',subjects:{'Media and Information Literacy':92,'Introduction to Philosophy of the Human Person':89}},
-  {lrn:'113609140024',name:'Tagbacaola, Irene A.',subjects:{'Media and Information Literacy':86,'Introduction to Philosophy of the Human Person':86}},
-  {lrn:'113782140023',name:'Tamayo, Mary Antoniette A.',subjects:{'Media and Information Literacy':97,'Introduction to Philosophy of the Human Person':89}}
+/* STEM subjects list */
+const STEM_SUBJECTS=[
+  'Earth Science',
+  'General Mathematics',
+  'Oral Communication in Context',
+  '21st Century Literature from the Philippines and the World',
+  'Introduction to Philosophy of the Human Person',
+  'Komunikasyon at Pananaliksik sa Wika at Kulturang Pilipino',
+  'Media and Information Literacy',
+  'Physical Education and Health',
+  'Pre-Calculus'
 ];
 
-// Persisted data (admin edits) saved in localStorage keys: dnhs_genmath and dnhs_stem
+/* STEM Aurora masterlist (32 students).
+   As requested, all subjects are BLANK initially so teachers can fill them in Admin mode.
+   (Students can still see whatever is filled later; averages compute from any subset.)
+*/
+let stemDB = [
+  {lrn:'113797140007',name:'Alutaya, MJ O.',subjects:{}},
+  {lrn:'113604140025',name:'Aparente, Austin Jolf S.',subjects:{}},
+  {lrn:'113604140026',name:'Arizobal, Robert Jules O.',subjects:{}},
+  {lrn:'113606150076',name:'Atacador, Rey Kenneth C.',subjects:{}},
+  {lrn:'113606130113',name:'Capellan, Kian Carl N.',subjects:{}},
+  {lrn:'113602140018',name:'Delara, Jhonpyu A.',subjects:{}},
+  {lrn:'113602140008',name:'Delara, Joeren Joules O.',subjects:{}},
+  {lrn:'113606150001',name:'Dilao, Mark Lawrence P.',subjects:{}},
+  {lrn:'113606140061',name:'Gabelo, Yeshuah Ashliegh B.',subjects:{}},
+  {lrn:'113606150116',name:'Gamba, Renzell Wen G.',subjects:{}},
+  {lrn:'113951140031',name:'Manlapaz, Mark Laurence B.',subjects:{}},
+  {lrn:'113606140170',name:'Paraguya, Josua E.',subjects:{}},
+  {lrn:'113605140018',name:'Piodos, John Errol M.',subjects:{}},
+  {lrn:'113612140017',name:'Raymundo, Kyle Nathan M.',subjects:{}},
+  {lrn:'113597140007',name:'Resma, Lenard B.',subjects:{}},
+  {lrn:'113599140008',name:'Retuerto, Remark Fel R.',subjects:{}},
+  {lrn:'113606140109',name:'Valle, Jahn Aj Vhin T.',subjects:{}},
+  {lrn:'113606140130',name:'Almero, Mikaela Mildred D.',subjects:{}},
+  {lrn:'113606140132',name:'Arizala, Rain A.',subjects:{}},
+  {lrn:'113786140015',name:'Atega, Dianne Ashly M.',subjects:{}},
+  {lrn:'113608140025',name:'Cabrera, Wenchie P.',subjects:{}},
+  {lrn:'113606140142',name:'Cervantes, Nica A.',subjects:{}},
+  {lrn:'113589140014',name:'Edem, Jeramie M.',subjects:{}},
+  {lrn:'113606140173',name:'Huelva, Jelianne S.',subjects:{}},
+  {lrn:'113597140060',name:'Ibañez, Carmela O.',subjects:{}},
+  {lrn:'113597140060',name:'Jores, Cristel B.',subjects:{}},
+  {lrn:'113597140026',name:'Malunes, Fricel Blaze A.',subjects:{}},
+  {lrn:'113599140030',name:'Pelayo, Trecia Faith C.',subjects:{}},
+  {lrn:'402104150245',name:'Peteros, Lhola Belle E.',subjects:{}},
+  {lrn:'113677130163',name:'Salazar, Shane A.',subjects:{}},
+  {lrn:'113609140024',name:'Tagbacaola, Irene A.',subjects:{}},
+  {lrn:'113782140023',name:'Tamayo, Mary Antoniette A.',subjects:{}}
+];
+
+/* ------------------- PERSISTENCE ------------------- */
 function loadPersisted(){
   try{
     const g = localStorage.getItem('dnhs_genmath');
     const s = localStorage.getItem('dnhs_stem');
-    if(g){ const parsed = JSON.parse(g); if(parsed) Object.assign(window.genMathDBpersist = parsed);
-    }
-    if(s){ const parsed = JSON.parse(s); if(parsed) window.stemDBpersist = parsed;
-    }
-  }catch(e){console.warn('loadPersisted failed',e)}
+    if(g){ const parsed = JSON.parse(g); if(parsed) window.genMathDBpersist = parsed; }
+    if(s){ const parsed = JSON.parse(s); if(parsed) window.stemDBpersist = parsed; }
+  }catch(e){ console.warn('Persistence load error', e); }
 }
-// Start with copies so original arrays remain reference data
 loadPersisted();
 if(!window.genMathDBpersist) window.genMathDBpersist = JSON.parse(JSON.stringify(genMathDB));
 if(!window.stemDBpersist) window.stemDBpersist = JSON.parse(JSON.stringify(stemDB));
 
-// ---------- UI helpers ----------
-function hideAll(){ document.querySelectorAll('section.card').forEach(s=>s.classList.add('hidden')); document.querySelectorAll('.overlay').forEach(o=>o.classList.add('hidden')); }
-function handleCode(){ const code = document.getElementById('codeInput').value.trim(); if(code==='GenMath2025'){ hideAll(); document.getElementById('genmath').classList.remove('hidden'); } else if(code==='TatakSTEM'){ hideAll(); document.getElementById('stem').classList.remove('hidden'); } else if(code==='675915'){ openAdminPin(); document.getElementById('adminPinField').value='675915'; } else alert('Invalid code'); }
+/* ---------------------- UI ------------------------ */
+function hideAll(){
+  document.querySelectorAll('section.card').forEach(s=>s.classList.add('hidden'));
+  document.querySelectorAll('.overlay').forEach(o=>o.classList.add('hidden'));
+}
+function logout(){ location.reload(); }
 
-// GenMath flow
+function handleCode(){
+  const code = document.getElementById('codeInput').value.trim();
+  if(code==='GenMath2025'){ hideAll(); document.getElementById('genmath').classList.remove('hidden'); }
+  else if(code==='TatakSTEM'){ hideAll(); document.getElementById('stem').classList.remove('hidden'); }
+  else if(code==='675915'){ openAdminPin(); document.getElementById('adminPinField').value=''; }
+  else alert('Invalid code');
+}
+
+/* -------- GenMath flow -------- */
 let currentSection='';
-function openLRN(section){ currentSection = section; hideAll(); document.getElementById('lrnSection').classList.remove('hidden'); document.getElementById('lrnSectionTitle').innerText = 'Section: 11 - ' + section; document.getElementById('lrnField').value=''; }
+function openLRN(section){
+  currentSection = section;
+  hideAll();
+  document.getElementById('lrnSection').classList.remove('hidden');
+  document.getElementById('lrnSectionTitle').innerText = 'Section: 11 – ' + section;
+  document.getElementById('lrnField').value='';
+}
 function backToGen(){ hideAll(); document.getElementById('genmath').classList.remove('hidden'); }
-function viewGenGrade(){ const lrn = document.getElementById('lrnField').value.trim(); if(!lrn){ alert('Enter LRN'); return; } const list = window.genMathDBpersist[currentSection] || []; const stu = list.find(x=>x.lrn === lrn); if(!stu){ alert('LRN not found in this section'); return; } hideAll(); document.getElementById('genStudent').classList.remove('hidden'); document.getElementById('genStuName').innerText = stu.name; document.getElementById('genStuLRN').innerText = stu.lrn; const gradeText = (stu.grade === null || stu.grade === undefined || stu.grade === '')? 'N/A' : stu.grade; document.getElementById('genStuGrade').innerText = gradeText; const msg = (stu.grade >= 75)? 'Congratulations! You passed the subject. Continue improving!' : 'May second quarter pa, pwedeng-pwede pang bumawi!'; document.getElementById('genStuMsg').innerText = (gradeText==='N/A')? 'Grade not yet available.' : msg; document.getElementById('genStuMsg').className = (stu.grade>=75)? 'msg-pass' : 'msg-fail'; }
+function viewGenGrade(){
+  const lrn = document.getElementById('lrnField').value.trim();
+  if(!lrn){ alert('Enter LRN'); return; }
+  const list = (window.genMathDBpersist[currentSection]||[]);
+  const stu = list.find(x=>x.lrn===lrn);
+  if(!stu){ alert('LRN not found in this section'); return; }
+  hideAll();
+  document.getElementById('genStudent').classList.remove('hidden');
+  document.getElementById('genStuName').innerText = stu.name;
+  document.getElementById('genStuLRN').innerText = stu.lrn;
+  const grade = (stu.grade===null||stu.grade===undefined||stu.grade==='')? null : Number(stu.grade);
+  document.getElementById('genStuGrade').innerText = (grade===null)? 'N/A' : grade;
+  const msg = (grade===null)? 'Grade not yet available.'
+           : (grade>=75 ? 'Congratulations! You passed the subject. Continue improving!'
+                        : 'May second quarter pa, pwedeng-pwede pang bumawi!');
+  const msgEl = document.getElementById('genStuMsg');
+  msgEl.className = (grade!==null && grade>=75) ? 'msg-pass' : 'msg-fail';
+  msgEl.innerText = msg;
+}
 
-// STEM flow
+/* -------- STEM flow -------- */
 function backToStem(){ hideAll(); document.getElementById('stem').classList.remove('hidden'); }
-function viewStem(){ const lrn = document.getElementById('stemLRNInput').value.trim(); if(!lrn){ alert('Enter LRN'); return; } const stu = (window.stemDBpersist || []).find(s=>s.lrn === lrn); if(!stu){ alert('LRN not found'); return; } hideAll(); document.getElementById('stemStudent').classList.remove('hidden'); document.getElementById('stemName').innerText = stu.name; document.getElementById('stemLRNDisplay').innerText = stu.lrn; const tbody = document.querySelector('#stemGrades tbody'); tbody.innerHTML=''; let total=0,count=0; for(const sub of STEM_SUBJECTS){ const val = stu.subjects && (stu.subjects[sub] !== undefined)? stu.subjects[sub] : ''; const tr = document.createElement('tr'); const td1 = document.createElement('td'); td1.innerText = sub; const td2 = document.createElement('td'); td2.innerText = (val === '' || val === null)? '' : val; tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr); if(val !== '' && val !== null){ total += Number(val); count++; } }
-  if(count>0){ const avg = total/count; let honors=''; if(avg >= 97.5555) honors=' - WITH HIGHEST HONORS'; else if(avg >= 94.5555) honors=' - WITH HIGH HONORS'; else if(avg >= 89.5444) honors=' - WITH HONORS'; document.getElementById('stemFinal').innerText = 'Final Average: ' + avg.toFixed(2) + honors; } else document.getElementById('stemFinal').innerText = 'Final Average: N/A'; }
+function viewStem(){
+  const lrn = document.getElementById('stemLRNInput').value.trim();
+  if(!lrn){ alert('Enter LRN'); return; }
+  const stu = (window.stemDBpersist||[]).find(s=>s.lrn===lrn);
+  if(!stu){ alert('LRN not found'); return; }
+  hideAll();
+  document.getElementById('stemStudent').classList.remove('hidden');
+  document.getElementById('stemName').innerText = stu.name;
+  document.getElementById('stemLRNDisplay').innerText = stu.lrn;
 
-// ADMIN
+  const tbody = document.querySelector('#stemGrades tbody');
+  tbody.innerHTML='';
+  let total=0, count=0;
+  STEM_SUBJECTS.forEach(sub=>{
+    const v = (stu.subjects && (stu.subjects[sub]!==undefined)) ? stu.subjects[sub] : '';
+    const tr = document.createElement('tr');
+    const td1 = document.createElement('td'); td1.textContent=sub;
+    const td2 = document.createElement('td'); td2.textContent=(v===''||v===null)? '' : v;
+    tr.appendChild(td1); tr.appendChild(td2); tbody.appendChild(tr);
+    if(v!=='' && v!==null){ total += Number(v); count++; }
+  });
+  if(count>0){
+    const avg = total/count;
+    let honors='';
+    if(avg >= 97.555555555){ honors=' - WITH HIGHEST HONORS'; }
+    else if(avg >= 94.5555555555){ honors=' - WITH HIGH HONORS'; }
+    else if(avg >= 89.544444){ honors=' - WITH HONORS'; }
+    document.getElementById('stemFinal').innerText = 'Final Average: ' + avg.toFixed(2) + honors;
+  }else{
+    document.getElementById('stemFinal').innerText = 'Final Average: N/A';
+  }
+}
+
+/* -------- Admin (PIN + Panel) -------- */
 function openAdminPin(){ document.getElementById('adminPinModal').classList.remove('hidden'); }
 function closeAdminPin(){ document.getElementById('adminPinModal').classList.add('hidden'); }
-function enterAdmin(){ const pin = document.getElementById('adminPinField').value.trim(); if(pin !== '675915'){ alert('Invalid PIN'); return; } closeAdminPin(); openAdmin(); }
-
+function enterAdmin(){
+  const pin = document.getElementById('adminPinField').value.trim();
+  if(pin!=='675915'){ alert('Invalid PIN'); return; }
+  closeAdminPin(); openAdmin();
+}
 function openAdmin(){ document.getElementById('adminPanel').classList.remove('hidden'); renderAdminTable(); }
 function closeAdmin(){ document.getElementById('adminPanel').classList.add('hidden'); }
 
-function renderAdminTable(){ const thead = document.querySelector('#adminTable thead'); const tbody = document.querySelector('#adminTable tbody'); thead.innerHTML = '<tr><th>Type</th><th>LRN</th><th>Name</th><th>Section / Subject</th><th>Grade</th></tr>'; tbody.innerHTML=''; // genmath rows
+function renderAdminTable(){
+  const thead = document.querySelector('#adminTable thead');
+  const tbody = document.querySelector('#adminTable tbody');
+  thead.innerHTML = '<tr><th>Type</th><th>LRN</th><th>Name</th><th>Section / Subject(s)</th><th>Grade / Edit</th></tr>';
+  tbody.innerHTML = '';
+
+  // GenMath rows
   for(const sec of Object.keys(window.genMathDBpersist)){
     for(const s of window.genMathDBpersist[sec]){
-      const tr = document.createElement('tr'); tr.innerHTML = `<td>GenMath</td><td><input value="${s.lrn}" data-original-lrn="${s.lrn}" style="width:130px"></td><td><input value="${s.name}" style="width:260px"></td><td>${sec}</td><td><input value="${s.grade === null ? '' : s.grade}" style="width:90px"></td>`; tbody.appendChild(tr);
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        `<td>GenMath</td>
+         <td><input value="${s.lrn}" style="width:140px"></td>
+         <td><input value="${s.name}" style="width:260px"></td>
+         <td>${sec}</td>
+         <td><input value="${s.grade==null?'':s.grade}" style="width:90px"></td>`;
+      tbody.appendChild(tr);
     }
   }
-  // stem rows (single row per student) 
+  // STEM rows (summary + button to edit subjects)
   for(const stu of window.stemDBpersist){
-    const preview = STEM_SUBJECTS.map(sub=> (stu.subjects && stu.subjects[sub] !== undefined && stu.subjects[sub] !== '')? `${sub}:${stu.subjects[sub]}` : `${sub}:`).join(' | ');
-    const tr = document.createElement('tr'); tr.innerHTML = `<td>STEM</td><td><input value="${stu.lrn}" style="width:130px"></td><td><input value="${stu.name}" style="width:260px"></td><td style="text-align:left">${preview}</td><td><button onclick='editStem("${stu.lrn}")'>Edit Subjects</button></td>`; tbody.appendChild(tr);
+    const preview = STEM_SUBJECTS.map(sub=>{
+      const v = (stu.subjects && stu.subjects[sub]!==undefined && stu.subjects[sub]!=='') ? stu.subjects[sub] : '';
+      return `${sub}:${v}`;
+    }).join(' | ');
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      `<td>STEM</td>
+       <td><input value="${stu.lrn}" style="width:140px"></td>
+       <td><input value="${stu.name}" style="width:260px"></td>
+       <td style="text-align:left">${preview}</td>
+       <td><button onclick='editStem("${stu.lrn}")'>Edit Subjects</button></td>`;
+    tbody.appendChild(tr);
   }
 }
 
-function editStem(lrn){ const stu = window.stemDBpersist.find(s=>s.lrn===lrn); if(!stu) return alert('Student not found'); // build modal content
-  const overlay = document.createElement('div'); overlay.className='overlay'; overlay.style.zIndex = 9999; const modal = document.createElement('div'); modal.className='modal'; modal.innerHTML = `<h3>Edit subjects for ${stu.name}</h3><div style="max-height:60vh;overflow:auto"><table><thead><tr><th>Subject</th><th>Grade (blank = empty)</th></tr></thead><tbody>${STEM_SUBJECTS.map(sub=>`<tr><td>${sub}</td><td><input data-sub="${sub}" value="${stu.subjects && stu.subjects[sub] !== undefined ? stu.subjects[sub] : ''}"></td></tr>`).join('')}</tbody></table></div><div style="margin-top:10px" class="flex-row"><button id='saveSub'>Save</button><button class='ghost' id='cancelSub'>Cancel</button></div>`;
-  overlay.appendChild(modal); document.body.appendChild(overlay);
-  document.getElementById('cancelSub').onclick = ()=>{ document.body.removeChild(overlay); };
+function editStem(lrn){
+  const stu = window.stemDBpersist.find(s=>s.lrn===lrn);
+  if(!stu) return alert('Student not found');
+
+  const overlay = document.createElement('div');
+  overlay.className='overlay';
+  const modal = document.createElement('div');
+  modal.className='modal';
+  modal.innerHTML =
+    `<h3>Edit subjects for ${stu.name}</h3>
+     <div style="max-height:60vh;overflow:auto">
+       <table><thead><tr><th>Subject</th><th>Grade (blank allowed)</th></tr></thead>
+       <tbody>${
+         STEM_SUBJECTS.map(sub=>{
+           const v = (stu.subjects && stu.subjects[sub]!==undefined)? stu.subjects[sub] : '';
+           return `<tr><td>${sub}</td><td><input data-sub="${sub}" value="${v}"></td></tr>`;
+         }).join('')
+       }</tbody></table>
+     </div>
+     <div class="row" style="margin-top:10px">
+       <button id="saveSub">Save</button>
+       <button class="ghost" id="cancelSub">Cancel</button>
+     </div>`;
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+
+  document.getElementById('cancelSub').onclick = ()=>document.body.removeChild(overlay);
   document.getElementById('saveSub').onclick = ()=>{
-    const inputs = modal.querySelectorAll('input[data-sub]'); inputs.forEach(inp=>{
-      const sub = inp.dataset.sub; const v = inp.value.trim(); stu.subjects[sub] = (v==='')? '' : Number(v);
+    modal.querySelectorAll('input[data-sub]').forEach(inp=>{
+      const sub = inp.dataset.sub;
+      const v = inp.value.trim();
+      if(!stu.subjects) stu.subjects = {};
+      stu.subjects[sub] = (v==='')? '' : Number(v);
     });
-    // re-render admin table, remove modal
-    document.body.removeChild(overlay); renderAdminTable();
+    document.body.removeChild(overlay);
+    renderAdminTable();
   };
 }
 
-function saveAdmin(){ // read table and persist to window.*persist
+function saveAdmin(){
   const rows = document.querySelectorAll('#adminTable tbody tr');
   const newGen = {Ember:[],Oasis:[],Solstice:[],Meadow:[]};
   const newStem = [];
+
   rows.forEach(row=>{
     const t = row.cells[0].innerText;
     if(t==='GenMath'){
       const lrn = row.cells[1].querySelector('input').value.trim();
       const name = row.cells[2].querySelector('input').value.trim();
-      const section = row.cells[3].innerText;
-      const gradeVal = row.cells[4].querySelector('input').value.trim();
-      const grade = gradeVal === '' ? null : Number(gradeVal);
+      const section = row.cells[3].innerText.trim();
+      const gval = row.cells[4].querySelector('input').value.trim();
+      const grade = gval==='' ? null : Number(gval);
       newGen[section].push({lrn,name,grade});
-    } else if(t==='STEM'){
+    }else{ // STEM summary row
       const lrn = row.cells[1].querySelector('input').value.trim();
       const name = row.cells[2].querySelector('input').value.trim();
-      // find original subjects if available
-      const orig = (window.stemDBpersist || []).find(s=>s.lrn===lrn);
+      const orig = (window.stemDBpersist||[]).find(s=>s.lrn===lrn);
       const subjects = orig ? orig.subjects : {};
       newStem.push({lrn,name,subjects});
     }
   });
-  window.genMathDBpersist = newGen; window.stemDBpersist = newStem;
-  localStorage.setItem('dnhs_genmath', JSON.stringify(window.genMathDBpersist));
-  localStorage.setItem('dnhs_stem', JSON.stringify(window.stemDBpersist));
-  alert('Saved. Changes persisted to this browser.'); renderAdminTable();
+
+  window.genMathDBpersist = newGen;
+  window.stemDBpersist = newStem;
+  localStorage.setItem('dnhs_genmath', JSON.stringify(newGen));
+  localStorage.setItem('dnhs_stem', JSON.stringify(newStem));
+  alert('Saved. Changes persisted to this browser.');
+  renderAdminTable();
 }
 
-function downloadCSV(){ // export simple flat CSV
+function downloadCSV(){
   const rows = [['type','lrn','name','section_or_subject','grade']];
   for(const sec of Object.keys(window.genMathDBpersist)){
-    for(const s of window.genMathDBpersist[sec]) rows.push(['GenMath',s.lrn,s.name,sec,s.grade===null? '': s.grade]);
+    for(const s of window.genMathDBpersist[sec]){
+      rows.push(['GenMath',s.lrn,s.name,sec,(s.grade==null)?'':s.grade]);
+    }
   }
-  for(const stu of window.stemDBpersist){ for(const sub of STEM_SUBJECTS){ rows.push(['STEM',stu.lrn,stu.name,sub, stu.subjects && stu.subjects[sub] !== undefined ? stu.subjects[sub] : '']); } }
-  const csv = rows.map(r=> r.map(c=>`"${(''+c).replace(/"/g,'""')}"`).join(',')).join('
-');
-  const blob = new Blob([csv],{type:'text/csv'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'dnhs_masterlist.csv'; a.click(); URL.revokeObjectURL(url);
+  for(const stu of window.stemDBpersist){
+    STEM_SUBJECTS.forEach(sub=>{
+      const g = (stu.subjects && stu.subjects[sub]!==undefined)? stu.subjects[sub] : '';
+      rows.push(['STEM',stu.lrn,stu.name,sub,g]);
+    });
+  }
+  const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv],{type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='dnhs_masterlist.csv'; a.click();
+  URL.revokeObjectURL(url);
 }
 
-function logout(){ location.reload(); }
-
-// show login on load
+/* ---------- Boot ---------- */
 hideAll(); document.getElementById('login').classList.remove('hidden');
 </script>
 </body>
