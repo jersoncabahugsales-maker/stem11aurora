@@ -1,478 +1,708 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>General Mathematics - Grade Viewer</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>General Mathematics — Grade Viewer</title>
   <style>
     :root{
-      --bg:#0f172a; --card:#0b1220; --accent:#7dd3fc; --muted:#94a3b8; --glass: rgba(255,255,255,0.04);
-      --success:#10b981; --danger:#ef4444; --soft:#111827;
+      --bg:#f7fbff;
+      --card:#ffffff;
+      --accent:#cfe9ff;
+      --blue:#2a9df4;
+      --muted:#6b7280;
+      --radius:14px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
-    *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
-    body{margin:0;background:linear-gradient(180deg,#071129 0%, #071a2a 100%);color:#e6eef6;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-    .container{width:100%;max-width:1100px}
-    header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
-    .logo{width:68px;height:68px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#60a5fa);display:flex;align-items:center;justify-content:center;color:#012; font-weight:700}
-    h1{margin:0;font-size:20px}
-    h2{margin:0;color:var(--muted);font-weight:400}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:18px;border-radius:14px;box-shadow:0 6px 20px rgba(2,6,23,0.6)}
-    .grid{display:grid;grid-template-columns:1fr 380px;gap:18px}
-    .sections{display:flex;flex-wrap:wrap;gap:10px}
-    .section-btn{background:var(--glass);border:1px solid rgba(255,255,255,0.03);padding:12px 14px;border-radius:10px;cursor:pointer;min-width:120px;text-align:center}
-    .section-btn:hover{transform:translateY(-4px);transition:all .14s}
-    .search{display:flex;gap:8px;margin-top:12px}
-    input,select,textarea{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:10px;border-radius:8px;color:inherit;width:100%}
-    button{background:var(--accent);border:none;color:#012;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:600}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#f0f7ff);}
+    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:28px;}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:0 10px 30px rgba(20,40,80,0.06);max-width:980px;width:100%;padding:28px;display:flex;gap:20px;align-items:stretch;}
+    .left{flex:1;display:flex;flex-direction:column;gap:14px;justify-content:center;padding:8px;}
+    .right{flex:1.05;background:linear-gradient(180deg,#fff, var(--accent));border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;}
+    h1{margin:0;font-size:20px;color:#05213a}
+    h2{margin:0;font-size:16px;color:#05213a}
+    p{margin:0;color:var(--muted)}
+    .big-cta{background:linear-gradient(90deg,var(--blue),#3fb1ff);color:white;padding:12px 18px;border-radius:10px;border:none;font-weight:600;cursor:pointer;box-shadow:0 6px 18px rgba(42,157,244,0.18);}
     .small{font-size:13px;color:var(--muted)}
-    .student-card{padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);}
-    .grade{font-weight:700;font-size:18px}
+    .input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(10,30,60,0.06);font-size:14px}
+    .sections{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+    .section{background:white;border-radius:10px;padding:12px 16px;min-width:140px;text-align:center;cursor:pointer;box-shadow:0 6px 20px rgba(40,80,120,0.04);border:1px solid rgba(10,30,60,0.04)}
+    .section:hover{transform:translateY(-4px);transition:all .18s}
     .muted{color:var(--muted);font-size:13px}
-    .admin-actions{display:flex;flex-direction:column;gap:8px;margin-top:10px}
-    .table{overflow:auto;max-height:420px}
-    table{width:100%;border-collapse:collapse}
-    th,td{text-align:left;padding:8px;border-bottom:1px dashed rgba(255,255,255,0.03)}
-    th{font-size:13px;color:var(--muted)}
-    td input{width:100%;background:transparent;border:none;color:inherit}
-    .controls{display:flex;gap:8px;align-items:center}
-    .hint{font-size:12px;color:var(--muted)}
-    .danger{background:var(--danger);color:white}
-    .success{background:var(--success);color:#012}
-    .footer-note{margin-top:10px;color:var(--muted);font-size:13px}
-    /* modal */
-    .modal-backdrop{position:fixed;inset:0;background:linear-gradient(0deg,rgba(0,0,0,0.55),rgba(0,0,0,0.65));display:flex;align-items:center;justify-content:center}
-    .modal{width:100%;max-width:540px;background:linear-gradient(180deg,#02243a,#041426);padding:20px;border-radius:12px;box-shadow:0 20px 40px rgba(2,6,23,0.7)}
-    .row{display:flex;gap:8px}
-    .topline{display:flex;align-items:center;justify-content:space-between}
-    @media (max-width:900px){.grid{grid-template-columns:1fr}.logo{width:56px;height:56px}}
+    .topbar{display:flex;justify-content:space-between;align-items:center;width:100%}
+    .btn-ghost{background:transparent;border:1px solid rgba(10,30,60,0.06);padding:8px 12px;border-radius:9px;cursor:pointer}
+    .db-table{width:100%;border-collapse:collapse}
+    .db-table th,.db-table td{padding:8px;border-bottom:1px solid rgba(10,30,60,0.04);text-align:left;font-size:13px}
+    .controls{display:flex;gap:8px;flex-wrap:wrap}
+    .notice{background:#eef9ff;padding:10px;border-radius:10px;color:#05507a}
+    .footer{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}
+    input[type=file]{display:none}
+    .login-hero{cursor:pointer;padding:12px;border-radius:10px;background:linear-gradient(90deg,#ffffff80,#ffffff10);border:1px solid rgba(255,255,255,0.2)}
+    .flex{display:flex;gap:8px;align-items:center}
+    .badge{background:#e9f7ff;padding:6px 9px;border-radius:999px;font-weight:600;color:#024a6e}
+    .hidden{display:none}
+    .center{display:flex;align-items:center;justify-content:center}
+    .danger{color:#b22222}
+    .small-link{font-size:13px;color:#0369a1;cursor:pointer}
+    .editable{background:transparent;border:none;padding:6px;font-size:13px}
+    .table-wrap{max-height:420px;overflow:auto;border-radius:8px}
+    @media (max-width:860px){
+      .card{flex-direction:column;padding:18px}
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="logo">G</div>
-      <div>
-        <h1>Welcome to General Mathematics Class</h1>
-        <h2>Subject Teacher: Jerson C. Sales</h2>
-      </div>
-    </header>
-
-    <div id="main" class="card">
-      <!-- content injected by JS -->
-      <div id="app-root"></div>
-    </div>
-
-    <p class="footer-note">This is a local single-file grade viewer. Data is stored in your browser. Teachers can import/export CSV to act as the grade "database" (Excel-friendly).</p>
-  </div>
-
-  <!-- welcome/login modal -->
-  <div id="welcomeModal" class="modal-backdrop">
-    <div class="modal">
-      <div class="topline">
-        <div>
-          <h2 style="margin:0">Welcome</h2>
-          <p class="small" style="margin:6px 0 0">Please sign in to continue to the General Mathematics Grade Viewing Database.</p>
-        </div>
-        <div class="muted">Version 1.0</div>
-      </div>
-
-      <div style="margin-top:14px">
-        <label class="small">Access code</label>
-        <input id="accessCode" placeholder="Enter class code" />
-        <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
-          <button id="accessBtn">Log in</button>
-          <div class="hint">Use code <strong>GenMath2025</strong></div>
-        </div>
-        <div id="accessMsg" class="small muted" style="margin-top:8px"></div>
-
-        <hr style="margin:12px 0;border:none;border-top:1px dashed rgba(255,255,255,0.03)" />
-        <div class="small muted">First-time setup (optional)</div>
-        <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
-          <input id="firstLoginCheckbox" type="checkbox" /> <label class="small">Show admin setup after login</label>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    // ----- sample dataset (acts as 'database') -----
-    const SAMPLE_DATA = [
-      {LRN: '2025000001', name: 'Maria Santos', section: 'Aurora', q1:88, q2:90, q3:85, q4:92},
-      {LRN: '2025000002', name: 'Juan Dela Cruz', section: 'Aurora', q1:78, q2:80, q3:82, q4:81},
-      {LRN: '2025000101', name: 'Alana Rivera', section: 'Ember', q1:92, q2:95, q3:94, q4:96},
-      {LRN: '2025000201', name: 'Edwin Cruz', section: 'Oasis', q1:74, q2:70, q3:72, q4:75},
-      {LRN: '2025000301', name: 'Bianca Reyes', section: 'Solstice', q1:89, q2:90, q3:87, q4:88},
-      {LRN: '2025000401', name: 'Kyle Martinez', section: 'Meadow', q1:66, q2:70, q3:68, q4:69}
-    ];
-
-    const CLASS_CODE = 'GenMath2025';
-    const ADMIN_PASS = '675915';
-    const SECTIONS = ['Aurora','Ember','Oasis','Solstice','Meadow'];
-
-    // ----- storage helpers -----
-    function loadData(){
-      const raw = localStorage.getItem('genmath_students');
-      if(!raw){
-        localStorage.setItem('genmath_students', JSON.stringify(SAMPLE_DATA));
-        return JSON.parse(JSON.stringify(SAMPLE_DATA));
-      }
-      try{ return JSON.parse(raw);}catch(e){localStorage.setItem('genmath_students', JSON.stringify(SAMPLE_DATA)); return JSON.parse(JSON.stringify(SAMPLE_DATA));}
-    }
-    function saveData(arr){ localStorage.setItem('genmath_students', JSON.stringify(arr)); }
-
-    // ----- UI render -----
-    const root = document.getElementById('app-root');
-    let students = loadData();
-    let currentSection = null;
-    let isAdmin = false;
-
-    function avg(s){
-      const a = ['q1','q2','q3','q4'].map(k => Number(s[k]||0));
-      return Math.round((a.reduce((x,y)=>x+y,0)/a.length) * 100)/100;
-    }
-
-    function renderHome(){
-      root.innerHTML = `
-        <div class="grid">
+  <div class="wrap">
+    <div class="card" id="card">
+      <div class="left" id="landing">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:72px;height:72px;border-radius:14px;background:linear-gradient(180deg,#dff2ff,#bfe6ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#034b78">GM</div>
           <div>
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-              <div><h1 style="font-size:18px;margin:0">General Mathematics Grade Viewing Database</h1><div class="small">Choose your section and enter LRN to view your personal grade.</div></div>
-              <div class="controls">
-                <button id="btnExport">Export CSV</button>
-                <button id="btnImport">Import CSV</button>
-              </div>
-            </div>
-
-            <div class="card" style="margin-bottom:12px">
-              <div class="small muted">Select section</div>
-              <div class="sections" id="sections"></div>
-            </div>
-
-            <div class="card">
-              <div class="small muted">Enter your LRN to view your grade</div>
-              <div class="search" style="margin-top:8px">
-                <input id="lrnInput" placeholder="e.g. 2025000001" />
-                <button id="viewBtn">View</button>
-              </div>
-              <div id="viewMsg" class="muted" style="margin-top:8px"></div>
-              <div id="studentView" style="margin-top:12px"></div>
-            </div>
-
-          </div>
-
-          <div>
-            <div class="card">
-              <div style="display:flex;align-items:center;justify-content:space-between">
-                <div>
-                  <div class="small muted">Class</div>
-                  <h2 style="margin:4px 0 0">General Mathematics — Teacher: Jerson C. Sales</h2>
-                </div>
-                <div style="text-align:right">
-                  <div class="small">Role</div>
-                  <div id="roleBadge" class="muted">Learner</div>
-                </div>
-              </div>
-
-              <div style="margin-top:12px">
-                <div class="small muted">Quick stats</div>
-                <div style="display:flex;gap:10px;margin-top:8px">
-                  <div class="student-card" style="flex:1"><div class="muted">Sections</div><div class="grade">${SECTIONS.length}</div></div>
-                  <div class="student-card" style="flex:1"><div class="muted">Total students</div><div class="grade">${students.length}</div></div>
-                </div>
-              </div>
-
-              <div class="admin-actions" id="adminActionsBlock">
-                <!-- admin-only controls -->
-              </div>
-
-            </div>
-
-            <div style="margin-top:12px" class="card">
-              <div class="small muted">Teacher tools</div>
-              <div style="margin-top:8px;display:flex;gap:6px;flex-direction:column">
-                <button id="btnAdminSetup">Admin login / setup</button>
-                <label class="small muted">Import CSV format: LRN,name,section,q1,q2,q3,q4</label>
-                <input id="csvFile" type="file" style="display:none" accept=".csv,text/csv" />
-              </div>
-            </div>
-
+            <h1>Welcome to General Mathematics Class</h1>
+            <p class="muted">Subject Teacher: <strong>Jerson C. Sales</strong></p>
           </div>
         </div>
-      `;
 
-      // populate sections
-      const sectionsDiv = document.getElementById('sections');
-      SECTIONS.forEach(s => {
-        const btn = document.createElement('div'); btn.className='section-btn'; btn.textContent = s; btn.onclick = ()=>{ currentSection = s; document.getElementById('lrnInput').value=''; showSection(s); }
-        sectionsDiv.appendChild(btn);
-      });
+        <div style="margin-top:18px">
+          <p class="small muted">Enter the class access code to continue to the grade viewer.</p>
+          <div style="margin-top:8px;display:flex;gap:8px">
+            <input id="accessCode" class="input" placeholder="Enter class code" autocomplete="off" />
+            <button class="big-cta" id="enterCodeBtn">Enter</button>
+          </div>
+          <p class="small muted" style="margin-top:8px">(Hint free — the code is not shown on-screen.)</p>
+        </div>
 
-      document.getElementById('viewBtn').onclick = handleView;
-      document.getElementById('btnAdminSetup').onclick = promptAdminLogin;
-      document.getElementById('btnExport').onclick = exportCSV;
-      document.getElementById('btnImport').onclick = ()=> document.getElementById('csvFile').click();
-      document.getElementById('csvFile').onchange = handleCSVImport;
+        <div style="margin-top:20px">
+          <div class="notice">
+            <strong>Student privacy:</strong> Students only see their own grade after entering the correct section and LRN.
+          </div>
+        </div>
 
-      renderAdminBlock();
-    }
+        <div style="margin-top:20px" class="center">
+          <button class="btn-ghost" id="showExample">Preview interface (no login)</button>
+        </div>
 
-    function showSection(s){
-      const viewMsg = document.getElementById('viewMsg'); viewMsg.textContent = `Section: ${s} — Enter your LRN to view personal grade.`;
-      // optionally show list with LRNs? We'll show a small table of students in that section but hide LRNs to preserve privacy (unless admin)
-      const studentView = document.getElementById('studentView');
-      const arr = students.filter(x=>x.section===s);
-      if(arr.length===0){ studentView.innerHTML = '<div class="muted">No students registered in this section yet.</div>'; return; }
-      let html = '<div class="muted" style="margin-bottom:8px">Students in this section</div><div class="table"><table><thead><tr><th>Name</th><th>Average</th></tr></thead><tbody>';
-      arr.forEach(st=>{ html += `<tr><td>${st.name}</td><td>${avg(st)}</td></tr>` });
-      html += '</tbody></table></div>';
-      studentView.innerHTML = html;
-    }
+        <div class="footer">Built for classroom use — client-side demo database included.</div>
+      </div>
 
-    function handleView(){
-      const lrn = document.getElementById('lrnInput').value.trim();
-      const vm = document.getElementById('viewMsg');
-      if(!currentSection){ vm.textContent = 'Please select a section first.'; return; }
-      if(!lrn){ vm.textContent = 'Please enter your LRN.'; return; }
-      const s = students.find(x=>x.LRN===lrn && x.section===currentSection);
-      if(!s){ vm.textContent = 'LRN not found in this section. Check LRN and section.'; document.getElementById('studentView').innerHTML = ''; return; }
-      vm.textContent = '';
-      document.getElementById('studentView').innerHTML = renderStudentCard(s);
+      <div class="right hidden" id="portal">
+        <div class="topbar" style="width:100%">
+          <div>
+            <h2>General Mathematics Grade Viewing Database</h2>
+            <p class="muted">Select your section to view your personal grade</p>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn-ghost" id="logoutBtn">Log out</button>
+            <button class="btn-ghost" id="adminToggle">Teacher / Admin</button>
+          </div>
+        </div>
 
-      if(isAdmin) setupInlineEditButtons();
-    }
+        <div style="width:100%;margin-top:8px" id="sectionsArea">
+          <div class="sections">
+            <div class="section" data-section="Aurora">Aurora</div>
+            <div class="section" data-section="Ember">Ember</div>
+            <div class="section" data-section="Oasis">Oasis</div>
+            <div class="section" data-section="Solstice">Solstice</div>
+            <div class="section" data-section="Meadow">Meadow</div>
+          </div>
+        </div>
 
-    function renderStudentCard(s){
-      return `
-        <div class="student-card">
+        <div id="lrnPrompt" class="hidden" style="margin-top:12px;width:100%">
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="lrnInput" class="input" placeholder="Enter your LRN (Learner's Reference Number)" autocomplete="off" />
+            <button class="big-cta" id="viewGradeBtn">View Grade</button>
+          </div>
+          <p class="small muted" style="margin-top:6px">Only your grade will be shown.</p>
+        </div>
+
+        <div id="result" class="hidden" style="margin-top:12px;width:100%">
+          <div style="background:white;padding:16px;border-radius:12px;width:100%;text-align:center">
+            <div id="resultName" style="font-weight:700;font-size:16px;color:#053b57"></div>
+            <div id="resultGrade" style="font-size:34px;font-weight:800;margin-top:6px;color:#0b5aa6"></div>
+            <div id="resultRemarks" style="margin-top:6px;color:var(--muted)"></div>
+          </div>
+        </div>
+
+        <!-- Admin area -->
+        <div id="adminArea" class="hidden" style="width:100%;margin-top:14px">
           <div style="display:flex;justify-content:space-between;align-items:center">
             <div>
-              <div class="muted">Name</div>
-              <div style="font-weight:700">${s.name}</div>
-              <div class="muted" style="margin-top:6px">LRN: ${s.LRN} — Section: ${s.section}</div>
+              <strong>Admin mode</strong>
+              <p class="small muted">Edit students, LRNs and grades. Changes persist locally (browser storage) until exported/imported.</p>
             </div>
-            <div style="text-align:right">
-              <div class="muted">Final Average</div>
-              <div class="grade">${avg(s)}</div>
+            <div class="controls">
+              <label class="small-link" id="downloadCsv">Download CSV</label>
+              <label class="small-link" id="uploadCsvLabel">Upload CSV</label>
+              <input type="file" id="uploadCsv" accept=".csv" />
+              <button class="btn-ghost" id="saveDbBtn">Save changes</button>
             </div>
           </div>
 
-          <div style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
-            <div><div class="muted">Quarter 1</div><div class="grade">${s.q1}</div></div>
-            <div><div class="muted">Quarter 2</div><div class="grade">${s.q2}</div></div>
-            <div><div class="muted">Quarter 3</div><div class="grade">${s.q3}</div></div>
-            <div><div class="muted">Quarter 4</div><div class="grade">${s.q4}</div></div>
+          <div style="margin-top:10px" class="table-wrap">
+            <table class="db-table" id="dbTable">
+              <thead>
+                <tr>
+                  <th>Section</th>
+                  <th>LRN</th>
+                  <th>Student Name</th>
+                  <th>Grade</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="dbBody"></tbody>
+            </table>
           </div>
-
-          <div style="margin-top:12px;display:flex;gap:8px">
-            ${isAdmin ? `<button id="editThis">Edit</button>` : ''}
-            <button id="printBtn">Print</button>
-          </div>
+          <div style="margin-top:8px" class="small muted">Tip: click a cell to edit. Use "Save changes" to store edits in browser. You may export CSV for backup.</div>
         </div>
-      `;
+
+        <div class="footer" style="margin-top:14px">If you are the teacher: use admin mode to maintain the database.</div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/*
+  General Mathematics Grade Viewer
+  - Student login uses a class access code (GenMath2025) checked client-side (obfuscated).
+  - Admin mode requires admin passcode (675915).
+  - Database seeded from the user's provided lists.
+  - Admin can edit and save to localStorage and export/import CSV.
+*/
+
+/* ---- Utilities ---- */
+function el(id){return document.getElementById(id)}
+function show(node){node.classList.remove('hidden')}
+function hide(node){node.classList.add('hidden')}
+
+/* ---- Simple obfuscation for codes (base64) so they're not printed in the UI */
+const ENCODE = s => btoa(s);
+const DECODE = s => atob(s);
+/* store the codes obfuscated */
+const CLASS_CODE_B64 = ENCODE('GenMath2025');
+const ADMIN_CODE_B64 = ENCODE('675915');
+
+/* ---- Seed database (from the user). Structure: array of objects {section, lrn, name, grade} ---- */
+const seedDB = [
+  /* Aurora */
+  {section:'Aurora', lrn:'113797140007', name:'Alutaya, MJ O.', grade:88},
+  {section:'Aurora', lrn:'113604140025', name:'Aparente, Austin Jolf S.', grade:85},
+  {section:'Aurora', lrn:'113604140026', name:'Arizobal, Robert Jules O.', grade:91},
+  {section:'Aurora', lrn:'113606150076', name:'Atacador, Rey Kenneth C.', grade:91},
+  {section:'Aurora', lrn:'113606130113', name:'Capellan, Kian Carl N.', grade:83},
+  {section:'Aurora', lrn:'113602140018', name:'Delara, Jhonpyu A.', grade:92},
+  {section:'Aurora', lrn:'113602140008', name:'Delara, Joeren Joules O.', grade:92},
+  {section:'Aurora', lrn:'113606150001', name:'Dilao, Mark Lawrence P.', grade:94},
+  {section:'Aurora', lrn:'113606140061', name:'Gabelo, Yeshuah Ashliegh B.', grade:87},
+  {section:'Aurora', lrn:'113606150116', name:'Gamba, Renzell Wen G.', grade:86},
+  {section:'Aurora', lrn:'113951140031', name:'Manlapaz, Mark Laurence B.', grade:88},
+  {section:'Aurora', lrn:'113606140170', name:'Paraguya, Josua E.', grade:85},
+  {section:'Aurora', lrn:'113605140018', name:'Piodos, John Errol M.', grade:91},
+  {section:'Aurora', lrn:'113612140017', name:'Raymundo, Kyle Nathan M.', grade:86},
+  {section:'Aurora', lrn:'113597140007', name:'Resma, Lenard B.', grade:94},
+  {section:'Aurora', lrn:'113599140008', name:'Retuerto, Remark Fel R.', grade:95},
+  {section:'Aurora', lrn:'113606140109', name:'Valle, Jahn Aj Vhin T.', grade:95},
+  {section:'Aurora', lrn:'113606140130', name:'Almero, Mikaela Mildred D.', grade:92},
+  {section:'Aurora', lrn:'113606140132', name:'Arizala, Rain A.', grade:89},
+  {section:'Aurora', lrn:'113786140015', name:'Atega, Dianne Ashly M.', grade:83},
+  {section:'Aurora', lrn:'113608140025', name:'Cabrera, Wenchie P.', grade:94},
+  {section:'Aurora', lrn:'113606140142', name:'Cervantes, Nica A.', grade:90},
+  {section:'Aurora', lrn:'113589140014', name:'Edem, Jeramie M.', grade:83},
+  {section:'Aurora', lrn:'113606140173', name:'Huelva, Jelianne S.', grade:92},
+  {section:'Aurora', lrn:'113597140060', name:'Ibañez, Carmela O.', grade:89},
+  {section:'Aurora', lrn:'113597140060', name:'Jores, Cristel B.', grade:90}, // duplicate LRN in provided list
+  {section:'Aurora', lrn:'113597140026', name:'Malunes, Fricel Blaze A.', grade:94},
+  {section:'Aurora', lrn:'113599140030', name:'Pelayo, Trecia Faith C.', grade:84},
+  {section:'Aurora', lrn:'402104150245', name:'Peteros, Lhola Belle E.', grade:92},
+  {section:'Aurora', lrn:'113677130163', name:'Salazar, Shane A.', grade:91},
+  {section:'Aurora', lrn:'113609140024', name:'Tagbacaola, Irene A.', grade:96},
+  {section:'Aurora', lrn:'113782140023', name:'Tamayo, Mary Antoniette A.', grade:97},
+
+  /* Ember */
+  {section:'Ember', lrn:'113597140014', name:'AFABLE,CLARENS ANTIPOLO', grade:74},
+  {section:'Ember', lrn:'113610140002', name:'ALFORTE,RANNEL JOHN BALDEO', grade:78},
+  {section:'Ember', lrn:'113606140068', name:'ATABAY,JURODS BASAS', grade:75},
+  {section:'Ember', lrn:'113606140041', name:'CAGATIN,MARC JAY MARFIL', grade:74},
+  {section:'Ember', lrn:'113606140051', name:'CAPELLAN,JAMES ROLLY TOLENTINO', grade:77},
+  {section:'Ember', lrn:'113606140046', name:'CASTOR,KENNY RICH SALONDAGA', grade:82},
+  {section:'Ember', lrn:'120868140083', name:'GERVACIO,CZECH NAZARINE DINGAL', grade:80},
+  {section:'Ember', lrn:'113951140024', name:'GIMANG,BABY NIÑO VAFLOR', grade:94},
+  {section:'Ember', lrn:'113943140021', name:'GUIOGUIO,WINNARD KENT DALANON', grade:88},
+  {section:'Ember', lrn:'113604140035', name:'LETADA,R-JAY VILLAMOR', grade:75},
+  {section:'Ember', lrn:'113712140015', name:'TAMAYO,RENZ IVAN FUENTES', grade:75},
+  {section:'Ember', lrn:'113606140183', name:'VILLAMIN,JAMES JAHRED GUIRIBA', grade:84},
+  {section:'Ember', lrn:'113606140185', name:'VISDA,MATTHEW JOSH BISNAR', grade:78},
+  {section:'Ember', lrn:'113606140113', name:'ABAÑO,JESSA MAE ALICANTE', grade:75},
+  {section:'Ember', lrn:'113612120033', name:'AFABLE,NOVIE EMPAS', grade:78},
+  {section:'Ember', lrn:'113951140037', name:'ALORAN,MARIA PRINCESS AMARO', grade:79},
+  {section:'Ember', lrn:'113606140124', name:'ARROYO,KIMBERLY MOTITA', grade:79},
+  {section:'Ember', lrn:'113606140126', name:'ATABAY,JEAN ESCARO', grade:86},
+  {section:'Ember', lrn:'113606140128', name:'ATABAY,MARY CLAIRE GADIANA', grade:84},
+  {section:'Ember', lrn:'113606150115', name:'CAJEGAS,BENNIE MARIE CAPELLAN', grade:81},
+  {section:'Ember', lrn:'136836140494', name:'CAPELLAN,PRESCILLA ENATE', grade:80},
+  {section:'Ember', lrn:'113606150071', name:'CARILLO,IRISH MITRA', grade:81},
+  {section:'Ember', lrn:'113610140012', name:'CLORES,JOJIELYN ARAGON', grade:82},
+  {section:'Ember', lrn:'113786140045', name:'DELAVIN,CHENKIE CASIO', grade:83},
+  {section:'Ember', lrn:'113606140144', name:'DERLA,PRINCESS MAE SORIANO', grade:85},
+  {section:'Ember', lrn:'103871140036', name:'ESCALA,SCARLETTE SORIANO', grade:88},
+  {section:'Ember', lrn:'113605140032', name:'GARCIA,ANALYN TAMAYO', grade:90},
+  {section:'Ember', lrn:'113610140016', name:'LOZADA,NECEL JOY BULALAQUE', grade:91},
+  {section:'Ember', lrn:'113604140052', name:'NAGA,JAMIE LOREN TINAY', grade:85},
+  {section:'Ember', lrn:'113606140164', name:'ORIAS,TRISHA JANE NUÑEZ', grade:81},
+  {section:'Ember', lrn:'113603140010', name:'PABILANDO,JHOANNA VILLANTES', grade:89},
+  {section:'Ember', lrn:'113606140160', name:'PEÑARANDA,JAN MONICQUE ESPARRAGO', grade:88},
+  {section:'Ember', lrn:'113606140178', name:'ROBISO,ANDREA ATENDIDO', grade:75},
+  {section:'Ember', lrn:'113605140039', name:'SANCHEZ,DIANNE PATRICIA BERGADO', grade:93},
+  {section:'Ember', lrn:'113504140033', name:'TORRENUEVA,PRINCESS GEMINO', grade:85},
+  {section:'Ember', lrn:'113606140161', name:'VALLERAS,ROSELYN JERUSALEM', grade:79},
+
+  /* Oasis */
+  {section:'Oasis', lrn:'113606140050', name:'Arimbuyutan, Nhel John Elyson A.', grade:76},
+  {section:'Oasis', lrn:'113602140005', name:'Belarmino, Mark Dm H.', grade:83},
+  {section:'Oasis', lrn:'113606140060', name:'Canete, Jolit Z.', grade:78},
+  {section:'Oasis', lrn:'113597140071', name:'Diaz, Jethro L.', grade:90},
+  {section:'Oasis', lrn:'113613140004', name:'Ecita, Lorince D.', grade:76},
+  {section:'Oasis', lrn:'113613140005', name:'Igloso, Jerry Jr. C.', grade:80},
+  {section:'Oasis', lrn:'113617140031', name:'Mahayag, Kyle', grade:85},
+  {section:'Oasis', lrn:'113604140036', name:'Mahinay, Romel C.', grade:81},
+  {section:'Oasis', lrn:'113606140074', name:'Manlangit, Lester C.', grade:88},
+  {section:'Oasis', lrn:'113615140011', name:'Minggoy, John Mark V.', grade:75},
+  {section:'Oasis', lrn:'113605130037', name:'Ramirez, Jielo A.', grade:77},
+  {section:'Oasis', lrn:'113604140042', name:'Serafin, Reynald P.', grade:70},
+  {section:'Oasis', lrn:'136838140101', name:'Ubac, Michael John M.', grade:79},
+  {section:'Oasis', lrn:'113606150124', name:'Alforque, Anniver C.', grade:75},
+  {section:'Oasis', lrn:'113615140014', name:'Aplacador, Arnie', grade:77},
+  {section:'Oasis', lrn:'113614140016', name:'Apues, Marjorie A.', grade:75},
+  {section:'Oasis', lrn:'113606140129', name:'Arizobal, Jenny P.', grade:75},
+  {section:'Oasis', lrn:'113606140088', name:'Atizado, Princess Odesa P.', grade:81},
+  {section:'Oasis', lrn:'113951140053', name:'Bandol, Loida A.', grade:77},
+  {section:'Oasis', lrn:'110282140176', name:'Baring, Kristine M.', grade:81},
+  {section:'Oasis', lrn:'113599140015', name:'Baring, Lanilyn A.', grade:90},
+  {section:'Oasis', lrn:'113606140143', name:'Bayagosa, Esiel V.', grade:76},
+  {section:'Oasis', lrn:'113606140139', name:'Caones, Cynde M.', grade:82},
+  {section:'Oasis', lrn:'113597140019', name:'Catarinin, Victoria M.', grade:81},
+  {section:'Oasis', lrn:'113612140024', name:'Etang, Kristine Rein Lara', grade:80},
+  {section:'Oasis', lrn:'113617140002', name:'Francisco, Emmalyn E.', grade:81},
+  {section:'Oasis', lrn:'113613140019', name:'Jubay, Jeann M.', grade:74},
+  {section:'Oasis', lrn:'123456789012', name:'Lerit, Sassy Liane A.', grade:70},
+  {section:'Oasis', lrn:'113597140053', name:'Luzong C. Nancy', grade:86},
+  {section:'Oasis', lrn:'113786140055', name:'Mahinay, Gella', grade:77},
+  {section:'Oasis', lrn:'113597120160', name:'Moreno, Jenny A.', grade:75},
+  {section:'Oasis', lrn:'113606140177', name:'Natural, Erika Joy P.', grade:79},
+  {section:'Oasis', lrn:'113606140114', name:'Noda, Glyza B.', grade:75},
+  {section:'Oasis', lrn:'113604140050', name:'Orbes, Annjean B.', grade:78},
+  {section:'Oasis', lrn:'113613140016', name:'Paghunasan, Shery-Ann T.', grade:83},
+  {section:'Oasis', lrn:'113606140115', name:'Paran, Ronalyn D.', grade:81},
+  {section:'Oasis', lrn:'113951140046', name:'Pascua, Danica A.', grade:78},
+  {section:'Oasis', lrn:'113951140086', name:'Presilda, Janna Shane R.', grade:78},
+  {section:'Oasis', lrn:'113606140116', name:'Ramirez, Jendy V.', grade:80},
+  {section:'Oasis', lrn:'113597140027', name:'Rupa, Clavel O.', grade:78},
+
+  /* Solstice */
+  {section:'Solstice', lrn:'113612140003', name:'AVILA,GIAN JOSH RAYMUNDO', grade:76},
+  {section:'Solstice', lrn:'113605130028', name:'BELEN,JACKPHILLIP MENDERO', grade:73},
+  {section:'Solstice', lrn:'110108140048', name:'BERRES,GEIAN CARLO RONDA', grade:75},
+  {section:'Solstice', lrn:'136524150592', name:'CABRALES,AL FRANCIS AFABLE', grade:78},
+  {section:'Solstice', lrn:'113606140044', name:'CARMEN,ERNESTO JR BERDIN', grade:73},
+  {section:'Solstice', lrn:'113606130133', name:'COSTE,IGNACIO III ABAYON', grade:73},
+  {section:'Solstice', lrn:'113606110055', name:'DEL MUNDO,JUSTINE PABATANG', grade:76},
+  {section:'Solstice', lrn:'109156150106', name:'DELA CRUZ,JOHN KYLE -', grade:74},
+  {section:'Solstice', lrn:'113602130016', name:'DOCUSIN,GIAN SOCITO', grade:78},
+  {section:'Solstice', lrn:'113954130030', name:'ERENIA,KIM OCHEA', grade:73},
+  {section:'Solstice', lrn:'113597140011', name:'FLORES,DAVE RABUYA', grade:75},
+  {section:'Solstice', lrn:'113604120065', name:'LIBAY,JOSHUA VILLAMAR', grade:77},
+  {section:'Solstice', lrn:'113602140012', name:'LUCENESIO,MARK JUSTIN ETAOC', grade:73},
+  {section:'Solstice', lrn:'113613130008', name:'LUGANA,JADE IGLOSO', grade:70},
+  {section:'Solstice', lrn:'113606140099', name:'LUZONG,BRENT KEVIN ARIZOBAL', grade:80},
+  {section:'Solstice', lrn:'113608110042', name:'MALANA,GEHARD ADIGUE', grade:81},
+  {section:'Solstice', lrn:'113614140009', name:'MONTECALVO,JOJIE AREGLADO', grade:75},
+  {section:'Solstice', lrn:'113612140020', name:'TAMAYO,JOHN LESTER BELARMINO', grade:75},
+  {section:'Solstice', lrn:'104753140051', name:'TOROY,DAVE ESPEJON', grade:76},
+  {section:'Solstice', lrn:'136477140516', name:'TRINIDAD,JOHN WAYNE LUTCHE', grade:73},
+  {section:'Solstice', lrn:'113603140006', name:'TUMANGAN,NHOAH BUJAWE', grade:75},
+  {section:'Solstice', lrn:'113606140119', name:'ALIÑO,JEAN BENARO', grade:73},
+  {section:'Solstice', lrn:'113597140076', name:'ARCUENO,AMANDA ANDRINO', grade:84},
+  {section:'Solstice', lrn:'113606140123', name:'ARMA,ROCHELLE COSTE', grade:74},
+  {section:'Solstice', lrn:'113612140023', name:'BARRUGA,RICHEL SOQUESO', grade:73},
+  {section:'Solstice', lrn:'113613140012', name:'BRUSAS,JESSEL CAPALAR', grade:81},
+  {section:'Solstice', lrn:'113608120068', name:'CANTORIA,JIZEL AMARO', grade:73},
+  {section:'Solstice', lrn:'113613140013', name:'CAPALAR,RICHELYN CABAIS', grade:80},
+  {section:'Solstice', lrn:'113602140021', name:'CARASICAS,SUSAN ANABE', grade:74},
+  {section:'Solstice', lrn:'113606140093', name:'COLIBAO,ALEYAH ARCUENO', grade:76},
+  {section:'Solstice', lrn:'113610140013', name:'ESCOTE,ROMA MAE MONCADA', grade:73},
+  {section:'Solstice', lrn:'113604140046', name:'FRANCISCO,ANIELYN PALANAS', grade:76},
+  {section:'Solstice', lrn:'113605140033', name:'GARCIA,SHIELA MAE BARILE', grade:74},
+  {section:'Solstice', lrn:'113606140150', name:'GESTIADA,JULIA JANE IGNACIO', grade:75},
+  {section:'Solstice', lrn:'113606130227', name:'MADERA,JERECA VERDIDA', grade:73},
+  {section:'Solstice', lrn:'113951130094', name:'RICARTE,SHEILA MAE ESQUILONA', grade:75},
+  {section:'Solstice', lrn:'113612140027', name:'ROMBAIZ,ROSALYN ADIGUE', grade:73},
+  {section:'Solstice', lrn:'113617140028', name:'SALUNDAGA,JOSEL ALMOGUERA', grade:75},
+  {section:'Solstice', lrn:'113597140065', name:'SANCHEZ,JESEL ARCUENO', grade:73},
+  {section:'Solstice', lrn:'113612140028', name:'TAMAYO,PRINCESS HANNAH YLARAN', grade:75},
+
+  /* Meadow */
+  {section:'Meadow', lrn:'113610130009', name:'ARRANGUEZ,MARK LEO ALFORTE', grade:73},
+  {section:'Meadow', lrn:'113956130022', name:'BOGABIL,ALDIN LUMALANG', grade:76},
+  {section:'Meadow', lrn:'113602140017', name:'CABAGUE,MIGUEL VIDA', grade:75},
+  {section:'Meadow', lrn:'113604140006', name:'CABINTOY,JEROME CASIDSID', grade:73},
+  {section:'Meadow', lrn:'113602120010', name:'CARASICAS,JEVAN ANABE', grade:76},
+  {section:'Meadow', lrn:'113605140007', name:'DELA CRUZ,JHONNY FRANCISCO', grade:75},
+  {section:'Meadow', lrn:'113604140007', name:'FLORES,JEM VASQUEZ', grade:77},
+  {section:'Meadow', lrn:'113605140012', name:'MANANGAT,ERIC MENEL', grade:76},
+  {section:'Meadow', lrn:'113604140038', name:'MITRA,CYRIL JOHN ESTRADA', grade:73},
+  {section:'Meadow', lrn:'113610140006', name:'MONCADA,RON MART ESCOTE', grade:76},
+  {section:'Meadow', lrn:'113606140169', name:'PARAGUYA,GERALD ESCARAN', grade:74},
+  {section:'Meadow', lrn:'113605140017', name:'PINOTE,JAMES ABLAS', grade:76},
+  {section:'Meadow', lrn:'113606140181', name:'RAMIREZ,RONIE MARK MENDOZA', grade:75},
+  {section:'Meadow', lrn:'113606140182', name:'TANA,FRANCE HERMOSA', grade:73},
+  {section:'Meadow', lrn:'113613130013', name:'URBANO,JOHN CARLO CAPELLAN', grade:90},
+  {section:'Meadow', lrn:'113612110001', name:'ABAD,JUVYMAE BARRUGA', grade:''},
+  {section:'Meadow', lrn:'113610140008', name:'ADORNA,CHARISA REBUJAS', grade:75},
+  {section:'Meadow', lrn:'113610140009', name:'ALFORTE,MERYL JOY CAÑELAS', grade:75},
+  {section:'Meadow', lrn:'113597130044', name:'ARCUENO,JENELYN PRESILDA', grade:73},
+  {section:'Meadow', lrn:'113605140023', name:'ATIBAGOS,CRISHELLE FLORES', grade:74},
+  {section:'Meadow', lrn:'113610140010', name:'BADIANA,MARIAN ARCON', grade:73},
+  {section:'Meadow', lrn:'113613130017', name:'BILARMINO,RAYCEL LATAGAN', grade:74},
+  {section:'Meadow', lrn:'113610140011', name:'BOGNOT,KIMBERLY ARAGON', grade:73},
+  {section:'Meadow', lrn:'113596120049', name:'CAADLAWON,BELIZA BOHOL', grade:75},
+  {section:'Meadow', lrn:'113604140012', name:'CARIÑO,DANICE ARQUIO', grade:75},
+  {section:'Meadow', lrn:'113606140147', name:'CLEMENTE,MAURENE NICDAO', grade:77},
+  {section:'Meadow', lrn:'165510141544', name:'COLLADO,HANNAH OSABEL', grade:72},
+  {section:'Meadow', lrn:'120741140026', name:'CONTREDAS,CRISTINE LABATETE', grade:74},
+  {section:'Meadow', lrn:'113606140094', name:'COSTE,GECEL TABOR', grade:74},
+  {section:'Meadow', lrn:'113608140014', name:'CUIZON,JUNALYN ABELINDE', grade:75},
+  {section:'Meadow', lrn:'113942140018', name:'DAO,LEIAN CARILLO', grade:77},
+  {section:'Meadow', lrn:'113612130037', name:'DELA PEÑA,CHARLENE GAVIOLA', grade:75},
+  {section:'Meadow', lrn:'113606140096', name:'DELOS SANTOS,LUJIL BELO', grade:77},
+  {section:'Meadow', lrn:'113597140021', name:'ECITA,CHARMAE CAÑELAS', grade:75},
+  {section:'Meadow', lrn:'113597140077', name:'LUCENESIO,ANGELICA VEPINOSA', grade:76},
+  {section:'Meadow', lrn:'113606140175', name:'MAGLASANG,DANIELA COLUMNA', grade:81},
+  {section:'Meadow', lrn:'113617130046', name:'MATERDAN,JESALYN TAMBOBOY', grade:72},
+  {section:'Meadow', lrn:'113606140118', name:'RAYMUNDO,RHEA BANDOL', grade:76},
+  {section:'Meadow', lrn:'113605140038', name:'SAMPAGA,JESSICA VILLAR', grade:74}
+];
+
+/* ---- DB persistence in localStorage ---- */
+const STORAGE_KEY = 'gm_grade_db_v1';
+function loadDB(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) {
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed)) return parsed;
     }
+  }catch(e){console.warn('load error',e)}
+  // if no saved DB, return seed copy
+  return JSON.parse(JSON.stringify(seedDB));
+}
+function saveDB(db){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+}
 
-    function setupInlineEditButtons(){
-      const editBtn = document.getElementById('editThis');
-      if(editBtn) editBtn.onclick = ()=>{
-        const lrn = document.getElementById('lrnInput').value.trim();
-        const sIdx = students.findIndex(x=>x.LRN===lrn && x.section===currentSection);
-        if(sIdx===-1) return alert('Student not found');
-        openAdminEditor(students[sIdx]);
-      };
+/* ---- App state ---- */
+let DB = loadDB();
+let currentSection = null;
+let loggedIn = false;
 
-      document.getElementById('printBtn').onclick = ()=> window.print();
-    }
+/* ---- Elements ---- */
+const accessCode = el('accessCode');
+const enterCodeBtn = el('enterCodeBtn');
+const landing = el('landing');
+const portal = el('portal');
+const sectionsArea = el('sectionsArea');
+const lrnPrompt = el('lrnPrompt');
+const lrnInput = el('lrnInput');
+const viewGradeBtn = el('viewGradeBtn');
+const result = el('result');
+const resultName = el('resultName');
+const resultGrade = el('resultGrade');
+const resultRemarks = el('resultRemarks');
+const logoutBtn = el('logoutBtn');
+const adminToggle = el('adminToggle');
+const adminArea = el('adminArea');
+const dbBody = el('dbBody');
+const saveDbBtn = el('saveDbBtn');
+const downloadCsv = el('downloadCsv');
+const uploadCsv = el('uploadCsv');
+const uploadCsvLabel = el('uploadCsvLabel');
+const showExample = el('showExample');
 
-    // ----- admin -----
-    function renderAdminBlock(){
-      const block = document.getElementById('adminActionsBlock');
-      if(!block) return;
-      block.innerHTML = '';
-      if(isAdmin){
-        document.getElementById('roleBadge').textContent = 'Teacher (Admin)';
-        block.innerHTML = `
-          <div style="display:flex;gap:8px">
-            <button id="openEditor">Open Grade Editor</button>
-            <button id="addStudent">Add Student</button>
-            <button id="logoutAdmin" class="danger">Exit Admin</button>
-          </div>
-        `;
-        document.getElementById('openEditor').onclick = ()=> openAdminEditor();
-        document.getElementById('addStudent').onclick = ()=> openAddStudent();
-        document.getElementById('logoutAdmin').onclick = ()=>{ isAdmin=false; renderHome(); }
-      } else {
-        document.getElementById('roleBadge').textContent = 'Learner';
-        block.innerHTML = `<div class="small muted">Not in admin mode. Use Admin login to edit grades.</div>`;
-      }
-    }
+/* ---- Handlers ---- */
+function checkClassCode(input){
+  try{
+    const expected = DECODE(CLASS_CODE_B64);
+    return String(input).trim() === expected;
+  }catch(e){return false}
+}
+function checkAdminCode(input){
+  try{
+    const expected = DECODE(ADMIN_CODE_B64);
+    return String(input).trim() === expected;
+  }catch(e){return false}
+}
 
-    function promptAdminLogin(){
-      const pass = prompt('Enter admin passcode to enable admin mode:');
-      if(pass===null) return;
-      if(pass===ADMIN_PASS){ isAdmin=true; localStorage.setItem('genmath_admin', 'true'); alert('Admin mode enabled'); renderHome(); }
-      else alert('Incorrect passcode');
-    }
+/* show portal after successful class code */
+enterCodeBtn.addEventListener('click', ()=>{
+  const val = accessCode.value.trim();
+  if(!val){alert('Please enter the class access code.'); return;}
+  if(checkClassCode(val)){
+    loggedIn = true;
+    hide(landing);
+    show(portal);
+    accessCode.value = '';
+    show(el('sectionsArea'));
+    hide(result);
+    hide(lrnPrompt);
+    hide(adminArea);
+    currentSection = null;
+    // show welcome micro-modal
+    setTimeout(()=>alert('Welcome to General Mathematics Class — please select your section.'), 80);
+  } else {
+    alert('Incorrect code. Please try again.');
+  }
+});
 
-    function openAddStudent(){
-      const html = `
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <input id="newLRN" placeholder="LRN" />
-          <input id="newName" placeholder="Full name" />
-          <select id="newSection">${SECTIONS.map(s=>`<option>${s}</option>`).join('')}</select>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
-            <input id="nq1" placeholder="Q1" />
-            <input id="nq2" placeholder="Q2" />
-            <input id="nq3" placeholder="Q3" />
-            <input id="nq4" placeholder="Q4" />
-          </div>
-          <div style="display:flex;gap:8px"><button id="createBtn">Create</button><button id="cancelCreate" class="danger">Cancel</button></div>
-        </div>
-      `;
-      openModalContent('Add new student', html);
-      document.getElementById('createBtn').onclick = ()=>{
-        const newS = {LRN:document.getElementById('newLRN').value.trim(), name:document.getElementById('newName').value.trim(), section:document.getElementById('newSection').value, q1:Number(document.getElementById('nq1').value)||0,q2:Number(document.getElementById('nq2').value)||0,q3:Number(document.getElementById('nq3').value)||0,q4:Number(document.getElementById('nq4').value)||0};
-        if(!newS.LRN||!newS.name){ alert('Please provide LRN and name'); return; }
-        students.push(newS); saveData(students); closeModal(); renderHome(); alert('Student added');
-      };
-      document.getElementById('cancelCreate').onclick = closeModal;
-    }
+/* quick preview for teacher to see UI without login (no data access) */
+showExample.addEventListener('click', ()=>{
+  alert('Preview: to actually view grades, enter the class code. This preview only shows the interface.');
+});
 
-    function openAdminEditor(student){
-      // if student provided, edit single; else full table
-      if(student){
-        const html = `
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div class="muted">Editing student (${student.LRN})</div>
-            <input id="eName" value="${escapeHtml(student.name)}" />
-            <select id="eSection">${SECTIONS.map(s=>`<option ${s===student.section? 'selected':''}>${s}</option>`).join('')}</select>
-            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
-              <input id="eq1" value="${student.q1}" />
-              <input id="eq2" value="${student.q2}" />
-              <input id="eq3" value="${student.q3}" />
-              <input id="eq4" value="${student.q4}" />
-            </div>
-            <div style="display:flex;gap:8px"><button id="saveEdit">Save</button><button id="cancelEdit" class="danger">Cancel</button></div>
-          </div>
-        `;
-        openModalContent('Edit student', html);
-        document.getElementById('saveEdit').onclick = ()=>{
-          const idx = students.findIndex(x=>x.LRN===student.LRN);
-          if(idx===-1) return alert('Student not found');
-          students[idx].name = document.getElementById('eName').value.trim();
-          students[idx].section = document.getElementById('eSection').value;
-          students[idx].q1 = Number(document.getElementById('eq1').value)||0;
-          students[idx].q2 = Number(document.getElementById('eq2').value)||0;
-          students[idx].q3 = Number(document.getElementById('eq3').value)||0;
-          students[idx].q4 = Number(document.getElementById('eq4').value)||0;
-          saveData(students); closeModal(); renderHome(); alert('Saved');
-        };
-        document.getElementById('cancelEdit').onclick = closeModal;
-        return;
-      }
+/* Sections click */
+document.querySelectorAll('.section').forEach(node=>{
+  node.addEventListener('click', ()=>{
+    if(!loggedIn){alert('Please enter class access code first.');return;}
+    // open LRN prompt for chosen section
+    currentSection = node.dataset.section;
+    show(lrnPrompt);
+    hide(result);
+    lrnInput.value = '';
+    lrnInput.focus();
+    resultRemarks.textContent = `Selected section: ${currentSection}`;
+  });
+});
 
-      // full table editor
-      let html = '<div style="display:flex;flex-direction:column;gap:8px"><div class="muted">Edit grades directly; changes are saved to browser storage.</div><div class="table"><table><thead><tr><th>LRN</th><th>Name</th><th>Section</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th></th></tr></thead><tbody>';
-      students.forEach((st,i)=>{
-        html += `<tr data-idx="${i}"><td>${st.LRN}</td><td><input value="${escapeHtml(st.name)}" data-field="name" /></td><td><select data-field="section">${SECTIONS.map(s=>`<option ${s===st.section? 'selected':''}>${s}</option>`).join('')}</select></td><td><input value="${st.q1}" data-field="q1" /></td><td><input value="${st.q2}" data-field="q2" /></td><td><input value="${st.q3}" data-field="q3" /></td><td><input value="${st.q4}" data-field="q4" /></td><td><button class="saveRow">Save</button> <button class="delRow danger">Delete</button></td></tr>`;
+/* view grade */
+viewGradeBtn.addEventListener('click', ()=>attemptView());
+lrnInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') attemptView(); });
+
+function attemptView(){
+  const lrn = (lrnInput.value||'').trim();
+  if(!currentSection){alert('Please select a section first.');return;}
+  if(!lrn){alert('Enter your LRN then click "View Grade".');return;}
+  // find matches in DB for this section and LRN
+  const matches = DB.filter(r => r.section===currentSection && String(r.lrn)===String(lrn));
+  if(matches.length===0){
+    resultName.textContent = 'No record found';
+    resultGrade.textContent = '—';
+    resultRemarks.textContent = 'Please check your section and LRN.';
+    show(result);
+    return;
+  }
+  // if multiple matches, only show first to avoid exposing others
+  if(matches.length>1){
+    resultRemarks.textContent = 'Multiple records for this LRN were found in this section. Displaying first match. Please ask teacher to resolve duplicates in admin mode.';
+  } else resultRemarks.textContent = '';
+  const rec = matches[0];
+  resultName.textContent = rec.name;
+  resultGrade.textContent = (rec.grade === '' || rec.grade === null) ? 'No grade yet' : String(rec.grade);
+  show(result);
+}
+
+/* logout */
+logoutBtn.addEventListener('click', ()=>{
+  if(confirm('Log out now?')){
+    loggedIn = false;
+    hide(portal);
+    show(landing);
+    hide(adminArea);
+    currentSection = null;
+    resultName.textContent = '';
+    resultGrade.textContent = '';
+    resultRemarks.textContent = '';
+  }
+});
+
+/* Admin toggle */
+adminToggle.addEventListener('click', ()=>{
+  // ask for admin code
+  const code = prompt('Enter admin passcode (teacher):');
+  if(code===null) return;
+  if(checkAdminCode(code)){
+    showAdmin();
+  } else {
+    alert('Incorrect admin passcode.');
+  }
+});
+
+function showAdmin(){
+  show(adminArea);
+  populateDbTable();
+}
+
+/* populate admin table */
+function populateDbTable(){
+  // clear
+  dbBody.innerHTML = '';
+  // Sort by section then name
+  const ordered = DB.slice().sort((a,b)=>{
+    if(a.section!==b.section) return a.section.localeCompare(b.section);
+    return (a.name||'').localeCompare(b.name||'');
+  });
+  ordered.forEach((r, idx)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.section}</td>
+      <td><input class="editable" data-i="${idx}" data-field="lrn" value="${r.lrn||''}" /></td>
+      <td><input class="editable" data-i="${idx}" data-field="name" value="${r.name||''}" /></td>
+      <td><input class="editable" data-i="${idx}" data-field="grade" value="${r.grade===null||r.grade===''? '': r.grade}" /></td>
+      <td><button class="btn-ghost" data-action="del" data-i="${idx}">Delete</button></td>
+    `;
+    dbBody.appendChild(tr);
+  });
+  // wire up editable inputs & delete buttons
+  dbBody.querySelectorAll('.editable').forEach(inp=>{
+    inp.addEventListener('change', (e)=>{
+      const i = parseInt(e.target.dataset.i,10);
+      const f = e.target.dataset.field;
+      let v = e.target.value;
+      if(f==='grade'){ v = v.trim()==='' ? '' : Number(v); if(v!=='' && (isNaN(v) || v<0 || v>100)){ alert('Grade must be a number 0–100 or blank.'); return; } }
+      // find corresponding record in DB: we sorted array earlier; so find matching by section+name+lrn roughly — simpler: update the nth item in ordered array then map back:
+      // For reliability, we'll reconstruct ordered list, update, then remap DB
+      const orderedNow = DB.slice().sort((a,b)=>{
+        if(a.section!==b.section) return a.section.localeCompare(b.section);
+        return (a.name||'').localeCompare(b.name||'');
       });
-      html += '</tbody></table></div><div style="display:flex;gap:8px"><button id="closeEditor">Close</button><button id="downloadCSV">Download CSV</button></div></div>';
-      openModalContent('Grade editor', html);
-      document.getElementById('closeEditor').onclick = ()=>{ closeModal(); renderHome(); };
-      document.getElementById('downloadCSV').onclick = exportCSV;
-
-      // attach row buttons
-      document.querySelectorAll('.saveRow').forEach(btn=> btn.onclick = (e)=>{
-        const tr = e.target.closest('tr'); const idx = Number(tr.getAttribute('data-idx'));
-        const inputs = tr.querySelectorAll('[data-field]');
-        inputs.forEach(inp=>{ const f = inp.getAttribute('data-field'); let val = inp.value; if(['q1','q2','q3','q4'].includes(f)) val = Number(val)||0; students[idx][f]=val; });
-        saveData(students); alert('Row saved');
+      const rec = orderedNow[i];
+      if(!rec){ alert('Record not found.'); return;}
+      rec[f] = (f==='grade' && v==='') ? '' : v;
+      // now update DB: find index by original unique combination (section + name + lrn)
+      const ix = DB.findIndex(d=>d.section===rec.section && d.name===rec.name && String(d.lrn)===String(rec.lrn));
+      if(ix>=0) DB[ix] = rec;
+      // refresh UI
+      setTimeout(()=>populateDbTable(), 60);
+    });
+  });
+  dbBody.querySelectorAll('button[data-action="del"]').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      const i = parseInt(e.target.dataset.i,10);
+      if(!confirm('Delete this record?')) return;
+      const orderedNow = DB.slice().sort((a,b)=>{
+        if(a.section!==b.section) return a.section.localeCompare(b.section);
+        return (a.name||'').localeCompare(b.name||'');
       });
-      document.querySelectorAll('.delRow').forEach(btn=> btn.onclick = (e)=>{
-        if(!confirm('Delete this student?')) return; const tr = e.target.closest('tr'); const idx = Number(tr.getAttribute('data-idx'));
-        students.splice(idx,1); saveData(students); alert('Deleted'); openAdminEditor(); // reopen to reflect
-      });
-    }
+      const rec = orderedNow[i];
+      const ix = DB.findIndex(d=>d.section===rec.section && d.name===rec.name && String(d.lrn)===String(rec.lrn));
+      if(ix>=0){ DB.splice(ix,1); populateDbTable(); }
+    });
+  });
+}
 
-    // ----- CSV import/export -----
-    function exportCSV(){
-      const header = 'LRN,name,section,q1,q2,q3,q4\n';
-      const csv = header + students.map(s=>`${s.LRN},"${s.name.replace(/"/g,'""')}",${s.section},${s.q1},${s.q2},${s.q3},${s.q4}`).join('\n');
-      const blob = new Blob([csv], {type:'text/csv'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href=url; a.download='genmath_grades.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-    }
+/* Save DB */
+saveDbBtn.addEventListener('click', ()=>{
+  if(!confirm('Save changes to this browser storage?')) return;
+  saveDB(DB);
+  alert('Database saved locally (browser storage). You can also Download CSV for backup.');
+});
 
-    function handleCSVImport(e){
-      const f = e.target.files[0]; if(!f) return; const reader = new FileReader();
-      reader.onload = (ev)=>{
-        const text = ev.target.result; parseCSVText(text);
-      };
-      reader.readAsText(f);
-      e.target.value='';
-    }
-    function parseCSVText(text){
-      const lines = text.split(/\r?\n/).filter(Boolean);
-      if(lines.length<2) return alert('CSV appears empty');
-      const data = [];
-      for(let i=1;i<lines.length;i++){
-        const row = parseCSVLine(lines[i]);
-        if(!row || row.length<7) continue;
-        data.push({LRN:row[0], name:row[1], section:row[2], q1:Number(row[3])||0, q2:Number(row[4])||0, q3:Number(row[5])||0, q4:Number(row[6])||0});
+/* Download CSV */
+downloadCsv.addEventListener('click', ()=>{
+  const headers = ['section','lrn','name','grade'];
+  const rows = [headers.join(',')].concat(DB.map(r=>{
+    return [r.section, `"${String(r.lrn).replace(/"/g,'""')}"`, `"${String(r.name||'').replace(/"/g,'""')}"`, String(r.grade===undefined||r.grade===null?'':r.grade)].join(',');
+  }));
+  const csv = rows.join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'gm_grades_backup.csv';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+/* Upload CSV */
+uploadCsvLabel.addEventListener('click', ()=> uploadCsv.click());
+uploadCsv.addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt){
+    const text = evt.target.result;
+    try{
+      const parsed = parseCSV(text);
+      if(!Array.isArray(parsed) || parsed.length===0) throw new Error('No rows found');
+      // Expect header row 'section,lrn,name,grade' or similar
+      const header = parsed[0].map(h=>String(h||'').toLowerCase().trim());
+      const idxSection = header.indexOf('section');
+      const idxLrn = header.indexOf('lrn');
+      const idxName = header.indexOf('name');
+      const idxGrade = header.indexOf('grade');
+      if(idxSection<0 || idxLrn<0 || idxName<0 || idxGrade<0) throw new Error('CSV must include headers: section, lrn, name, grade');
+      const newDB = [];
+      for(let i=1;i<parsed.length;i++){
+        const row = parsed[i];
+        if(!row) continue;
+        const sec = row[idxSection] ? String(row[idxSection]).trim() : '';
+        const lrn = row[idxLrn] ? String(row[idxLrn]).replace(/"/g,'').trim() : '';
+        const name = row[idxName] ? String(row[idxName]).replace(/"/g,'').trim() : '';
+        const g = row[idxGrade] ? String(row[idxGrade]).trim() : '';
+        const grade = g==='' ? '' : Number(g);
+        newDB.push({section:sec, lrn:lrn, name:name, grade:grade});
       }
-      if(!confirm(`Import ${data.length} rows and replace existing students? Press Cancel to append instead.`)){
-        // append
-        students = students.concat(data);
-      } else {
-        students = data;
+      if(!confirm('Replace current database with uploaded CSV?')) return;
+      DB = newDB;
+      saveDB(DB);
+      populateDbTable();
+      alert('CSV imported and database replaced.');
+    }catch(err){
+      alert('CSV import failed: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+});
+
+/* CSV parse (simple) */
+function parseCSV(text){
+  const lines = text.split(/\r?\n/).filter(l=>l.trim()!=='');
+  return lines.map(line=>{
+    // split on commas but handle quoted values
+    const out = [];
+    let cur = '';
+    let inQuotes = false;
+    for(let i=0;i<line.length;i++){
+      const ch = line[i];
+      if(ch==='\"'){
+        if(inQuotes && line[i+1]==='\"'){ cur += '\"'; i++; continue; }
+        inQuotes = !inQuotes;
+        continue;
       }
-      saveData(students); alert('Import complete'); renderHome();
+      if(ch===',' && !inQuotes){
+        out.push(cur);
+        cur = '';
+        continue;
+      }
+      cur += ch;
     }
-    function parseCSVLine(line){
-      // simple CSV parser that handles quoted fields
-      const out=[]; let cur=''; let inQuotes=false; for(let i=0;i<line.length;i++){ const ch=line[i]; if(ch==='"'){ if(inQuotes && line[i+1]==='"'){ cur+='"'; i++; } else inQuotes=!inQuotes; } else if(ch===',' && !inQuotes){ out.push(cur); cur=''; } else cur+=ch; } out.push(cur); return out;
-    }
+    out.push(cur);
+    return out;
+  });
+}
 
-    // ----- modal helpers -----
-    function openModalContent(title, innerHTML){
-      // reuse existing welcomeModal as container by replacing its content temporarily
-      const modal = document.createElement('div'); modal.className='modal-backdrop';
-      modal.innerHTML = `<div class="modal"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">${title}</h3><button id="closeModalSmall">X</button></div><div style="margin-top:12px">${innerHTML}</div></div>`;
-      document.body.appendChild(modal);
-      document.getElementById('closeModalSmall').onclick = ()=>{ modal.remove(); };
-      modal.onclick = (ev)=>{ if(ev.target===modal) modal.remove(); };
-    }
-    function closeModal(){ document.querySelectorAll('.modal-backdrop').forEach((m,i)=>{ if(i>0) m.remove(); }); }
+/* initial load of DB for admin display if admin area open */
+if(localStorage.getItem(STORAGE_KEY)) DB = loadDB();
 
-    // small helper
-    function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+/* small UX: clear result when clicking elsewhere */
+document.addEventListener('click', (e)=>{
+  if(!portal.contains(e.target) && !landing.contains(e.target)) return;
+});
 
-    // ----- initial login handling -----
-    (function init(){
-      const modal = document.getElementById('welcomeModal');
-      document.getElementById('accessBtn').onclick = ()=>{
-        const val = document.getElementById('accessCode').value.trim();
-        const msg = document.getElementById('accessMsg');
-        const showAdminOpt = document.getElementById('firstLoginCheckbox').checked;
-        if(val===CLASS_CODE){
-          modal.style.display='none'; modal.remove(); renderHome();
-          // if first time and user asked for admin setup, show admin prompt
-          if(showAdminOpt && !localStorage.getItem('genmath_admin_initialized')){
-            const p = prompt('Set admin mode now? Enter admin passcode to enable now (will be stored locally):');
-            if(p===ADMIN_PASS){ isAdmin=true; localStorage.setItem('genmath_admin','true'); localStorage.setItem('genmath_admin_initialized','1'); alert('Admin enabled and initialized.'); }
-            else if(p!==null) alert('Incorrect passcode. You can enable admin later.');
-          }
-          // if admin flag set earlier
-          if(localStorage.getItem('genmath_admin')==='true') { isAdmin=true; }
-        } else { msg.textContent = 'Incorrect access code.'; }
-      };
-      // allow Enter key for convenience
-      document.getElementById('accessCode').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('accessBtn').click(); });
+/* show admin area only after auth; but show save/download controls when visible - already wired */
 
-      // if admin flag stored, set isAdmin
-      if(localStorage.getItem('genmath_admin')==='true') isAdmin=true;
+/* initial state */
+hide(portal);
+hide(adminArea);
 
-    })();
-
-  </script>
+</script>
 </body>
 </html>
