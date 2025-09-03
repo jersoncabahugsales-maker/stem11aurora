@@ -1,74 +1,93 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dimasalang National High School — Student Portal</title>
-  <style>
-    :root{
-      --blue:#dff1ff;
-      --accent:#68b8ff;
-      --text:#0b2545;
-      --muted:#5b6b7a;
-      --glass: rgba(255,255,255,0.8);
-    }
-    html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:linear-gradient(180deg,var(--blue),#ffffff 60%); color:var(--text)}
-    .container{max-width:980px;margin:30px auto;padding:24px}
-    header{display:flex;align-items:center;gap:16px}
-    .logo{width:76px;height:76px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:linear-gradient(135deg,var(--accent),#9ee0ff);box-shadow:0 6px 18px rgba(6,40,80,0.08)}
-    .logo svg{width:56px;height:56px}
-    .school{line-height:1}
-    .school h1{margin:0;font-size:26px}
-    .school p{margin:0;font-size:15px;color:var(--muted)}
-
-    .card{background:var(--glass);border-radius:14px;padding:20px;margin-top:18px;box-shadow:0 8px 30px rgba(25,70,120,0.06)}
-
-    .center{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
-    .code-box{margin-top:12px}
-    input[type=text]{padding:12px 14px;border-radius:8px;border:1px solid rgba(11,37,69,0.08);width:280px;font-size:15px}
-    button{padding:10px 14px;border-radius:10px;border:0;background:var(--accent);color:white;font-weight:600;cursor:pointer}
-    .links{display:flex;gap:12px;margin-top:12px}
-
-    .hidden{display:none}
-    .nav{display:flex;gap:10px;margin-top:14px}
-    .section-btn{background:white;border:1px solid rgba(11,37,69,0.06);padding:8px 12px;border-radius:10px;cursor:pointer}
-
-    .student-view{display:grid;grid-template-columns:1fr 300px;gap:18px}
-    .info{padding:12px;background:white;border-radius:10px}
-
-    table{width:100%;border-collapse:collapse}
-    th,td{padding:8px;border-bottom:1px dashed rgba(0,0,0,0.05);text-align:left}
-    .small{font-size:13px;color:var(--muted)}
-
-    .logout{background:transparent;border:0;color:var(--text);font-weight:600;cursor:pointer}
-
-    /* admin spreadsheet */
-    .admin-tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    .csv-export{background:white;border:1px solid rgba(11,37,69,0.06);padding:8px 10px;border-radius:8px}
-
-    footer{margin-top:24px;color:var(--muted);font-size:13px}
-
-    @media (max-width:820px){.student-view{grid-template-columns:1fr}header{flex-direction:column;align-items:flex-start}.center input[type=text]{width:100%}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dimasalang School Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
+            color: #333;
+        }
+        header {
+            background-color: #1e90ff;
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .school-info h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        .school-info p {
+            margin: 0;
+            font-size: 0.9em;
+        }
+        main {
+            padding: 20px;
+        }
+        .hidden { display: none; }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #1e90ff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover { background-color: #4682b4; }
+        input[type="text"], input[type="number"] {
+            padding: 8px;
+            margin: 5px 0;
+            width: 100%;
+            max-width: 300px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        .logout-btn { background-color: crimson; }
+    </style>
 </head>
 <body>
-  <div class="container">
     <header>
-<div class="logo">
-  <svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="25" cy="25" r="20" fill="lightblue" stroke="navy" stroke-width="2"/>
-    <text x="25" y="30" text-anchor="middle" font-size="12" fill="navy">LOGO</text>
-  </svg>
-</div>
-      <div class="school">
-        <h1>Dimasalang National High School</h1>
-        <p>Dimasalang, Masbate</p>
-      </div>
-      <div style="margin-left:auto;display:flex;gap:10px;align-items:center">
-        <button id="admin-toggle">Admin Mode</button>
-        <button id="help-btn" style="background:transparent;color:var(--text);border:1px solid rgba(11,37,69,0.06);">Help</button>
-      </div>
+        <div class="logo">
+            <a href="index.html">
+                <img src="https://tinyurl.com/dnhslogosmall" alt="Dimasalang National High School Logo" width="60">
+            </a>
+        </div>
+        <div class="school-info">
+            <h1>Dimasalang National High School</h1>
+            <p>Dimasalang, Masbate</p>
+        </div>
     </header>
+
+    <main id="app">
+        <!-- The rest of your login and portal system code follows here -->
+    </main>
+
+    <script>
+        /* Your existing JavaScript code for login, grade viewing, admin mode, etc. */
+    </script>
+</body>
+</html>
 
     <section class="card center" id="landing">
       <h2 style="margin:0">Welcome! Please enter the code</h2>
@@ -751,4 +770,5 @@
   </script>
 </body>
 </html>
+
 
