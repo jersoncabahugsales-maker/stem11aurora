@@ -8,26 +8,25 @@
     :root{
       --bg:#f7fbff;
       --card:#ffffff;
-      --accent:#cfe9ff;
-      --blue:#2a9df4;
-      --muted:#6b7280;
+      --accent:#e6f4ff;
+      --blue:#1e90ff;
+      --muted:#52606a;
       --radius:14px;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
     }
-    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#f0f7ff);}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#eef7ff);}
     .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:28px;}
-    .card{background:var(--card);border-radius:var(--radius);box-shadow:0 10px 30px rgba(20,40,80,0.06);max-width:980px;width:100%;padding:28px;display:flex;gap:20px;align-items:stretch;}
+    .card{background:var(--card);border-radius:16px;box-shadow:0 12px 30px rgba(20,40,80,0.06);max-width:980px;width:100%;padding:26px;display:flex;gap:20px;align-items:stretch;}
     .left{flex:1;display:flex;flex-direction:column;gap:14px;justify-content:center;padding:8px;}
-    .right{flex:1.05;background:linear-gradient(180deg,#fff, var(--accent));border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;}
-    h1{margin:0;font-size:20px;color:#05213a}
-    h2{margin:0;font-size:16px;color:#05213a}
+    .right{flex:1.05;background:linear-gradient(180deg,#fff,var(--accent));border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;}
+    h1{margin:0;font-size:20px;color:#042f4a}
+    h2{margin:0;font-size:16px;color:#042f4a}
     p{margin:0;color:var(--muted)}
-    .big-cta{background:linear-gradient(90deg,var(--blue),#3fb1ff);color:white;padding:12px 18px;border-radius:10px;border:none;font-weight:600;cursor:pointer;box-shadow:0 6px 18px rgba(42,157,244,0.18);}
-    .small{font-size:13px;color:var(--muted)}
+    .big-cta{background:linear-gradient(90deg,var(--blue),#3fa9ff);color:white;padding:12px 18px;border-radius:10px;border:none;font-weight:700;cursor:pointer;box-shadow:0 8px 20px rgba(30,144,255,0.18);}
     .input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(10,30,60,0.06);font-size:14px}
     .sections{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-    .section{background:white;border-radius:10px;padding:12px 16px;min-width:140px;text-align:center;cursor:pointer;box-shadow:0 6px 20px rgba(40,80,120,0.04);border:1px solid rgba(10,30,60,0.04)}
-    .section:hover{transform:translateY(-4px);transition:all .18s}
+    .section{background:white;border-radius:12px;padding:12px 16px;min-width:140px;text-align:center;cursor:pointer;box-shadow:0 8px 20px rgba(40,80,120,0.04);border:1px solid rgba(10,30,60,0.04);font-weight:600}
+    .section:hover{transform:translateY(-6px);transition:all .18s}
     .muted{color:var(--muted);font-size:13px}
     .topbar{display:flex;justify-content:space-between;align-items:center;width:100%}
     .btn-ghost{background:transparent;border:1px solid rgba(10,30,60,0.06);padding:8px 12px;border-radius:9px;cursor:pointer}
@@ -36,16 +35,12 @@
     .controls{display:flex;gap:8px;flex-wrap:wrap}
     .notice{background:#eef9ff;padding:10px;border-radius:10px;color:#05507a}
     .footer{font-size:12px;color:var(--muted);text-align:center;margin-top:8px}
-    input[type=file]{display:none}
-    .login-hero{cursor:pointer;padding:12px;border-radius:10px;background:linear-gradient(90deg,#ffffff80,#ffffff10);border:1px solid rgba(255,255,255,0.2)}
-    .flex{display:flex;gap:8px;align-items:center}
-    .badge{background:#e9f7ff;padding:6px 9px;border-radius:999px;font-weight:600;color:#024a6e}
     .hidden{display:none}
     .center{display:flex;align-items:center;justify-content:center}
-    .danger{color:#b22222}
-    .small-link{font-size:13px;color:#0369a1;cursor:pointer}
-    .editable{background:transparent;border:none;padding:6px;font-size:13px}
+    .editable{background:transparent;border:none;padding:6px;font-size:13px;width:100%}
     .table-wrap{max-height:420px;overflow:auto;border-radius:8px}
+    .hero{cursor:pointer;padding:18px;border-radius:12px;background:linear-gradient(90deg,#ffffff,#f1fbff);border:1px solid rgba(200,230,255,0.6);display:flex;gap:14px;align-items:center}
+    .logo{width:64px;height:64px;border-radius:12px;background:linear-gradient(180deg,#dff2ff,#bfe6ff);display:flex;align-items:center;justify-content:center;font-weight:800;color:#034b78;font-size:22px}
     @media (max-width:860px){
       .card{flex-direction:column;padding:18px}
     }
@@ -55,11 +50,11 @@
   <div class="wrap">
     <div class="card" id="card">
       <div class="left" id="landing">
-        <div style="display:flex;align-items:center;gap:12px">
-          <div style="width:72px;height:72px;border-radius:14px;background:linear-gradient(180deg,#dff2ff,#bfe6ff);display:flex;align-items:center;justify-content:center;font-weight:700;color:#034b78">GM</div>
-          <div>
-            <h1>Welcome to General Mathematics Class</h1>
-            <p class="muted">Subject Teacher: <strong>Jerson C. Sales</strong></p>
+        <div class="hero" id="heroStart">
+          <div class="logo">GM</div>
+          <div style="text-align:left">
+            <h1 id="greetingTitle">Welcome to General Mathematics Class</h1>
+            <p class="muted" style="margin-top:6px">Subject Teacher: <strong>Jerson C. Sales</strong></p>
           </div>
         </div>
 
@@ -69,20 +64,20 @@
             <input id="accessCode" class="input" placeholder="Enter class code" autocomplete="off" />
             <button class="big-cta" id="enterCodeBtn">Enter</button>
           </div>
-          <p class="small muted" style="margin-top:8px">(Hint free — the code is not shown on-screen.)</p>
+          <p class="small muted" style="margin-top:8px">(The passcode is checked behind the scenes.)</p>
         </div>
 
         <div style="margin-top:20px">
           <div class="notice">
-            <strong>Student privacy:</strong> Students only see their own grade after entering the correct section and LRN.
+            Students will only see their personal grade after selecting section and entering LRN.
           </div>
         </div>
 
         <div style="margin-top:20px" class="center">
-          <button class="btn-ghost" id="showExample">Preview interface (no login)</button>
+          <button class="btn-ghost" id="showPreview">Preview interface (no login)</button>
         </div>
 
-        <div class="footer">Built for classroom use — client-side demo database included.</div>
+        <div class="footer">Client-side demo. For stronger security use a backend.</div>
       </div>
 
       <div class="right hidden" id="portal">
@@ -119,7 +114,7 @@
           <div style="background:white;padding:16px;border-radius:12px;width:100%;text-align:center">
             <div id="resultName" style="font-weight:700;font-size:16px;color:#053b57"></div>
             <div id="resultGrade" style="font-size:34px;font-weight:800;margin-top:6px;color:#0b5aa6"></div>
-            <div id="resultRemarks" style="margin-top:6px;color:var(--muted)"></div>
+            <div id="resultRemarks" style="margin-top:10px;color:var(--muted);font-weight:600"></div>
           </div>
         </div>
 
@@ -128,12 +123,12 @@
           <div style="display:flex;justify-content:space-between;align-items:center">
             <div>
               <strong>Admin mode</strong>
-              <p class="small muted">Edit students, LRNs and grades. Changes persist locally (browser storage) until exported/imported.</p>
+              <p class="small muted">Edit LRNs, names, and grades. Changes persist in browser storage and can be exported/imported as CSV.</p>
             </div>
             <div class="controls">
-              <label class="small-link" id="downloadCsv">Download CSV</label>
-              <label class="small-link" id="uploadCsvLabel">Upload CSV</label>
-              <input type="file" id="uploadCsv" accept=".csv" />
+              <button class="btn-ghost" id="downloadCsv">Download CSV</button>
+              <label class="btn-ghost" id="uploadCsvLabel" style="cursor:pointer">Upload CSV</label>
+              <input type="file" id="uploadCsv" accept=".csv" style="display:none" />
               <button class="btn-ghost" id="saveDbBtn">Save changes</button>
             </div>
           </div>
@@ -152,7 +147,7 @@
               <tbody id="dbBody"></tbody>
             </table>
           </div>
-          <div style="margin-top:8px" class="small muted">Tip: click a cell to edit. Use "Save changes" to store edits in browser. You may export CSV for backup.</div>
+          <div style="margin-top:8px" class="small muted">Tip: edit cells, then press "Save changes" to persist to this browser's storage. Export CSV as backup.</div>
         </div>
 
         <div class="footer" style="margin-top:14px">If you are the teacher: use admin mode to maintain the database.</div>
@@ -162,26 +157,30 @@
 
 <script>
 /*
-  General Mathematics Grade Viewer
-  - Student login uses a class access code (GenMath2025) checked client-side (obfuscated).
-  - Admin mode requires admin passcode (675915).
-  - Database seeded from the user's provided lists.
-  - Admin can edit and save to localStorage and export/import CSV.
+  Full client-side Grade Viewer
+  - Class code: GenMath2025 (checked client-side, encoded)
+  - Admin code: 675915 (checked client-side, encoded)
+  - DB seeded from user-provided lists; editable by admin; stored in localStorage when saved.
+  - Shows pass/fail messages per requirements.
 */
 
-/* ---- Utilities ---- */
-function el(id){return document.getElementById(id)}
-function show(node){node.classList.remove('hidden')}
-function hide(node){node.classList.add('hidden')}
+/* helpers */
+const $ = id => document.getElementById(id);
+const qs = s => document.querySelector(s);
+const qsa = s => document.querySelectorAll(s);
+function show(el){ el.classList.remove('hidden'); }
+function hide(el){ el.classList.add('hidden'); }
 
-/* ---- Simple obfuscation for codes (base64) so they're not printed in the UI */
-const ENCODE = s => btoa(s);
-const DECODE = s => atob(s);
-/* store the codes obfuscated */
-const CLASS_CODE_B64 = ENCODE('GenMath2025');
-const ADMIN_CODE_B64 = ENCODE('675915');
+/* small/base64 obfuscation so passcodes aren't visible in interface source at first glance */
+const encode = s => btoa(s);
+const decode = s => atob(s);
+const CLASS_CODE_B64 = encode('GenMath2025');
+const ADMIN_CODE_B64 = encode('675915');
 
-/* ---- Seed database (from the user). Structure: array of objects {section, lrn, name, grade} ---- */
+/* Storage key */
+const STORAGE_KEY = 'gm_grade_db_v1';
+
+/* Seed DB (copied directly from your data). Each object: { section, lrn, name, grade } */
 const seedDB = [
   /* Aurora */
   {section:'Aurora', lrn:'113797140007', name:'Alutaya, MJ O.', grade:88},
@@ -209,7 +208,7 @@ const seedDB = [
   {section:'Aurora', lrn:'113589140014', name:'Edem, Jeramie M.', grade:83},
   {section:'Aurora', lrn:'113606140173', name:'Huelva, Jelianne S.', grade:92},
   {section:'Aurora', lrn:'113597140060', name:'Ibañez, Carmela O.', grade:89},
-  {section:'Aurora', lrn:'113597140060', name:'Jores, Cristel B.', grade:90}, // duplicate LRN in provided list
+  {section:'Aurora', lrn:'113597140060', name:'Jores, Cristel B.', grade:90},
   {section:'Aurora', lrn:'113597140026', name:'Malunes, Fricel Blaze A.', grade:94},
   {section:'Aurora', lrn:'113599140030', name:'Pelayo, Trecia Faith C.', grade:84},
   {section:'Aurora', lrn:'402104150245', name:'Peteros, Lhola Belle E.', grade:92},
@@ -304,8 +303,8 @@ const seedDB = [
   {section:'Solstice', lrn:'136524150592', name:'CABRALES,AL FRANCIS AFABLE', grade:78},
   {section:'Solstice', lrn:'113606140044', name:'CARMEN,ERNESTO JR BERDIN', grade:73},
   {section:'Solstice', lrn:'113606130133', name:'COSTE,IGNACIO III ABAYON', grade:73},
-  {section:'Solstice', lrn:'113606110055', name:'DEL MUNDO,JUSTINE PABATANG', grade:76},
-  {section:'Solstice', lrn:'109156150106', name:'DELA CRUZ,JOHN KYLE -', grade:74},
+  {section:'Solstice', lrn:'113606110055', name:'DEL MUNDO,JUSTINE PABATANG', grade:74},
+  {section:'Solstice', lrn:'109156150106', name:'DELA CRUZ,JOHN KYLE -', grade:76},
   {section:'Solstice', lrn:'113602130016', name:'DOCUSIN,GIAN SOCITO', grade:78},
   {section:'Solstice', lrn:'113954130030', name:'ERENIA,KIM OCHEA', grade:73},
   {section:'Solstice', lrn:'113597140011', name:'FLORES,DAVE RABUYA', grade:75},
@@ -370,10 +369,10 @@ const seedDB = [
   {section:'Meadow', lrn:'120741140026', name:'CONTREDAS,CRISTINE LABATETE', grade:74},
   {section:'Meadow', lrn:'113606140094', name:'COSTE,GECEL TABOR', grade:74},
   {section:'Meadow', lrn:'113608140014', name:'CUIZON,JUNALYN ABELINDE', grade:75},
-  {section:'Meadow', lrn:'113942140018', name:'DAO,LEIAN CARILLO', grade:77},
-  {section:'Meadow', lrn:'113612130037', name:'DELA PEÑA,CHARLENE GAVIOLA', grade:75},
-  {section:'Meadow', lrn:'113606140096', name:'DELOS SANTOS,LUJIL BELO', grade:77},
-  {section:'Meadow', lrn:'113597140021', name:'ECITA,CHARMAE CAÑELAS', grade:75},
+  {section:'Meadow', lrn:'113942140018', name:'DAO,LEIAN CARILLO', grade:75},
+  {section:'Meadow', lrn:'113612130037', name:'DELA PEÑA,CHARLENE GAVIOLA', grade:77},
+  {section:'Meadow', lrn:'113606140096', name:'DELOS SANTOS,LUJIL BELO', grade:75},
+  {section:'Meadow', lrn:'113597140021', name:'ECITA,CHARMAE CAÑELAS', grade:77},
   {section:'Meadow', lrn:'113597140077', name:'LUCENESIO,ANGELICA VEPINOSA', grade:76},
   {section:'Meadow', lrn:'113606140175', name:'MAGLASANG,DANIELA COLUMNA', grade:81},
   {section:'Meadow', lrn:'113617130046', name:'MATERDAN,JESALYN TAMBOBOY', grade:72},
@@ -381,235 +380,251 @@ const seedDB = [
   {section:'Meadow', lrn:'113605140038', name:'SAMPAGA,JESSICA VILLAR', grade:74}
 ];
 
-/* ---- DB persistence in localStorage ---- */
-const STORAGE_KEY = 'gm_grade_db_v1';
+/* Load DB from localStorage or seed */
 function loadDB(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
-    if(raw) {
+    if(raw){
       const parsed = JSON.parse(raw);
       if(Array.isArray(parsed)) return parsed;
     }
-  }catch(e){console.warn('load error',e)}
-  // if no saved DB, return seed copy
+  }catch(e){ console.warn('load error', e); }
+  // deep copy seed
   return JSON.parse(JSON.stringify(seedDB));
 }
-function saveDB(db){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-}
-
-/* ---- App state ---- */
 let DB = loadDB();
-let currentSection = null;
+
+/* UI elements */
+const accessCode = $('accessCode');
+const enterCodeBtn = $('enterCodeBtn');
+const landing = $('landing');
+const portal = $('portal');
+const sections = document.querySelectorAll('.section');
+const lrnPrompt = $('lrnPrompt');
+const lrnInput = $('lrnInput');
+const viewGradeBtn = $('viewGradeBtn');
+const result = $('result');
+const resultName = $('resultName');
+const resultGrade = $('resultGrade');
+const resultRemarks = $('resultRemarks');
+const logoutBtn = $('logoutBtn');
+const adminToggle = $('adminToggle');
+const adminArea = $('adminArea');
+const dbBody = $('dbBody');
+const saveDbBtn = $('saveDbBtn');
+const downloadCsv = $('downloadCsv');
+const uploadCsv = $('uploadCsv');
+const uploadCsvLabel = $('uploadCsvLabel');
+const showPreview = $('showPreview');
+const heroStart = $('heroStart');
+
 let loggedIn = false;
+let currentSection = null;
 
-/* ---- Elements ---- */
-const accessCode = el('accessCode');
-const enterCodeBtn = el('enterCodeBtn');
-const landing = el('landing');
-const portal = el('portal');
-const sectionsArea = el('sectionsArea');
-const lrnPrompt = el('lrnPrompt');
-const lrnInput = el('lrnInput');
-const viewGradeBtn = el('viewGradeBtn');
-const result = el('result');
-const resultName = el('resultName');
-const resultGrade = el('resultGrade');
-const resultRemarks = el('resultRemarks');
-const logoutBtn = el('logoutBtn');
-const adminToggle = el('adminToggle');
-const adminArea = el('adminArea');
-const dbBody = el('dbBody');
-const saveDbBtn = el('saveDbBtn');
-const downloadCsv = el('downloadCsv');
-const uploadCsv = el('uploadCsv');
-const uploadCsvLabel = el('uploadCsvLabel');
-const showExample = el('showExample');
+/* Check codes (decoded) */
+function validClassCode(v){ return String(v).trim() === decode(CLASS_CODE_B64); }
+function validAdminCode(v){ return String(v).trim() === decode(ADMIN_CODE_B64); }
 
-/* ---- Handlers ---- */
-function checkClassCode(input){
-  try{
-    const expected = DECODE(CLASS_CODE_B64);
-    return String(input).trim() === expected;
-  }catch(e){return false}
-}
-function checkAdminCode(input){
-  try{
-    const expected = DECODE(ADMIN_CODE_B64);
-    return String(input).trim() === expected;
-  }catch(e){return false}
-}
+/* Landing hero click should show greeting (already visible) — keep as small friendly prompt */
+heroStart.addEventListener('click', ()=>{
+  alert('Welcome to General Mathematics Class\\nSubject Teacher: Jerson C. Sales');
+});
 
-/* show portal after successful class code */
+/* Preview button */
+showPreview.addEventListener('click', ()=>{
+  alert('Preview only — to view grades enter class access code.');
+});
+
+/* Enter class code */
 enterCodeBtn.addEventListener('click', ()=>{
-  const val = accessCode.value.trim();
-  if(!val){alert('Please enter the class access code.'); return;}
-  if(checkClassCode(val)){
+  const v = accessCode.value.trim();
+  if(!v){ alert('Enter class access code.'); return; }
+  if(validClassCode(v)){
+    accessCode.value = '';
     loggedIn = true;
     hide(landing);
     show(portal);
-    accessCode.value = '';
-    show(el('sectionsArea'));
+    hide(adminArea);
     hide(result);
     hide(lrnPrompt);
-    hide(adminArea);
     currentSection = null;
-    // show welcome micro-modal
-    setTimeout(()=>alert('Welcome to General Mathematics Class — please select your section.'), 80);
   } else {
     alert('Incorrect code. Please try again.');
   }
 });
 
-/* quick preview for teacher to see UI without login (no data access) */
-showExample.addEventListener('click', ()=>{
-  alert('Preview: to actually view grades, enter the class code. This preview only shows the interface.');
-});
+/* Section selection */
+sections.forEach(s => s.addEventListener('click', (e)=>{
+  if(!loggedIn){ alert('Please enter class access code first.'); return; }
+  currentSection = e.currentTarget.dataset.section;
+  show(lrnPrompt);
+  hide(result);
+  lrnInput.value = '';
+  lrnInput.focus();
+}));
 
-/* Sections click */
-document.querySelectorAll('.section').forEach(node=>{
-  node.addEventListener('click', ()=>{
-    if(!loggedIn){alert('Please enter class access code first.');return;}
-    // open LRN prompt for chosen section
-    currentSection = node.dataset.section;
-    show(lrnPrompt);
-    hide(result);
-    lrnInput.value = '';
-    lrnInput.focus();
-    resultRemarks.textContent = `Selected section: ${currentSection}`;
-  });
-});
-
-/* view grade */
-viewGradeBtn.addEventListener('click', ()=>attemptView());
-lrnInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') attemptView(); });
+/* View grade */
+viewGradeBtn.addEventListener('click', attemptView);
+lrnInput.addEventListener('keypress', (e)=>{ if(e.key === 'Enter') attemptView(); });
 
 function attemptView(){
-  const lrn = (lrnInput.value||'').trim();
-  if(!currentSection){alert('Please select a section first.');return;}
-  if(!lrn){alert('Enter your LRN then click "View Grade".');return;}
-  // find matches in DB for this section and LRN
-  const matches = DB.filter(r => r.section===currentSection && String(r.lrn)===String(lrn));
-  if(matches.length===0){
+  const lrn = String(lrnInput.value||'').trim();
+  if(!currentSection){ alert('Select your section first.'); return; }
+  if(!lrn){ alert('Enter your LRN.'); return; }
+  const matches = DB.filter(r => r.section === currentSection && String(r.lrn) === String(lrn));
+  if(matches.length === 0){
     resultName.textContent = 'No record found';
     resultGrade.textContent = '—';
     resultRemarks.textContent = 'Please check your section and LRN.';
     show(result);
     return;
   }
-  // if multiple matches, only show first to avoid exposing others
-  if(matches.length>1){
-    resultRemarks.textContent = 'Multiple records for this LRN were found in this section. Displaying first match. Please ask teacher to resolve duplicates in admin mode.';
-  } else resultRemarks.textContent = '';
+  // show first match only
   const rec = matches[0];
-  resultName.textContent = rec.name;
+  resultName.textContent = rec.name || 'No name';
   resultGrade.textContent = (rec.grade === '' || rec.grade === null) ? 'No grade yet' : String(rec.grade);
+  if(rec.grade === '' || rec.grade === null){
+    resultRemarks.textContent = 'Study more, good luck in the Second Quarter! - Sir Jerson';
+  } else {
+    const g = Number(rec.grade);
+    if(!isNaN(g) && g >= 75){
+      resultRemarks.textContent = 'Congratulations! You passed the subject. Continue improving!';
+    } else {
+      resultRemarks.textContent = 'Study more, good luck in the Second Quarter! - Sir Jerson';
+    }
+  }
   show(result);
 }
 
-/* logout */
+/* Logout */
 logoutBtn.addEventListener('click', ()=>{
   if(confirm('Log out now?')){
     loggedIn = false;
     hide(portal);
     show(landing);
     hide(adminArea);
+    hide(result);
+    hide(lrnPrompt);
     currentSection = null;
-    resultName.textContent = '';
-    resultGrade.textContent = '';
-    resultRemarks.textContent = '';
   }
 });
 
-/* Admin toggle */
+/* Admin toggle -> ask for passcode */
 adminToggle.addEventListener('click', ()=>{
-  // ask for admin code
   const code = prompt('Enter admin passcode (teacher):');
-  if(code===null) return;
-  if(checkAdminCode(code)){
+  if(code === null) return;
+  if(validAdminCode(code)){
     showAdmin();
   } else {
     alert('Incorrect admin passcode.');
   }
 });
 
+/* Show admin area and populate table */
 function showAdmin(){
   show(adminArea);
-  populateDbTable();
+  populateAdminTable();
 }
 
-/* populate admin table */
-function populateDbTable(){
-  // clear
+/* populate admin table (sorted by section then name) */
+function populateAdminTable(){
   dbBody.innerHTML = '';
-  // Sort by section then name
   const ordered = DB.slice().sort((a,b)=>{
-    if(a.section!==b.section) return a.section.localeCompare(b.section);
-    return (a.name||'').localeCompare(b.name||'');
+    if(a.section !== b.section) return a.section.localeCompare(b.section);
+    return String(a.name||'').localeCompare(b.name||'');
   });
-  ordered.forEach((r, idx)=>{
+  ordered.forEach((rec, idx)=>{
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${r.section}</td>
-      <td><input class="editable" data-i="${idx}" data-field="lrn" value="${r.lrn||''}" /></td>
-      <td><input class="editable" data-i="${idx}" data-field="name" value="${r.name||''}" /></td>
-      <td><input class="editable" data-i="${idx}" data-field="grade" value="${r.grade===null||r.grade===''? '': r.grade}" /></td>
-      <td><button class="btn-ghost" data-action="del" data-i="${idx}">Delete</button></td>
+      <td style="white-space:nowrap">${rec.section}</td>
+      <td><input class="editable" data-idx="${idx}" data-field="lrn" value="${rec.lrn||''}" /></td>
+      <td><input class="editable" data-idx="${idx}" data-field="name" value="${(rec.name||'')}" /></td>
+      <td><input class="editable" data-idx="${idx}" data-field="grade" value="${rec.grade===undefined||rec.grade===null? '': rec.grade}" /></td>
+      <td><button class="btn-ghost del-btn" data-idx="${idx}">Delete</button></td>
     `;
     dbBody.appendChild(tr);
   });
-  // wire up editable inputs & delete buttons
+
+  // wire inputs
   dbBody.querySelectorAll('.editable').forEach(inp=>{
     inp.addEventListener('change', (e)=>{
-      const i = parseInt(e.target.dataset.i,10);
+      const i = parseInt(e.target.dataset.idx,10);
       const f = e.target.dataset.field;
       let v = e.target.value;
-      if(f==='grade'){ v = v.trim()==='' ? '' : Number(v); if(v!=='' && (isNaN(v) || v<0 || v>100)){ alert('Grade must be a number 0–100 or blank.'); return; } }
-      // find corresponding record in DB: we sorted array earlier; so find matching by section+name+lrn roughly — simpler: update the nth item in ordered array then map back:
-      // For reliability, we'll reconstruct ordered list, update, then remap DB
+      if(f === 'grade'){
+        v = v.trim() === '' ? '' : Number(v);
+        if(v !== '' && (isNaN(v) || v < 0 || v > 100)){ alert('Grade must be 0–100 or blank.'); populateAdminTable(); return; }
+      } else v = v.trim();
+      // Update the DB: map ordered list's record back to DB by matching original unique combination (section + name + lrn)
       const orderedNow = DB.slice().sort((a,b)=>{
-        if(a.section!==b.section) return a.section.localeCompare(b.section);
-        return (a.name||'').localeCompare(b.name||'');
+        if(a.section !== b.section) return a.section.localeCompare(b.section);
+        return String(a.name||'').localeCompare(b.name||'');
       });
       const rec = orderedNow[i];
-      if(!rec){ alert('Record not found.'); return;}
-      rec[f] = (f==='grade' && v==='') ? '' : v;
-      // now update DB: find index by original unique combination (section + name + lrn)
-      const ix = DB.findIndex(d=>d.section===rec.section && d.name===rec.name && String(d.lrn)===String(rec.lrn));
-      if(ix>=0) DB[ix] = rec;
-      // refresh UI
-      setTimeout(()=>populateDbTable(), 60);
+      if(!rec) return;
+      // Note: to avoid ambiguous mapping when LRN or name changed, find by an index-based approach:
+      // find first DB index whose section and original name/lrn match the rec's previous values
+      // We'll locate by section and previous lrn (but previous lrn may have changed). Simpler: update the first DB entry that has same section and same name OR lrn.
+      const ix = DB.findIndex(d => d.section === rec.section && (d.lrn === rec.lrn || d.name === rec.name));
+      if(ix >= 0){
+        DB[ix] = { section: rec.section, lrn: rec.lrn, name: rec.name, grade: rec.grade };
+      } else {
+        // fallback: replace by position in DB (best effort)
+        DB[i] = { section: rec.section, lrn: rec.lrn, name: rec.name, grade: rec.grade };
+      }
+      // but we must actually set the updated field properly — recompute orderedNow and set:
+      // Rebuild ordered list with updated values
+      orderedNow[i][f] = v;
+      // Now map orderedNow back to DB (by matching section + name + lrn if possible)
+      // Simplest approach: replace DB with orderedNow (but keep other items too). We'll compute newDB as orderedNow + any DB items not in orderedNow (none missing)
+      // For clarity here, just set DB = orderedNow concatenated with any remaining (empty)
+      DB = orderedNow.concat(DB.filter(d=> !orderedNow.some(o => o.section===d.section && o.lrn===d.lrn && o.name===d.name)));
+      // finally refresh table
+      populateAdminTable();
     });
   });
-  dbBody.querySelectorAll('button[data-action="del"]').forEach(btn=>{
+
+  // wire delete buttons
+  dbBody.querySelectorAll('.del-btn').forEach(btn=>{
     btn.addEventListener('click', (e)=>{
-      const i = parseInt(e.target.dataset.i,10);
+      const i = parseInt(e.target.dataset.idx,10);
       if(!confirm('Delete this record?')) return;
       const orderedNow = DB.slice().sort((a,b)=>{
-        if(a.section!==b.section) return a.section.localeCompare(b.section);
-        return (a.name||'').localeCompare(b.name||'');
+        if(a.section !== b.section) return a.section.localeCompare(b.section);
+        return String(a.name||'').localeCompare(b.name||'');
       });
       const rec = orderedNow[i];
-      const ix = DB.findIndex(d=>d.section===rec.section && d.name===rec.name && String(d.lrn)===String(rec.lrn));
-      if(ix>=0){ DB.splice(ix,1); populateDbTable(); }
+      // find exact index in DB
+      const ix = DB.findIndex(d => d.section === rec.section && d.lrn === rec.lrn && d.name === rec.name && String(d.grade) === String(rec.grade));
+      if(ix >= 0){
+        DB.splice(ix,1);
+        populateAdminTable();
+      } else {
+        alert('Could not find record to delete.');
+      }
     });
   });
 }
 
-/* Save DB */
+/* Save DB to localStorage */
 saveDbBtn.addEventListener('click', ()=>{
-  if(!confirm('Save changes to this browser storage?')) return;
-  saveDB(DB);
-  alert('Database saved locally (browser storage). You can also Download CSV for backup.');
+  if(!confirm('Save current database to browser storage?')) return;
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
+    alert('Database saved locally in browser storage.');
+  }catch(e){ alert('Save failed: ' + e.message); }
 });
 
 /* Download CSV */
 downloadCsv.addEventListener('click', ()=>{
   const headers = ['section','lrn','name','grade'];
-  const rows = [headers.join(',')].concat(DB.map(r=>{
-    return [r.section, `"${String(r.lrn).replace(/"/g,'""')}"`, `"${String(r.name||'').replace(/"/g,'""')}"`, String(r.grade===undefined||r.grade===null?'':r.grade)].join(',');
+  const rows = [headers.join(',')].concat(DB.map(r => {
+    const lrn = `"${String(r.lrn||'').replace(/"/g,'""')}"`;
+    const name = `"${String(r.name||'').replace(/"/g,'""')}"`;
+    const grade = r.grade === '' || r.grade === null || r.grade === undefined ? '' : String(r.grade);
+    return [r.section, lrn, name, grade].join(',');
   }));
-  const csv = rows.join('\n');
+  const csv = rows.join('\\n');
   const blob = new Blob([csv], {type:'text/csv'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -621,67 +636,54 @@ downloadCsv.addEventListener('click', ()=>{
   URL.revokeObjectURL(url);
 });
 
-/* Upload CSV */
+/* Upload CSV (replace DB) */
 uploadCsvLabel.addEventListener('click', ()=> uploadCsv.click());
 uploadCsv.addEventListener('change', (e)=>{
   const file = e.target.files[0];
   if(!file) return;
   const reader = new FileReader();
   reader.onload = function(evt){
-    const text = evt.target.result;
     try{
-      const parsed = parseCSV(text);
-      if(!Array.isArray(parsed) || parsed.length===0) throw new Error('No rows found');
-      // Expect header row 'section,lrn,name,grade' or similar
-      const header = parsed[0].map(h=>String(h||'').toLowerCase().trim());
-      const idxSection = header.indexOf('section');
-      const idxLrn = header.indexOf('lrn');
-      const idxName = header.indexOf('name');
-      const idxGrade = header.indexOf('grade');
-      if(idxSection<0 || idxLrn<0 || idxName<0 || idxGrade<0) throw new Error('CSV must include headers: section, lrn, name, grade');
+      const parsed = parseCSV(String(evt.target.result || ''));
+      if(parsed.length < 2) throw new Error('CSV appears empty or lacks rows.');
+      const header = parsed[0].map(h => String(h||'').toLowerCase().trim());
+      const si = header.indexOf('section'), li = header.indexOf('lrn'), ni = header.indexOf('name'), gi = header.indexOf('grade');
+      if(si < 0 || li < 0 || ni < 0 || gi < 0) throw new Error('CSV must include headers: section, lrn, name, grade');
       const newDB = [];
       for(let i=1;i<parsed.length;i++){
         const row = parsed[i];
-        if(!row) continue;
-        const sec = row[idxSection] ? String(row[idxSection]).trim() : '';
-        const lrn = row[idxLrn] ? String(row[idxLrn]).replace(/"/g,'').trim() : '';
-        const name = row[idxName] ? String(row[idxName]).replace(/"/g,'').trim() : '';
-        const g = row[idxGrade] ? String(row[idxGrade]).trim() : '';
-        const grade = g==='' ? '' : Number(g);
-        newDB.push({section:sec, lrn:lrn, name:name, grade:grade});
+        if(!row || row.length < 4) continue;
+        const section = String(row[si]||'').trim();
+        const lrn = String(row[li]||'').replace(/^"|"$/g,'').trim();
+        const name = String(row[ni]||'').replace(/^"|"$/g,'').trim();
+        const gRaw = String(row[gi]||'').trim();
+        const grade = gRaw === '' ? '' : Number(gRaw);
+        newDB.push({section, lrn, name, grade});
       }
       if(!confirm('Replace current database with uploaded CSV?')) return;
       DB = newDB;
-      saveDB(DB);
-      populateDbTable();
-      alert('CSV imported and database replaced.');
-    }catch(err){
-      alert('CSV import failed: ' + err.message);
-    }
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(DB));
+      populateAdminTable();
+      alert('CSV imported, database replaced and saved locally.');
+    }catch(err){ alert('CSV import failed: ' + err.message); }
   };
   reader.readAsText(file);
 });
 
-/* CSV parse (simple) */
+/* Basic CSV parser handling quoted fields */
 function parseCSV(text){
-  const lines = text.split(/\r?\n/).filter(l=>l.trim()!=='');
-  return lines.map(line=>{
-    // split on commas but handle quoted values
+  const lines = text.split(/\\r?\\n/).filter(l => l.trim() !== '');
+  return lines.map(line => {
     const out = [];
     let cur = '';
     let inQuotes = false;
     for(let i=0;i<line.length;i++){
       const ch = line[i];
-      if(ch==='\"'){
-        if(inQuotes && line[i+1]==='\"'){ cur += '\"'; i++; continue; }
-        inQuotes = !inQuotes;
-        continue;
+      if(ch === '\"'){
+        if(inQuotes && line[i+1] === '\"'){ cur += '\"'; i++; continue; }
+        inQuotes = !inQuotes; continue;
       }
-      if(ch===',' && !inQuotes){
-        out.push(cur);
-        cur = '';
-        continue;
-      }
+      if(ch === ',' && !inQuotes){ out.push(cur); cur = ''; continue; }
       cur += ch;
     }
     out.push(cur);
@@ -689,19 +691,11 @@ function parseCSV(text){
   });
 }
 
-/* initial load of DB for admin display if admin area open */
-if(localStorage.getItem(STORAGE_KEY)) DB = loadDB();
-
-/* small UX: clear result when clicking elsewhere */
-document.addEventListener('click', (e)=>{
-  if(!portal.contains(e.target) && !landing.contains(e.target)) return;
-});
-
-/* show admin area only after auth; but show save/download controls when visible - already wired */
-
-/* initial state */
+/* On page load: nothing to show until login. But if adminArea visible from previous session, keep hidden. */
 hide(portal);
 hide(adminArea);
+hide(result);
+hide(lrnPrompt);
 
 </script>
 </body>
