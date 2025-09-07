@@ -677,24 +677,30 @@ function renderTatakStudent(idx){
   tsName.textContent = name;
   tsLrn.textContent = `LRN: ${lrn}`;
   tsGradesTable.innerHTML = '';
+
   // prepare subject-grade mapping
   const subjects = db.tatak.subjects;
   subjects.forEach(sub => {
-    let grade = '';
-    // check if in db.tatak.grades[sub]
+    let grade = '—'; // default
     if(db.tatak.grades && db.tatak.grades[sub]){
-      grade = db.tatak.grades[sub][idx] !== undefined ? db.tatak.grades[sub][idx] : '';
+      const gArr = db.tatak.grades[sub];
+      if (Array.isArray(gArr) && idx < gArr.length) {
+        grade = gArr[idx];
+      }
     }
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${sub}</td><td>${grade === '' ? '—' : grade}</td>`;
+    tr.innerHTML = `<td>${sub}</td><td>${grade}</td>`;
     tsGradesTable.appendChild(tr);
   });
+
   // compute final average using available numeric grades across all subjects for this student
   computeAndShowFinal(idx);
   tsStudentCard.classList.remove('hidden');
-  // show special "Congratulations! You survived..." line here only on this student page
+
+  // show special message
   tsSurvive.innerHTML = `<strong style="font-family: Georgia, 'Times New Roman', serif; font-size:14px">Congratulations! You survived the First Quarter of School Year 2025-2026 — Sir Jerson</strong>`;
 }
+
 
 function computeAndShowFinal(idx){
   const subjects = db.tatak.subjects;
@@ -1000,5 +1006,6 @@ buildAdminTable();
 </script>
 </body>
 </html>
+
 
 
